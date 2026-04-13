@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AloHost — Admin (Anfitrion) UX Flow</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="icons.css">
+<script src="theme.js"></script>
+<script src="icons.js"></script>
+<style>
+.flow-header{background:linear-gradient(135deg,#222 0%,#1a2a3a 50%,#00393d 100%);padding:60px 40px 40px;position:relative;overflow:hidden}
+.flow-header::before{content:'';position:absolute;top:-50%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(255,56,92,0.2),transparent 70%);border-radius:50%}
+.flow-header-content{position:relative;z-index:1;max-width:1400px;margin:0 auto}
+.flow-badge{display:inline-block;background:rgba(255,56,92,0.2);border:1px solid rgba(255,56,92,0.3);color:var(--primary-light);padding:6px 16px;border-radius:var(--radius-full);font-size:12px;font-weight:600;margin-bottom:16px}
+.flow-header h1{font-family:var(--font-display);font-size:42px;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-0.03em}
+.flow-header p{font-size:18px;color:rgba(255,255,255,0.6);max-width:600px}
+
+.calendar-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cal-header{font-size:11px;font-weight:600;color:var(--text-secondary);text-align:center;padding:8px 4px;text-transform:uppercase}
+.cal-day{aspect-ratio:1;border-radius:var(--radius-sm);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:var(--transition)}
+.cal-day:hover{background:var(--bg-hover)}
+.cal-day.booked{background:var(--primary-soft);color:var(--primary);font-weight:600}
+.cal-day.checkin{background:var(--primary);color:#fff;font-weight:600;border-radius:var(--radius-sm) 0 0 var(--radius-sm)}
+.cal-day.checkout{background:var(--accent);color:#fff;font-weight:600;border-radius:0 var(--radius-sm) var(--radius-sm) 0}
+.cal-day.today{border:2px solid var(--primary)}
+.cal-day.empty{opacity:0.3}
+
+.timeline{display:flex;flex-direction:column;position:relative;padding-left:24px}
+.timeline::before{content:'';position:absolute;left:10px;top:8px;bottom:8px;width:2px;background:var(--border-light)}
+.timeline-item{position:relative;padding:12px 0 12px 20px}
+.timeline-dot{position:absolute;left:-18px;top:16px;width:12px;height:12px;border-radius:50%;border:2px solid var(--bg-primary)}
+.timeline-dot.done{background:var(--success)}
+.timeline-dot.active{background:var(--primary);box-shadow:0 0 0 4px rgba(255,56,92,0.2)}
+.timeline-dot.pending{background:var(--border-default)}
+.timeline-item h4{font-size:14px;font-weight:600}
+.timeline-item p{font-size:12px;color:var(--text-secondary)}
+
+.property-card{background:var(--bg-card);border-radius:var(--radius-lg);overflow:hidden;border:1px solid var(--border-light);transition:var(--transition)}
+.property-card:hover{box-shadow:var(--shadow-lg);transform:translateY(-4px)}
+.property-img{height:140px;position:relative;display:flex;align-items:center;justify-content:center;color:rgba(255,255,255,0.3)}
+.property-info{padding:16px}
+.property-info h4{font-size:15px;font-weight:600;margin-bottom:4px}
+.property-info p{font-size:12px;color:var(--text-secondary)}
+.property-meta{display:flex;gap:12px;margin-top:8px;font-size:12px;color:var(--text-secondary);align-items:center}
+.property-meta span{display:inline-flex;align-items:center;gap:4px}
+
+.service-card{background:var(--bg-card);border-radius:var(--radius-lg);padding:20px;border:1px solid var(--border-light);transition:var(--transition);cursor:pointer}
+.service-card:hover{border-color:var(--primary);box-shadow:var(--shadow-md)}
+
+.chat-area{background:#1a1a1a;border-radius:var(--radius-lg);padding:24px;border:1px solid #333;display:flex;flex-direction:column;gap:12px}
+.chat-area h3{font-size:16px;font-weight:600;color:#fff;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.chat-msg{max-width:80%;padding:12px 16px;font-size:13px;line-height:1.5}
+.chat-msg.ai{align-self:flex-start;background:rgba(255,56,92,0.15);color:rgba(255,255,255,0.9);border-radius:16px 16px 16px 4px}
+.chat-msg.guest{align-self:flex-end;background:var(--primary);color:#fff;border-radius:16px 16px 4px 16px}
+.chat-sender{font-size:11px;font-weight:600;margin-bottom:4px;color:var(--primary-light)}
+
+.stepper{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:32px}
+.stepper-step{text-align:center;padding:16px;background:var(--bg-card);border-radius:var(--radius-lg);border:2px solid var(--border-light);transition:var(--transition)}
+.stepper-step.done{border-color:var(--success)}
+.stepper-step.active{border-color:var(--primary);animation:pulse 2s infinite}
+.stepper-step .step-icon{margin-bottom:6px;display:flex;justify-content:center}
+.stepper-step .step-label{font-size:12px;font-weight:600}
+.stepper-step .step-status{font-size:11px;color:var(--text-secondary);margin-top:2px}
+.stepper-step.done .step-label{color:var(--success)}
+.stepper-step.active .step-label{color:var(--primary)}
+
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(255,56,92,0.3)}50%{box-shadow:0 0 0 8px rgba(255,56,92,0)}}
+
+.progress-ring{width:140px;height:140px;border-radius:50%;background:conic-gradient(var(--primary) 0% 80%,var(--border-light) 80% 100%);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.progress-ring-inner{width:110px;height:110px;border-radius:50%;background:var(--bg-card);display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:36px;font-weight:800;color:var(--primary)}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="top-nav-left">
+    <a href="design-system.html" class="logo">Alo<span>Host</span></a>
+    <div class="nav-links">
+      <a href="design-system.html" class="nav-link">Design System</a>
+      <a href="superadmin.html" class="nav-link">Super Admin</a>
+      <a href="admin.html" class="nav-link active">Admin</a>
+      <a href="guest-mobile.html" class="nav-link">Huesped</a>
+      <a href="admin-app.html" class="nav-link">App Admin</a>
+      <a href="flowmap.html" class="nav-link">Mapa de Flujos</a>
+    </div>
+  </div>
+</nav>
+
+<div class="flow-header">
+  <div class="flow-header-content">
+    <div class="flow-badge">PLATAFORMA 2 DE 4</div>
+    <h1>Admin (Anfitrion) — Web</h1>
+    <p>Panel centralizado para gestionar propiedades, reservas, check-in/out automatico, documentos legales y servicios extra. La IA trabaja por ti.</p>
+  </div>
+</div>
+
+<div class="screens-container">
+
+  <div class="steps-row">
+    <div class="step-pill active" onclick="scrollToScreen('s1',this)">1. Dashboard</div>
+    <div class="step-pill" onclick="scrollToScreen('s2',this)">2. Propiedades</div>
+    <div class="step-pill" onclick="scrollToScreen('s3',this)">3. Reservas</div>
+    <div class="step-pill" onclick="scrollToScreen('s4',this)">4. Detalle Reserva</div>
+    <div class="step-pill" onclick="scrollToScreen('s5',this)">5. Check-in Auto</div>
+    <div class="step-pill" onclick="scrollToScreen('s6',this)">6. Monetizacion</div>
+    <div class="step-pill" onclick="scrollToScreen('s7',this)">7. Agente IA</div>
+    <div class="step-pill" onclick="scrollToScreen('s8',this)">8. Legal SIRE</div>
+  </div>
+
+  <!-- ============================================================
+       SCREEN 1 — Dashboard del Anfitrion
+       ============================================================ -->
+  <div class="flow-section" id="s1">
+    <div class="flow-section-header">
+      <div class="flow-number">1</div>
+      <div><h2>Dashboard del Anfitrion</h2><p>Vista rapida: reservas de hoy, ingresos, actividad IA y alertas importantes</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/dashboard</div>
+      </div>
+      <div class="screen-body" data-active="dashboard">
+        <div class="main-content">
+          <div class="main-header">
+            <div>
+              <h2>Buenos dias, Carlos</h2>
+              <p style="font-size:14px;color:var(--text-secondary);">Martes, 12 de Abril — Tienes 3 check-ins hoy</p>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <button class="btn btn-secondary btn-sm" style="position:relative;">
+                <span class="icon"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+                <span style="position:absolute;top:-4px;right:-4px;width:18px;height:18px;background:var(--danger);border-radius:50%;font-size:10px;display:flex;align-items:center;justify-content:center;color:#fff;">2</span>
+              </button>
+              <button class="btn btn-accent"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span> Nueva Reserva Manual</button>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card" style="border-left:3px solid var(--primary);">
+              <div class="stat-label">Check-ins Hoy</div>
+              <div class="stat-value">3</div>
+              <div style="font-size:12px;color:var(--success);margin-top:4px;">2 completados por IA</div>
+            </div>
+            <div class="stat-card" style="border-left:3px solid var(--accent);">
+              <div class="stat-label">Check-outs Hoy</div>
+              <div class="stat-value">2</div>
+              <div style="font-size:12px;color:var(--success);margin-top:4px;">Automaticos programados</div>
+            </div>
+            <div class="stat-card" style="border-left:3px solid var(--success);">
+              <div class="stat-label">Ingresos este Mes</div>
+              <div class="stat-value" style="color:var(--success);">$4.2M</div>
+              <div class="stat-change up"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span> 15% vs mes pasado</div>
+            </div>
+            <div class="stat-card" style="border-left:3px solid var(--accent);">
+              <div class="stat-label">Servicios Extra Vendidos</div>
+              <div class="stat-value" style="color:var(--accent);">$680K</div>
+              <div style="font-size:12px;color:var(--primary);margin-top:4px;display:flex;align-items:center;gap:4px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Via Agente IA</div>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div class="chart-placeholder">
+              <h3>Actividad de Hoy</h3>
+              <div class="timeline">
+                <div class="timeline-item"><div class="timeline-dot done"></div><h4>08:00 — Check-out Apto. Centro #3</h4><p>Maria G. — Completado automaticamente por IA</p></div>
+                <div class="timeline-item"><div class="timeline-dot done"></div><h4>10:00 — Check-in Casa Laureles</h4><p>John S. — Identidad verificada, contrato firmado</p></div>
+                <div class="timeline-item"><div class="timeline-dot active"></div><h4>14:00 — Check-in Loft Poblado</h4><p>Ana L. — En proceso: IA guiando al huesped</p></div>
+                <div class="timeline-item"><div class="timeline-dot pending"></div><h4>16:00 — Check-in Studio Envigado</h4><p>Pedro R. — Pendiente: documentos enviados</p></div>
+                <div class="timeline-item"><div class="timeline-dot pending"></div><h4>18:00 — Check-out Loft El Tesoro</h4><p>Emma W. — Programado</p></div>
+              </div>
+            </div>
+            <div>
+              <div class="ai-bubble" style="margin-top:0;margin-bottom:20px;">
+                <div class="ai-bubble-header"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Agente Alo — Resumen del Dia</div>
+                <p>He gestionado <strong>5 conversaciones</strong> con huespedes hoy. Resolvi el 100% sin necesidad de tu intervencion. Vendi <strong>1 servicio de transporte</strong> ($45K) y <strong>1 late checkout</strong> ($30K).</p>
+              </div>
+              <div class="chart-placeholder">
+                <h3>Proximas Reservas</h3>
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                  <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="width:40px;height:40px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:13px;">JD</div>
+                    <div style="flex:1;"><div style="font-weight:600;font-size:13px;">Juan Diaz</div><div style="font-size:11px;color:var(--text-secondary);">Abr 13-16 · Apt. Centro #3</div></div>
+                    <span class="badge-sm badge-checkin">Check-in manana</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:13px;">LR</div>
+                    <div style="flex:1;"><div style="font-weight:600;font-size:13px;">Laura Rios</div><div style="font-size:11px;color:var(--text-secondary);">Abr 14-18 · Casa Laureles</div></div>
+                    <span class="badge-sm badge-pending">Documentos pendientes</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="width:40px;height:40px;border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:600;font-size:13px;">TS</div>
+                    <div style="flex:1;"><div style="font-weight:600;font-size:13px;">Tom Smith</div><div style="font-size:11px;color:var(--text-secondary);">Abr 15-20 · Loft Poblado</div></div>
+                    <span class="badge-sm badge-active">Confirmado</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decision UX</h4>
+      <p>Dashboard orientado al "hoy" del anfitrion. Timeline de actividades en tiempo real con estados visuales. Resumen del agente IA prominente — refuerza que la IA trabaja autonomamente. KPIs con borde de color para categorizacion rapida. Proximas reservas con acciones pendientes visibles.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 2 — Mis Propiedades
+       ============================================================ -->
+  <div class="flow-section" id="s2">
+    <div class="flow-section-header">
+      <div class="flow-number">2</div>
+      <div><h2>Mis Propiedades</h2><p>Gestion de propiedades sincronizadas desde Airbnb, Booking, PMS o creadas manualmente</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/properties</div>
+      </div>
+      <div class="screen-body" data-active="properties">
+        <div class="main-content">
+          <div class="main-header">
+            <h2>Mis Propiedades (8)</h2>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-secondary btn-sm"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115.36-6.36L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15.36 6.36L3 16"/></svg></span> Sincronizar PMS</button>
+              <button class="btn btn-accent"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span> Agregar Propiedad</button>
+            </div>
+          </div>
+
+          <div class="three-col" style="margin-bottom:24px;">
+            <div class="property-card">
+              <div class="property-img" style="background:linear-gradient(135deg,#667eea,#764ba2);">
+                <span class="icon icon-3xl"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="1.5"/><line x1="9" y1="6" x2="9" y2="6.01"/><line x1="12" y1="6" x2="12" y2="6.01"/><line x1="15" y1="6" x2="15" y2="6.01"/><line x1="9" y1="10" x2="9" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="15" y1="10" x2="15" y2="10.01"/><path d="M10 22v-4h4v4"/></svg></span>
+              </div>
+              <div class="property-info">
+                <div style="display:flex;justify-content:space-between;align-items:start;">
+                  <h4>Apt. Centro #3</h4>
+                  <span class="badge-sm badge-active">Activa</span>
+                </div>
+                <p>Medellin, El Poblado</p>
+                <div class="property-meta">
+                  <span><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M3 7v10"/><path d="M21 7v10"/><path d="M3 17h18"/><path d="M3 12h18"/><path d="M3 12V9a2 2 0 012-2h14a2 2 0 012 2v3"/><circle cx="7" cy="9.5" r="1.5"/></svg></span> 2 hab</span>
+                  <span><span class="icon icon-sm"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21c0-4.418-3.582-7-8-7s-8 2.582-8 7"/></svg></span> 4 huesp</span>
+                  <span><span class="icon icon-sm"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span> 4.9</span>
+                </div>
+                <div style="display:flex;gap:6px;margin-top:12px;">
+                  <span class="ota-badge" data-ota="airbnb">Airbnb</span>
+                  <span class="ota-badge" data-ota="booking">Booking</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="property-card">
+              <div class="property-img" style="background:linear-gradient(135deg,#00b09b,#96c93d);">
+                <span class="icon icon-3xl"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg></span>
+              </div>
+              <div class="property-info">
+                <div style="display:flex;justify-content:space-between;align-items:start;">
+                  <h4>Casa Laureles</h4>
+                  <span class="badge-sm badge-active">Activa</span>
+                </div>
+                <p>Medellin, Laureles</p>
+                <div class="property-meta">
+                  <span><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M3 7v10"/><path d="M21 7v10"/><path d="M3 17h18"/><path d="M3 12h18"/><path d="M3 12V9a2 2 0 012-2h14a2 2 0 012 2v3"/><circle cx="7" cy="9.5" r="1.5"/></svg></span> 3 hab</span>
+                  <span><span class="icon icon-sm"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21c0-4.418-3.582-7-8-7s-8 2.582-8 7"/></svg></span> 6 huesp</span>
+                  <span><span class="icon icon-sm"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span> 4.7</span>
+                </div>
+                <div style="display:flex;gap:6px;margin-top:12px;">
+                  <span class="ota-badge" data-ota="airbnb">Airbnb</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="property-card">
+              <div class="property-img" style="background:linear-gradient(135deg,#f093fb,#f5576c);">
+                <span class="icon icon-3xl"><svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="1.5"/><line x1="9" y1="6" x2="9" y2="6.01"/><line x1="12" y1="6" x2="12" y2="6.01"/><line x1="15" y1="6" x2="15" y2="6.01"/><line x1="9" y1="10" x2="9" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="15" y1="10" x2="15" y2="10.01"/><path d="M10 22v-4h4v4"/></svg></span>
+              </div>
+              <div class="property-info">
+                <div style="display:flex;justify-content:space-between;align-items:start;">
+                  <h4>Loft Poblado</h4>
+                  <span class="badge-sm badge-checkin">Huesped hoy</span>
+                </div>
+                <p>Medellin, El Poblado</p>
+                <div class="property-meta">
+                  <span><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M3 7v10"/><path d="M21 7v10"/><path d="M3 17h18"/><path d="M3 12h18"/><path d="M3 12V9a2 2 0 012-2h14a2 2 0 012 2v3"/><circle cx="7" cy="9.5" r="1.5"/></svg></span> 1 hab</span>
+                  <span><span class="icon icon-sm"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21c0-4.418-3.582-7-8-7s-8 2.582-8 7"/></svg></span> 2 huesp</span>
+                  <span><span class="icon icon-sm"><svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg></span> 4.8</span>
+                </div>
+                <div style="display:flex;gap:6px;margin-top:12px;">
+                  <span class="ota-badge" data-ota="airbnb">Airbnb</span>
+                  <span class="ota-badge" data-ota="booking">Booking</span>
+                  <span class="ota-badge" data-ota="stays">Stays</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ai-bubble">
+            <div class="ai-bubble-header"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Alo IA — Insight de Propiedades</div>
+            <p>Tu propiedad <strong>Apt. Centro #3</strong> tiene una tasa de ocupacion del 92% este mes, la mas alta. Recomiendo subir el precio un 8% para los fines de semana. <strong>Loft Poblado</strong> tiene un huesped llegando a las 14:00 — ya le envie instrucciones de acceso.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decision UX</h4>
+      <p>Propiedades como cards visuales con imagen, estado, plataformas conectadas y metricas rapidas. La IA ofrece insights proactivos sobre ocupacion y acciones automaticas. OTA badges con colores de marca para reconocimiento inmediato. Grid de 3 columnas escala bien en desktop.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 3 — Calendario de Reservas
+       ============================================================ -->
+  <div class="flow-section" id="s3">
+    <div class="flow-section-header">
+      <div class="flow-number">3</div>
+      <div><h2>Calendario de Reservas</h2><p>Todas las reservas centralizadas con vista calendario y proteccion anti-overbooking</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/reservations</div>
+      </div>
+      <div class="screen-body" data-active="reservations">
+        <div class="main-content">
+          <div class="main-header">
+            <h2>Reservas — Abril 2026</h2>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-secondary btn-sm" style="border-color:var(--primary);color:var(--primary);"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></span> Calendario</button>
+              <button class="btn btn-secondary btn-sm"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor"/><circle cx="4" cy="12" r="1" fill="currentColor"/><circle cx="4" cy="18" r="1" fill="currentColor"/></svg></span> Lista</button>
+              <button class="btn btn-accent btn-sm"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span> Reserva Manual</button>
+            </div>
+          </div>
+
+          <div style="background:var(--bg-card);border-radius:var(--radius-lg);border:1px solid var(--border-light);padding:24px;margin-bottom:24px;">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+              <div style="display:flex;align-items:center;gap:16px;">
+                <button class="btn btn-secondary btn-sm"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"/></svg></span> Mar</button>
+                <span style="font-family:var(--font-display);font-size:18px;font-weight:700;">Abril 2026</span>
+                <button class="btn btn-secondary btn-sm">May <span class="icon icon-sm"><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg></span></button>
+              </div>
+              <div style="display:flex;gap:16px;font-size:12px;align-items:center;">
+                <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:3px;background:var(--primary);"></span> Check-in</span>
+                <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:3px;background:var(--primary-soft);border:1px solid rgba(255,56,92,0.2);"></span> Ocupado</span>
+                <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:3px;background:var(--accent);"></span> Check-out</span>
+                <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:3px;background:var(--danger);"></span> Conflicto</span>
+              </div>
+            </div>
+            <div class="calendar-grid">
+              <div class="cal-header">Lun</div><div class="cal-header">Mar</div><div class="cal-header">Mie</div><div class="cal-header">Jue</div><div class="cal-header">Vie</div><div class="cal-header">Sab</div><div class="cal-header">Dom</div>
+              <div class="cal-day empty">30</div><div class="cal-day empty">31</div><div class="cal-day">1</div><div class="cal-day">2</div><div class="cal-day">3</div><div class="cal-day booked">4</div><div class="cal-day booked">5</div>
+              <div class="cal-day booked">6</div><div class="cal-day checkout">7</div><div class="cal-day">8</div><div class="cal-day">9</div><div class="cal-day checkin">10</div><div class="cal-day booked">11</div><div class="cal-day today booked">12</div>
+              <div class="cal-day booked">13</div><div class="cal-day checkout">14</div><div class="cal-day checkin">15</div><div class="cal-day booked">16</div><div class="cal-day booked">17</div><div class="cal-day booked">18</div><div class="cal-day booked">19</div>
+              <div class="cal-day checkout">20</div><div class="cal-day">21</div><div class="cal-day">22</div><div class="cal-day checkin">23</div><div class="cal-day booked">24</div><div class="cal-day booked">25</div><div class="cal-day booked">26</div>
+              <div class="cal-day booked">27</div><div class="cal-day checkout">28</div><div class="cal-day">29</div><div class="cal-day">30</div><div class="cal-day empty">1</div><div class="cal-day empty">2</div><div class="cal-day empty">3</div>
+            </div>
+          </div>
+
+          <div style="background:var(--danger-light);border:1px solid rgba(193,53,21,0.2);border-radius:var(--radius-md);padding:16px;margin-bottom:24px;display:flex;align-items:center;gap:12px;">
+            <span class="icon icon-lg" style="color:var(--danger);flex-shrink:0;"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+            <div style="flex:1;">
+              <div style="font-weight:600;font-size:14px;color:var(--danger);">Alerta Anti-Overbooking</div>
+              <div style="font-size:13px;color:var(--text-secondary);">Se detecto un posible conflicto en <strong>Apt. Centro #3</strong> para el 23-26 Abr (reservas en Airbnb + Booking). La IA ya bloqueo las fechas en Booking.</div>
+            </div>
+            <button class="btn btn-secondary btn-sm" style="white-space:nowrap;">Revisar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decision UX</h4>
+      <p>Calendario como vista principal con codigo de color para check-in/out/ocupado. Alerta de overbooking prominente con accion automatica de la IA. Leyenda de colores inline. Navegacion mes a mes y toggle calendario/lista. Diseno que evita confusion visual con estados claros por color y forma (bordes redondeados asimetricos diferencian check-in de check-out).</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 4 — Detalle de Reserva
+       ============================================================ -->
+  <div class="flow-section" id="s4">
+    <div class="flow-section-header">
+      <div class="flow-number">4</div>
+      <div><h2>Detalle de Reserva</h2><p>Informacion completa: huesped, estado, documentos, timeline de interacciones IA y acciones</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/reservations/RSV-2026-0412</div>
+      </div>
+      <div class="screen-body" data-active="reservations">
+        <div class="main-content">
+          <div class="main-header">
+            <div style="display:flex;align-items:center;gap:12px;">
+              <button class="btn btn-secondary btn-sm"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><polyline points="15 6 9 12 15 18"/></svg></span> Volver</button>
+              <h2>Reserva RSV-2026-0412</h2>
+              <span class="badge-sm badge-checkin">Check-in en progreso</span>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div>
+              <div class="chart-placeholder">
+                <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;">
+                  <div style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--accent));display:flex;align-items:center;justify-content:center;color:#fff;font-size:24px;font-weight:700;">AL</div>
+                  <div>
+                    <h3 style="margin-bottom:2px;">Ana Lopez</h3>
+                    <p style="font-size:13px;color:var(--text-secondary);">ana.lopez@gmail.com · +57 311 456 7890</p>
+                    <p style="font-size:12px;color:var(--text-secondary);">CC: 1023456789 · Colombia</p>
+                  </div>
+                </div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                  <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;font-weight:600;">Check-in</div>
+                    <div style="font-weight:600;">12 Abr 2026 — 14:00</div>
+                  </div>
+                  <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;font-weight:600;">Check-out</div>
+                    <div style="font-weight:600;">15 Abr 2026 — 11:00</div>
+                  </div>
+                  <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;font-weight:600;">Propiedad</div>
+                    <div style="font-weight:600;">Loft Poblado</div>
+                  </div>
+                  <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;font-weight:600;">Origen</div>
+                    <div style="font-weight:600;display:flex;align-items:center;gap:6px;"><span class="ota-badge" data-ota="airbnb">Airbnb</span></div>
+                  </div>
+                  <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;font-weight:600;">Total</div>
+                    <div style="font-weight:600;color:var(--success);">$450.000 COP</div>
+                  </div>
+                  <div style="padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="font-size:11px;color:var(--text-secondary);text-transform:uppercase;font-weight:600;">Servicios Extra</div>
+                    <div style="font-weight:600;color:var(--accent);">$75.000 COP</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="chart-placeholder">
+                <h3>Documentos</h3>
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></span> Contrato de alojamiento</div>
+                    <span class="badge-sm badge-active">Firmado</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span> ID — Foto documento</div>
+                    <span class="badge-sm badge-active">Verificado</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2v11z"/><circle cx="12" cy="13" r="4"/></svg></span> Selfie de verificacion</div>
+                    <span class="badge-sm badge-active">Match OK</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></span> Registro SIRE</div>
+                    <span class="badge-sm badge-active">Enviado</span>
+                  </div>
+                  <div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                    <div style="display:flex;align-items:center;gap:8px;font-size:13px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5.25-3.5 9.74-8 11-4.5-1.26-8-5.75-8-11V6l8-4z"/><polyline points="9 12 11 14 15 10"/></svg></span> TRA Generada</div>
+                    <span class="badge-sm badge-active">Completa</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <div class="chart-placeholder" style="background:linear-gradient(135deg,var(--primary-soft),var(--accent-soft));">
+                <h3 style="display:flex;align-items:center;gap:8px;"><span class="icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Log del Agente IA — Esta Reserva</h3>
+                <div class="timeline" style="margin-top:16px;">
+                  <div class="timeline-item"><div class="timeline-dot done"></div><h4>Abr 10, 09:00</h4><p>IA envio mensaje de bienvenida y contrato a Ana</p></div>
+                  <div class="timeline-item"><div class="timeline-dot done"></div><h4>Abr 10, 10:30</h4><p>Ana firmo contrato digitalmente</p></div>
+                  <div class="timeline-item"><div class="timeline-dot done"></div><h4>Abr 10, 10:35</h4><p>IA solicito foto de documento + selfie</p></div>
+                  <div class="timeline-item"><div class="timeline-dot done"></div><h4>Abr 10, 11:15</h4><p>Identidad verificada — Match 98.7%</p></div>
+                  <div class="timeline-item"><div class="timeline-dot done"></div><h4>Abr 11, 08:00</h4><p>IA envio instrucciones de llegada y acceso</p></div>
+                  <div class="timeline-item"><div class="timeline-dot done"></div><h4>Abr 11, 14:00</h4><p>Ana pregunto sobre transporte — IA ofrecio servicio ($45K)</p></div>
+                  <div class="timeline-item"><div class="timeline-dot done"></div><h4>Abr 11, 14:05</h4><p>Ana compro servicio de transporte aeropuerto</p></div>
+                  <div class="timeline-item"><div class="timeline-dot active"></div><h4>Abr 12, 12:00</h4><p>IA envio recordatorio: "Tu check-in es en 2 horas"</p></div>
+                  <div class="timeline-item"><div class="timeline-dot pending"></div><h4>Abr 12, 14:00</h4><p>Check-in automatico programado — Codigo acceso listo</p></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decision UX</h4>
+      <p>Vista de reserva en dos columnas: informacion del huesped + documentos a la izquierda, log completo de la IA a la derecha. El timeline muestra CADA interaccion que la IA tuvo con el huesped — transparencia total para el anfitrion. Documentos con estados de verificacion claros. El admin ve todo sin haber intervenido directamente.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 5 — Check-in Automatico
+       ============================================================ -->
+  <div class="flow-section" id="s5">
+    <div class="flow-section-header">
+      <div class="flow-number">5</div>
+      <div><h2>Check-in Automatico — Vista Admin</h2><p>El admin observa el proceso que la IA ejecuta autonomamente con el huesped</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/checkin/RSV-2026-0412</div>
+      </div>
+      <div class="screen-body" data-active="reservations">
+        <div class="main-content">
+          <div class="main-header">
+            <h2>Check-in — Ana Lopez</h2>
+            <span class="badge-sm badge-checkin" style="font-size:13px;padding:8px 16px;display:inline-flex;align-items:center;gap:6px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> IA Gestionando</span>
+          </div>
+
+          <div class="stepper">
+            <div class="stepper-step done">
+              <div class="step-icon"><span class="icon icon-lg" style="color:var(--success);"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg></span></div>
+              <div class="step-label">Contrato</div>
+              <div class="step-status">Firmado</div>
+            </div>
+            <div class="stepper-step done">
+              <div class="step-icon"><span class="icon icon-lg" style="color:var(--success);"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg></span></div>
+              <div class="step-label">Identidad</div>
+              <div class="step-status">Verificada</div>
+            </div>
+            <div class="stepper-step done">
+              <div class="step-icon"><span class="icon icon-lg" style="color:var(--success);"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg></span></div>
+              <div class="step-label">SIRE</div>
+              <div class="step-status">Registrado</div>
+            </div>
+            <div class="stepper-step active">
+              <div class="step-icon"><span class="icon icon-lg" style="color:var(--primary);"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span></div>
+              <div class="step-label">Instrucciones</div>
+              <div class="step-status">Enviando...</div>
+            </div>
+            <div class="stepper-step">
+              <div class="step-icon"><span class="icon icon-lg" style="color:var(--text-tertiary);"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></span></div>
+              <div class="step-label">Acceso</div>
+              <div class="step-status">Pendiente</div>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <div class="chat-area">
+              <h3><span class="icon" style="color:var(--primary);"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Chat IA ↔ Huesped (en vivo)</h3>
+              <div class="chat-msg ai">
+                <div class="chat-sender">Alo IA</div>
+                Hola Ana! Todo listo para tu llegada. Te envio las instrucciones de acceso a tu Loft.
+              </div>
+              <div class="chat-msg ai">
+                <div class="chat-sender">Alo IA</div>
+                <span class="icon icon-sm" style="color:var(--primary-light);display:inline;vertical-align:middle;"><svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg></span> Direccion: Cra 43A #7-50, Poblado<br>
+                <span class="icon icon-sm" style="color:var(--primary-light);display:inline;vertical-align:middle;"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span> Codigo de acceso: <strong>4829</strong><br>
+                <span class="icon icon-sm" style="color:var(--primary-light);display:inline;vertical-align:middle;"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg></span> Piso 12, Apt 1204<br>
+                <span class="icon icon-sm" style="color:var(--primary-light);display:inline;vertical-align:middle;"><svg viewBox="0 0 24 24"><path d="M2 8.82a15 15 0 0120 0"/><path d="M5 12.86a10 10 0 0114 0"/><path d="M8.5 16.9a5 5 0 017 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg></span> WiFi: LoftPoblado / Pass: bienvenida2026
+              </div>
+              <div class="chat-msg guest">
+                Perfecto! Ya estoy en camino, llego en 30 min
+              </div>
+              <div class="chat-msg ai">
+                <div class="chat-sender">Alo IA</div>
+                Genial! Tu transporte te espera en el aeropuerto. El conductor se llama Miguel, placa XYZ-123. Necesitas algo mas?
+              </div>
+            </div>
+
+            <div>
+              <div class="chart-placeholder">
+                <h3>Estado del Check-in</h3>
+                <div style="text-align:center;padding:24px;">
+                  <div class="progress-ring">
+                    <div class="progress-ring-inner">80%</div>
+                  </div>
+                  <div style="font-family:var(--font-display);font-size:18px;font-weight:600;">Casi completo</div>
+                  <div style="font-size:13px;color:var(--text-secondary);">Falta: confirmacion de llegada</div>
+                </div>
+              </div>
+              <div class="ai-bubble">
+                <div class="ai-bubble-header"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> No necesitas intervenir</div>
+                <p>Todo va bien. El check-in se completara automaticamente cuando Ana llegue y confirme. Solo recibiras una notificacion de confirmacion.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decision UX</h4>
+      <p>Stepper visual horizontal muestra el progreso del check-in en tiempo real. Chat IA ↔ huesped visible para el admin (solo lectura, fondo oscuro para diferenciar del panel). Indicador de progreso circular. Mensaje explicito "No necesitas intervenir" refuerza la propuesta de valor de la IA. El admin observa, no participa.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 6 — Servicios Extra (Monetizacion)
+       ============================================================ -->
+  <div class="flow-section" id="s6">
+    <div class="flow-section-header">
+      <div class="flow-number">6</div>
+      <div><h2>Servicios Extra — Monetizacion</h2><p>Configurar y vender servicios adicionales que la IA sugiere automaticamente a los huespedes</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/services</div>
+      </div>
+      <div class="screen-body" data-active="services">
+        <div class="main-content">
+          <div class="main-header">
+            <h2>Servicios Extra</h2>
+            <button class="btn btn-accent"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span> Nuevo Servicio</button>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px;">
+            <div class="stat-card" style="border-top:3px solid var(--success);">
+              <div class="stat-label">Ingresos Extra Este Mes</div>
+              <div class="stat-value" style="color:var(--success);">$2.1M</div>
+              <div class="stat-change up"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span> 28% vs mes pasado</div>
+            </div>
+            <div class="stat-card" style="border-top:3px solid var(--primary);">
+              <div class="stat-label">Servicios Vendidos por IA</div>
+              <div class="stat-value" style="color:var(--primary);">87%</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">del total vendido</div>
+            </div>
+            <div class="stat-card" style="border-top:3px solid var(--accent);">
+              <div class="stat-label">Servicio Mas Popular</div>
+              <div class="stat-value" style="font-size:22px;">Transporte</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">42 ventas este mes</div>
+            </div>
+          </div>
+
+          <div class="three-col">
+            <div class="service-card">
+              <div style="margin-bottom:12px;"><span class="icon icon-2xl" style="color:var(--primary);"><svg viewBox="0 0 24 24"><path d="M5 17h14M5 17a2 2 0 01-2-2v-3a1 1 0 011-1h1l2-4h10l2 4h1a1 1 0 011 1v3a2 2 0 01-2 2M5 17a2 2 0 002 2h1a2 2 0 002-2M14 17a2 2 0 002 2h1a2 2 0 002-2"/></svg></span></div>
+              <h4 style="font-size:15px;font-weight:600;margin-bottom:4px;">Transporte Aeropuerto</h4>
+              <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">Recogida en aeropuerto con conductor privado</p>
+              <div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--success);margin-bottom:8px;">$45.000 <span style="font-size:13px;color:var(--text-secondary);font-weight:400;">COP</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="badge-sm badge-active">Activo</span>
+                <span style="font-size:11px;color:var(--primary);display:flex;align-items:center;gap:4px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> IA sugiere automaticamente</span>
+              </div>
+            </div>
+            <div class="service-card">
+              <div style="margin-bottom:12px;"><span class="icon icon-2xl" style="color:var(--accent);"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span></div>
+              <h4 style="font-size:15px;font-weight:600;margin-bottom:4px;">Limpieza Adicional</h4>
+              <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">Limpieza extra durante la estancia</p>
+              <div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--success);margin-bottom:8px;">$60.000 <span style="font-size:13px;color:var(--text-secondary);font-weight:400;">COP</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="badge-sm badge-active">Activo</span>
+                <span style="font-size:11px;color:var(--primary);display:flex;align-items:center;gap:4px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> IA sugiere dia 3+</span>
+              </div>
+            </div>
+            <div class="service-card">
+              <div style="margin-bottom:12px;"><span class="icon icon-2xl" style="color:var(--warning);"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span></div>
+              <h4 style="font-size:15px;font-weight:600;margin-bottom:4px;">Early Check-in</h4>
+              <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">Acceso desde las 10:00 AM</p>
+              <div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--success);margin-bottom:8px;">$80.000 <span style="font-size:13px;color:var(--text-secondary);font-weight:400;">COP</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="badge-sm badge-active">Activo</span>
+                <span style="font-size:11px;color:var(--primary);display:flex;align-items:center;gap:4px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> IA sugiere pre-llegada</span>
+              </div>
+            </div>
+            <div class="service-card">
+              <div style="margin-bottom:12px;"><span class="icon icon-2xl" style="color:var(--info);"><svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg></span></div>
+              <h4 style="font-size:15px;font-weight:600;margin-bottom:4px;">Late Check-out</h4>
+              <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">Salida hasta las 16:00 PM</p>
+              <div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--success);margin-bottom:8px;">$70.000 <span style="font-size:13px;color:var(--text-secondary);font-weight:400;">COP</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="badge-sm badge-active">Activo</span>
+                <span style="font-size:11px;color:var(--primary);display:flex;align-items:center;gap:4px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> IA sugiere ultima noche</span>
+              </div>
+            </div>
+            <div class="service-card">
+              <div style="margin-bottom:12px;"><span class="icon icon-2xl" style="color:var(--success);"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg></span></div>
+              <h4 style="font-size:15px;font-weight:600;margin-bottom:4px;">Kit Desayuno</h4>
+              <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">Desayuno artesanal entregado a la puerta</p>
+              <div style="font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--success);margin-bottom:8px;">$25.000 <span style="font-size:13px;color:var(--text-secondary);font-weight:400;">COP</span></div>
+              <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span class="badge-sm badge-pending">Pendiente</span>
+                <button class="btn btn-sm btn-secondary">Activar</button>
+              </div>
+            </div>
+            <div class="service-card" style="border:2px dashed var(--border-default);display:flex;flex-direction:column;align-items:center;justify-content:center;">
+              <span class="icon icon-2xl" style="color:var(--text-tertiary);"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+              <h4 style="font-size:14px;color:var(--text-secondary);margin-top:8px;">Agregar Servicio</h4>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decision UX</h4>
+      <p>Servicios como cards producto con precio, estado y estrategia de la IA visible ("sugiere dia 3+", "sugiere pre-llegada"). KPIs destacan que el 87% de ventas las hace la IA. Card vacia con "+" invita a crear nuevos servicios. Monetizacion pasiva para el anfitrion.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 7 — Panel del Agente IA
+       ============================================================ -->
+  <div class="flow-section" id="s7">
+    <div class="flow-section-header">
+      <div class="flow-number">7</div>
+      <div><h2>Panel del Agente IA</h2><p>Vista de todas las conversaciones activas, rendimiento y configuracion del asistente</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/ai-agent</div>
+      </div>
+      <div class="screen-body" data-active="ai">
+        <div class="main-content">
+          <div class="main-header">
+            <h2 style="display:flex;align-items:center;gap:8px;"><span class="icon icon-lg" style="color:var(--primary);"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Agente Alo</h2>
+            <div style="display:flex;gap:8px;align-items:center;">
+              <span class="badge-sm badge-active" style="font-size:13px;padding:8px 16px;">En linea — 3 conversaciones activas</span>
+              <button class="btn btn-primary btn-sm"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span> Configurar IA</button>
+            </div>
+          </div>
+
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px;">
+            <div class="stat-card" style="text-align:center;">
+              <div style="font-family:var(--font-display);font-size:36px;font-weight:700;color:var(--primary);">156</div>
+              <div style="font-size:12px;color:var(--text-secondary);">Conversaciones este mes</div>
+            </div>
+            <div class="stat-card" style="text-align:center;">
+              <div style="font-family:var(--font-display);font-size:36px;font-weight:700;color:var(--success);">98.7%</div>
+              <div style="font-size:12px;color:var(--text-secondary);">Resueltas sin admin</div>
+            </div>
+            <div class="stat-card" style="text-align:center;">
+              <div style="font-family:var(--font-display);font-size:36px;font-weight:700;color:var(--accent);">4.9</div>
+              <div style="font-size:12px;color:var(--text-secondary);">Satisfaccion huespedes</div>
+            </div>
+            <div class="stat-card" style="text-align:center;">
+              <div style="font-family:var(--font-display);font-size:36px;font-weight:700;color:var(--accent);">$2.1M</div>
+              <div style="font-size:12px;color:var(--text-secondary);">Vendido por IA</div>
+            </div>
+          </div>
+
+          <div class="table-wrapper">
+            <div class="table-header">
+              <h3>Conversaciones Activas</h3>
+              <div style="display:flex;gap:8px;">
+                <button class="btn btn-secondary btn-sm" style="border-color:var(--success);color:var(--success);">Resueltas</button>
+                <button class="btn btn-secondary btn-sm" style="border-color:var(--danger);color:var(--danger);">Escaladas</button>
+              </div>
+            </div>
+            <table>
+              <thead><tr><th>Huesped</th><th>Propiedad</th><th>Tema</th><th>Estado</th><th>Acciones</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td><div style="font-weight:600;">Ana Lopez</div></td>
+                  <td style="font-size:13px;">Loft Poblado</td>
+                  <td style="font-size:13px;">Instrucciones de check-in</td>
+                  <td><span class="badge-sm" style="background:var(--ota-stays-bg);color:var(--ota-stays);display:inline-flex;align-items:center;gap:4px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> IA respondiendo</span></td>
+                  <td><button class="btn btn-secondary btn-sm">Ver chat</button></td>
+                </tr>
+                <tr>
+                  <td><div style="font-weight:600;">John Smith</div></td>
+                  <td style="font-size:13px;">Casa Laureles</td>
+                  <td style="font-size:13px;">WiFi no funciona</td>
+                  <td><span class="badge-sm" style="background:var(--danger-light);color:var(--danger);display:inline-flex;align-items:center;gap:4px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span> Escalado a ti</span></td>
+                  <td><button class="btn btn-primary btn-sm">Responder</button></td>
+                </tr>
+                <tr>
+                  <td><div style="font-weight:600;">Pedro Ruiz</div></td>
+                  <td style="font-size:13px;">Studio Centro</td>
+                  <td style="font-size:13px;">Late checkout consulta</td>
+                  <td><span class="badge-sm" style="background:var(--ota-stays-bg);color:var(--ota-stays);display:inline-flex;align-items:center;gap:4px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg></span> IA vendiendo</span></td>
+                  <td><button class="btn btn-secondary btn-sm">Ver chat</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="ai-bubble" style="margin-top:24px;">
+            <div class="ai-bubble-header"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Resumen Alo IA</div>
+            <p>De 156 conversaciones este mes, solo <strong>2 necesitaron tu atencion</strong> (1.3%). Temas principales: instrucciones de acceso (34%), servicios extra (28%), informacion local (22%), problemas tecnicos (16%). He generado $2.1M en servicios adicionales para ti.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decision UX</h4>
+      <p>Panel dedicado de IA con metricas de autonomia prominentes. Tabla de conversaciones con estados claros: "IA respondiendo" (no necesita accion), "Escalado a ti" (requiere atencion). Solo 1.3% escalado demuestra el valor. Filtros por estado para priorizar. Resumen de IA al final como coach de rendimiento.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 8 — SIRE / TRA — Cumplimiento Legal
+       ============================================================ -->
+  <div class="flow-section" id="s8">
+    <div class="flow-section-header">
+      <div class="flow-number">8</div>
+      <div><h2>SIRE / TRA — Cumplimiento Legal</h2><p>Registro automatico de huespedes ante Migracion Colombia y generacion de TRA</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/legal</div>
+      </div>
+      <div class="screen-body" data-active="legal">
+        <div class="main-content">
+          <div class="main-header">
+            <h2>Cumplimiento Legal</h2>
+            <button class="btn btn-primary"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span> Configurar datos SIRE</button>
+          </div>
+
+          <div style="background:rgba(0,138,5,0.05);border:1px solid rgba(0,138,5,0.2);border-radius:var(--radius-md);padding:16px;margin-bottom:24px;display:flex;align-items:center;gap:12px;">
+            <span class="icon icon-lg" style="color:var(--success);flex-shrink:0;"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg></span>
+            <div>
+              <div style="font-weight:600;font-size:14px;color:var(--success);">Todo al dia</div>
+              <div style="font-size:13px;color:var(--text-secondary);">Todos los registros SIRE de este mes estan enviados. Las TRA se generan automaticamente con cada check-in.</div>
+            </div>
+          </div>
+
+          <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);">
+            <div class="stat-card">
+              <div class="stat-label">Registros SIRE Este Mes</div>
+              <div class="stat-value" style="color:var(--success);">24</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">100% automaticos</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">TRA Generadas</div>
+              <div class="stat-value" style="color:var(--primary);">24</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Sincronizadas con Migracion</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Huespedes Extranjeros</div>
+              <div class="stat-value">8</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Registrados correctamente</div>
+            </div>
+          </div>
+
+          <div class="table-wrapper" style="margin-bottom:24px;">
+            <div class="table-header">
+              <h3>Ultimos Registros</h3>
+              <button class="btn btn-secondary btn-sm"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></span> Exportar</button>
+            </div>
+            <table>
+              <thead><tr><th>Huesped</th><th>Nacionalidad</th><th>Propiedad</th><th>SIRE</th><th>TRA</th><th>Fecha</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight:600;">Ana Lopez</td>
+                  <td>Colombia</td>
+                  <td>Loft Poblado</td>
+                  <td><span class="badge-sm badge-active">Enviado</span></td>
+                  <td><span class="badge-sm badge-active">Generada</span></td>
+                  <td style="font-size:13px;">12 Abr 2026</td>
+                </tr>
+                <tr>
+                  <td style="font-weight:600;">John Smith</td>
+                  <td>Estados Unidos</td>
+                  <td>Casa Laureles</td>
+                  <td><span class="badge-sm badge-active">Enviado</span></td>
+                  <td><span class="badge-sm badge-active">Generada</span></td>
+                  <td style="font-size:13px;">10 Abr 2026</td>
+                </tr>
+                <tr>
+                  <td style="font-weight:600;">Maria Garcia</td>
+                  <td>Espana</td>
+                  <td>Apt. Centro #3</td>
+                  <td><span class="badge-sm badge-active">Enviado</span></td>
+                  <td><span class="badge-sm badge-active">Generada</span></td>
+                  <td style="font-size:13px;">8 Abr 2026</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="ai-bubble">
+            <div class="ai-bubble-header"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Alo IA — Cumplimiento Legal</div>
+            <p>Cada vez que un huesped completa el check-in, yo registro automaticamente sus datos en SIRE y genero la TRA. No necesitas hacer nada. Si hay un error en el envio, lo reintento 3 veces antes de notificarte. Este mes: <strong>0 errores, 24 registros exitosos</strong>.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decision UX</h4>
+      <p>Banner verde "Todo al dia" como estado principal — tranquilidad para el admin. Metricas simples y tabla de ultimos registros. Explicacion de la IA sobre el proceso automatico con tasa de exito. El admin configura una vez sus datos SIRE y no vuelve a preocuparse.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div style="max-width:1400px;margin:0 auto;">
+    <p>AloHost UX Flows v1.0 — <a href="design-system.html">Design System</a> · <a href="superadmin.html">Super Admin</a> · <a href="admin.html">Admin</a> · <a href="guest-mobile.html">Huesped</a> · <a href="admin-app.html">App Admin</a> · <a href="flowmap.html">Mapa de Flujos</a></p>
+  </div>
+</div>
+
+<script>
+function scrollToScreen(id, el) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.step-pill').forEach(function(p) { p.classList.remove('active'); });
+  el.classList.add('active');
+}
+
+(function renderSidebars() {
+  var navItems = [
+    { id: 'dashboard', label: 'Dashboard', svg: '<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="4" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/>' },
+    { id: 'properties', label: 'Propiedades', svg: '<path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/>' },
+    { id: 'reservations', label: 'Reservas', svg: '<rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/>' },
+    { id: 'guests', label: 'Huespedes', svg: '<circle cx="12" cy="8" r="4"/><path d="M20 21c0-4.418-3.582-7-8-7s-8 2.582-8 7"/>' },
+    { id: 'divider' },
+    { id: 'ai', label: 'Agente IA', svg: '<path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/>' },
+    { id: 'services', label: 'Servicios Extra', svg: '<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>' },
+    { id: 'documents', label: 'Documentos', svg: '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>' },
+    { id: 'legal', label: 'SIRE / TRA', svg: '<path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/>' },
+    { id: 'divider' },
+    { id: 'integrations', label: 'Integraciones', svg: '<path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>' },
+    { id: 'settings', label: 'Configuracion', svg: '<circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>' }
+  ];
+
+  document.querySelectorAll('.screen-body[data-active]').forEach(function(body) {
+    var active = body.getAttribute('data-active');
+    var html = '<div class="sidebar"><div class="sidebar-logo">Alo<span>Host</span></div>';
+    navItems.forEach(function(item) {
+      if (item.id === 'divider') {
+        html += '<div class="side-divider"></div>';
+      } else {
+        var cls = item.id === active ? ' active' : '';
+        html += '<div class="side-item' + cls + '"><span class="icon"><svg viewBox="0 0 24 24">' + item.svg + '</svg></span> ' + item.label + '</div>';
+      }
+    });
+    html += '</div>';
+    body.insertAdjacentHTML('afterbegin', html);
+  });
+})();
+</script>
+</body>
+</html>

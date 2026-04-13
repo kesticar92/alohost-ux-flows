@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AloHost — Super Admin UX Flow</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="icons.css">
+<script src="theme.js"></script>
+<script src="icons.js"></script>
+<style>
+
+/* Flow Header Hero */
+.flow-header {
+  background: linear-gradient(135deg, #222 0%, #111 50%, var(--primary-dark) 100%);
+  padding: 60px 40px 40px;
+  position: relative; overflow: hidden;
+}
+.flow-header::before {
+  content: ''; position: absolute; top: -50%; right: -10%;
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(255,56,92,0.25), transparent 70%); border-radius: 50%;
+}
+.flow-header-content { position: relative; z-index: 1; max-width: 1400px; margin: 0 auto; }
+.flow-badge {
+  display: inline-block; background: rgba(255,56,92,0.2); border: 1px solid rgba(255,56,92,0.3);
+  color: var(--primary-light); padding: 6px 16px; border-radius: var(--radius-full);
+  font-size: 12px; font-weight: 600; margin-bottom: 16px;
+}
+.flow-header h1 {
+  font-family: var(--font-display); font-size: 42px; font-weight: 800;
+  color: #fff; margin-bottom: 8px; letter-spacing: -0.03em;
+}
+.flow-header p { font-size: 18px; color: rgba(255,255,255,0.55); max-width: 600px; }
+
+/* Sidebar Icon Override for SVG */
+.side-icon {
+  width: 20px; height: 20px;
+  display: inline-flex; align-items: center; justify-content: center;
+  flex-shrink: 0; font-size: 0;
+}
+.side-icon svg {
+  width: 100%; height: 100%;
+  stroke: currentColor; fill: none;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* Chart Bars */
+.chart-bars {
+  display: flex; align-items: flex-end; gap: 12px; height: 200px; padding-top: 20px;
+}
+.chart-bar {
+  flex: 1; border-radius: 8px 8px 0 0; transition: var(--transition);
+  position: relative; cursor: pointer;
+}
+.chart-bar:hover { opacity: 0.8; }
+.chart-bar-label {
+  position: absolute; bottom: -24px; left: 50%; transform: translateX(-50%);
+  font-size: 11px; color: var(--text-secondary); white-space: nowrap;
+}
+.chart-bar-value {
+  position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+  font-size: 11px; font-weight: 600; color: var(--text-primary); white-space: nowrap;
+}
+
+/* User Cell */
+.user-cell { display: flex; align-items: center; gap: 12px; }
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 600; color: #fff;
+}
+
+/* Settings Grid */
+.settings-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.setting-card {
+  background: var(--bg-card); border-radius: var(--radius-lg);
+  padding: 24px; border: 1px solid var(--border-light); transition: var(--transition);
+  cursor: pointer;
+}
+.setting-card:hover { border-color: var(--primary); box-shadow: var(--shadow-md); }
+.setting-icon {
+  width: 36px; height: 36px; border-radius: var(--radius-md);
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 12px;
+}
+.setting-icon svg {
+  width: 22px; height: 22px; stroke: currentColor; fill: none;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
+.setting-card h4 { font-size: 15px; font-weight: 600; margin-bottom: 4px; }
+.setting-card p { font-size: 12px; color: var(--text-secondary); }
+
+/* Toggle */
+.toggle-wrapper { display: flex; align-items: center; gap: 12px; }
+.toggle {
+  width: 44px; height: 24px; background: var(--border-default);
+  border-radius: var(--radius-full); position: relative; cursor: pointer;
+  transition: var(--transition); flex-shrink: 0;
+}
+.toggle.active { background: var(--primary); }
+.toggle::after {
+  content: ''; position: absolute; top: 2px; left: 2px;
+  width: 20px; height: 20px; background: #fff;
+  border-radius: 50%; transition: var(--transition);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+.toggle.active::after { left: 22px; }
+
+/* Form Grid */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { margin-bottom: 16px; }
+
+/* Alert Row */
+.alert-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border-radius: var(--radius-md);
+}
+.alert-row .alert-icon {
+  width: 20px; height: 20px; flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+}
+.alert-row .alert-icon svg {
+  width: 100%; height: 100%; stroke-width: 1.5;
+  stroke-linecap: round; stroke-linejoin: round; fill: none;
+}
+
+/* City Circle */
+.city-circle {
+  width: 72px; height: 72px; border-radius: 50%;
+  margin: 0 auto 8px; display: flex; align-items: center; justify-content: center;
+}
+.city-circle svg {
+  width: 28px; height: 28px; stroke: #fff; fill: none;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* Inline small icon */
+.icon-inline {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 14px; height: 14px; vertical-align: -1px;
+}
+.icon-inline svg {
+  width: 100%; height: 100%; fill: none; stroke: currentColor;
+  stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+}
+
+/* Rule Row */
+.rule-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px; background: var(--bg-secondary); border-radius: var(--radius-md);
+}
+.rule-row-text h5 { font-weight: 600; font-size: 14px; margin-bottom: 2px; }
+.rule-row-text p { font-size: 12px; color: var(--text-secondary); }
+
+</style>
+</head>
+<body>
+
+<!-- Top Navigation -->
+<nav class="top-nav">
+  <div class="top-nav-left">
+    <a href="design-system.html" class="logo">Alo<span>Host</span></a>
+    <div class="nav-links">
+      <a href="design-system.html" class="nav-link">Design System</a>
+      <a href="superadmin.html" class="nav-link active">Super Admin</a>
+      <a href="admin.html" class="nav-link">Admin</a>
+      <a href="guest-mobile.html" class="nav-link">Hu&eacute;sped</a>
+      <a href="admin-app.html" class="nav-link">App Admin</a>
+      <a href="flowmap.html" class="nav-link">Mapa de Flujos</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Flow Header -->
+<div class="flow-header">
+  <div class="flow-header-content">
+    <div class="flow-badge">PLATAFORMA 1 DE 4</div>
+    <h1>Super Admin &mdash; Web</h1>
+    <p>Control total de la plataforma AloHost. Gesti&oacute;n de cuentas, suscripciones, cumplimiento legal y anal&iacute;tica global.</p>
+  </div>
+</div>
+
+<div class="screens-container">
+
+  <!-- Steps Navigation -->
+  <div class="steps-row">
+    <div class="step-pill active" onclick="scrollToSection('s1')">1. Login</div>
+    <div class="step-pill" onclick="scrollToSection('s2')">2. Dashboard</div>
+    <div class="step-pill" onclick="scrollToSection('s3')">3. Gesti&oacute;n Cuentas</div>
+    <div class="step-pill" onclick="scrollToSection('s4')">4. SIRE/TRA</div>
+    <div class="step-pill" onclick="scrollToSection('s5')">5. Suscripciones</div>
+    <div class="step-pill" onclick="scrollToSection('s6')">6. Anal&iacute;tica</div>
+    <div class="step-pill" onclick="scrollToSection('s7')">7. Config IA</div>
+  </div>
+
+  <!-- ===================== SCREEN 1: LOGIN ===================== -->
+  <div class="flow-section" id="s1">
+    <div class="flow-section-header">
+      <div class="flow-number">1</div>
+      <div>
+        <h2>Login Super Admin</h2>
+        <p>Acceso seguro con 2FA obligatorio para administradores de plataforma</p>
+      </div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div>
+        <div class="screen-dot yellow"></div>
+        <div class="screen-dot green"></div>
+        <div class="screen-url">https://admin.alohost.co/login</div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:center;min-height:560px;background:linear-gradient(135deg,#1a1a1a,#111);">
+        <div style="width:400px;text-align:center;">
+          <div style="font-family:var(--font-display);font-size:36px;font-weight:800;color:#fff;margin-bottom:8px;">Alo<span style="color:var(--primary-light);">Host</span></div>
+          <p style="color:rgba(255,255,255,0.45);font-size:14px;margin-bottom:40px;">Panel de Super Administraci&oacute;n</p>
+          <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-xl);padding:40px;">
+            <div style="margin-bottom:16px;">
+              <label style="display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:6px;text-align:left;">Email corporativo</label>
+              <input type="email" style="width:100%;padding:12px 14px;border:1.5px solid rgba(255,255,255,0.12);border-radius:var(--radius-md);font-size:13px;font-family:var(--font-primary);background:rgba(255,255,255,0.06);color:#fff;" placeholder="admin@alohost.co">
+            </div>
+            <div style="margin-bottom:16px;">
+              <label style="display:block;font-size:12px;font-weight:600;color:rgba(255,255,255,0.5);margin-bottom:6px;text-align:left;">Contrase&ntilde;a</label>
+              <input type="password" style="width:100%;padding:12px 14px;border:1.5px solid rgba(255,255,255,0.12);border-radius:var(--radius-md);font-size:13px;font-family:var(--font-primary);background:rgba(255,255,255,0.06);color:#fff;" placeholder="••••••••">
+            </div>
+            <button class="btn btn-primary" style="width:100%;justify-content:center;padding:14px;font-size:15px;margin-top:8px;">Iniciar Sesi&oacute;n</button>
+            <div style="display:flex;align-items:center;justify-content:center;gap:6px;margin-top:16px;">
+              <span style="color:rgba(255,255,255,0.35);display:inline-flex;width:16px;height:16px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l8 4v6c0 5.25-3.5 9.74-8 11-4.5-1.26-8-5.75-8-11V6l8-4z"/></svg>
+              </span>
+              <span style="color:rgba(255,255,255,0.35);font-size:12px;">Se enviar&aacute; c&oacute;digo 2FA a tu dispositivo</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Login minimalista con fondo oscuro premium. 2FA obligatorio refuerza seguridad sin friccionar al perfil t&eacute;cnico del super admin. El branding es sutil pero presente.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ===================== SCREEN 2: DASHBOARD ===================== -->
+  <div class="flow-section" id="s2">
+    <div class="flow-section-header">
+      <div class="flow-number">2</div>
+      <div>
+        <h2>Dashboard Global</h2>
+        <p>Vista panor&aacute;mica de toda la plataforma &mdash; m&eacute;tricas, alertas y actividad en tiempo real</p>
+      </div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div>
+        <div class="screen-dot yellow"></div>
+        <div class="screen-dot green"></div>
+        <div class="screen-url">https://admin.alohost.co/dashboard</div>
+      </div>
+      <div class="screen-body">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-logo">Alo<span>Host</span> <span class="sidebar-badge">SUPER</span></div>
+          <div class="side-item active"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="4" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/></svg></span> Dashboard</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3.5"/><path d="M17 21c0-3.866-3.134-6-8-6s-8 2.134-8 6"/><circle cx="18" cy="8" r="2.5"/><path d="M22 21c0-2.761-1.791-4.5-4-4.5"/></svg></span> Cuentas Admin</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg></span> Propiedades</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg></span> Reservas Global</div>
+          <div class="side-divider"></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></span> SIRE / TRA</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Suscripciones</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg></span> Anal&iacute;tica</div>
+          <div class="side-divider"></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Config IA</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg></span> Integraciones</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span> Configuraci&oacute;n</div>
+        </div>
+        <!-- Main -->
+        <div class="main-content">
+          <div class="main-header">
+            <h2>Dashboard</h2>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span style="font-size:13px;color:var(--text-secondary);">&Uacute;ltima actualizaci&oacute;n: hace 2 min</span>
+              <button class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:6px;">
+                <span class="icon-inline"><svg viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115.36-6.36L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15.36 6.36L3 16"/></svg></span>
+                Refrescar
+              </button>
+            </div>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Admins Activos</div>
+              <div class="stat-value">1,247</div>
+              <div class="stat-change up">
+                <span class="icon-inline"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+                12% este mes
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Propiedades Totales</div>
+              <div class="stat-value">3,891</div>
+              <div class="stat-change up">
+                <span class="icon-inline"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+                8% este mes
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Reservas Hoy</div>
+              <div class="stat-value">342</div>
+              <div class="stat-change up">
+                <span class="icon-inline"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+                23% vs ayer
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">IA &mdash; Interacciones / d&iacute;a</div>
+              <div class="stat-value" style="color:var(--primary);">8,450</div>
+              <div class="stat-change up">
+                <span class="icon-inline"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+                34% esta semana
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts + Alerts -->
+          <div class="two-col">
+            <div class="chart-placeholder">
+              <h3>Reservas por Mes</h3>
+              <div class="chart-bars">
+                <div class="chart-bar" style="height:45%;background:linear-gradient(to top,var(--primary),var(--primary-light));"><span class="chart-bar-value">1.2K</span><span class="chart-bar-label">Ene</span></div>
+                <div class="chart-bar" style="height:55%;background:linear-gradient(to top,var(--primary),var(--primary-light));"><span class="chart-bar-value">1.5K</span><span class="chart-bar-label">Feb</span></div>
+                <div class="chart-bar" style="height:60%;background:linear-gradient(to top,var(--primary),var(--primary-light));"><span class="chart-bar-value">1.8K</span><span class="chart-bar-label">Mar</span></div>
+                <div class="chart-bar" style="height:80%;background:linear-gradient(to top,var(--primary),var(--primary-light));"><span class="chart-bar-value">2.4K</span><span class="chart-bar-label">Abr</span></div>
+                <div class="chart-bar" style="height:70%;background:linear-gradient(to top,var(--primary),var(--primary-light));"><span class="chart-bar-value">2.1K</span><span class="chart-bar-label">May</span></div>
+                <div class="chart-bar" style="height:95%;background:linear-gradient(to top,var(--accent),var(--accent-light));"><span class="chart-bar-value">3.2K</span><span class="chart-bar-label">Jun</span></div>
+              </div>
+            </div>
+            <div class="chart-placeholder">
+              <h3>Alertas del Sistema</h3>
+              <div style="display:flex;flex-direction:column;gap:12px;">
+                <!-- Alert: Danger -->
+                <div class="alert-row" style="background:rgba(193,53,21,0.06);border-left:3px solid var(--danger);">
+                  <span class="alert-icon" style="color:var(--danger);"><svg viewBox="0 0 24 24" stroke="currentColor"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></span>
+                  <div>
+                    <div style="font-size:13px;font-weight:600;">3 registros SIRE fallidos</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">Hace 15 min &mdash; Requiere revisi&oacute;n</div>
+                  </div>
+                </div>
+                <!-- Alert: Warning -->
+                <div class="alert-row" style="background:rgba(224,121,18,0.06);border-left:3px solid var(--warning);">
+                  <span class="alert-icon" style="color:var(--warning);"><svg viewBox="0 0 24 24" stroke="currentColor"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+                  <div>
+                    <div style="font-size:13px;font-weight:600;">2 suscripciones por vencer</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">En las pr&oacute;ximas 48 horas</div>
+                  </div>
+                </div>
+                <!-- Alert: AI -->
+                <div class="alert-row" style="background:var(--primary-soft);border-left:3px solid var(--primary);">
+                  <span class="alert-icon" style="color:var(--primary);"><svg viewBox="0 0 24 24" stroke="currentColor"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span>
+                  <div>
+                    <div style="font-size:13px;font-weight:600;">IA: 12 consultas escaladas al admin</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">Hoy &mdash; 98.5% resueltas autom&aacute;ticamente</div>
+                  </div>
+                </div>
+                <!-- Alert: Success -->
+                <div class="alert-row" style="background:rgba(0,138,5,0.06);border-left:3px solid var(--success);">
+                  <span class="alert-icon" style="color:var(--success);"><svg viewBox="0 0 24 24" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg></span>
+                  <div>
+                    <div style="font-size:13px;font-weight:600;">Integraci&oacute;n Stays sincronizada</div>
+                    <div style="font-size:11px;color:var(--text-secondary);">Hace 5 min &mdash; Todo OK</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Dashboard con KPIs accionables arriba, gr&aacute;ficas temporales y alertas en tiempo real abajo. La m&eacute;trica de IA es prominente para reforzar el valor de la automatizaci&oacute;n. Las alertas usan c&oacute;digo de color + &iacute;cono SVG para escaneo r&aacute;pido.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ===================== SCREEN 3: ACCOUNT MANAGEMENT ===================== -->
+  <div class="flow-section" id="s3">
+    <div class="flow-section-header">
+      <div class="flow-number">3</div>
+      <div>
+        <h2>Gesti&oacute;n de Cuentas Admin</h2>
+        <p>CRUD de administradores/anfitriones con estados, suscripciones y propiedades vinculadas</p>
+      </div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div>
+        <div class="screen-dot yellow"></div>
+        <div class="screen-dot green"></div>
+        <div class="screen-url">https://admin.alohost.co/accounts</div>
+      </div>
+      <div class="screen-body">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-logo">Alo<span>Host</span> <span class="sidebar-badge">SUPER</span></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="4" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/></svg></span> Dashboard</div>
+          <div class="side-item active"><span class="side-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3.5"/><path d="M17 21c0-3.866-3.134-6-8-6s-8 2.134-8 6"/><circle cx="18" cy="8" r="2.5"/><path d="M22 21c0-2.761-1.791-4.5-4-4.5"/></svg></span> Cuentas Admin</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg></span> Propiedades</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg></span> Reservas Global</div>
+          <div class="side-divider"></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></span> SIRE / TRA</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Suscripciones</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg></span> Anal&iacute;tica</div>
+          <div class="side-divider"></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Config IA</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span> Configuraci&oacute;n</div>
+        </div>
+        <!-- Main -->
+        <div class="main-content">
+          <div class="main-header">
+            <h2>Cuentas de Administradores</h2>
+            <div style="display:flex;gap:8px;">
+              <div style="position:relative;">
+                <span style="position:absolute;left:12px;top:50%;transform:translateY(-50%);display:inline-flex;width:16px;height:16px;color:var(--text-tertiary);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+                </span>
+                <input class="form-input" style="width:260px;padding-left:36px;" placeholder="Buscar por nombre, email o ID...">
+              </div>
+              <button class="btn btn-primary" style="display:inline-flex;align-items:center;gap:6px;">
+                <span class="icon-inline" style="width:16px;height:16px;"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+                Nuevo Admin
+              </button>
+            </div>
+          </div>
+          <div class="table-wrapper">
+            <div class="table-header">
+              <h3>1,247 administradores</h3>
+              <div style="display:flex;gap:8px;">
+                <button class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:6px;">
+                  <span class="icon-inline"><svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg></span>
+                  Filtrar
+                </button>
+                <button class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:6px;">
+                  <span class="icon-inline"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></span>
+                  Exportar
+                </button>
+              </div>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Administrador</th>
+                  <th>Plan</th>
+                  <th>Propiedades</th>
+                  <th>Reservas/mes</th>
+                  <th>Estado</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar" style="background:var(--primary);">CM</div>
+                      <div>
+                        <div style="font-weight:600;font-size:14px;">Carlos Mej&iacute;a</div>
+                        <div style="font-size:12px;color:var(--text-secondary);">carlos@hosting.co</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge-sm" style="background:var(--primary-soft);color:var(--primary);">Pro</span></td>
+                  <td>12</td>
+                  <td>89</td>
+                  <td><span class="badge-sm badge-active">Activo</span></td>
+                  <td><button class="btn btn-secondary btn-sm">Ver</button></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar" style="background:var(--accent);">AL</div>
+                      <div>
+                        <div style="font-weight:600;font-size:14px;">Ana L&oacute;pez</div>
+                        <div style="font-size:12px;color:var(--text-secondary);">ana@properties.co</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge-sm" style="background:rgba(224,121,18,0.08);color:var(--warning);">Starter</span></td>
+                  <td>3</td>
+                  <td>24</td>
+                  <td><span class="badge-sm badge-active">Activo</span></td>
+                  <td><button class="btn btn-secondary btn-sm">Ver</button></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar" style="background:var(--info);">RG</div>
+                      <div>
+                        <div style="font-weight:600;font-size:14px;">Roberto Garc&iacute;a</div>
+                        <div style="font-size:12px;color:var(--text-secondary);">rgarcia@mail.com</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge-sm" style="background:var(--primary-soft);color:var(--primary);">Pro</span></td>
+                  <td>8</td>
+                  <td>67</td>
+                  <td><span class="badge-sm badge-pending">Pago Pendiente</span></td>
+                  <td><button class="btn btn-secondary btn-sm">Ver</button></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar" style="background:var(--text-tertiary);">MP</div>
+                      <div>
+                        <div style="font-weight:600;font-size:14px;">Mar&iacute;a P&eacute;rez</div>
+                        <div style="font-size:12px;color:var(--text-secondary);">maria@email.co</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge-sm" style="background:rgba(224,121,18,0.08);color:var(--warning);">Starter</span></td>
+                  <td>1</td>
+                  <td>5</td>
+                  <td><span class="badge-sm badge-suspended">Suspendido</span></td>
+                  <td><button class="btn btn-secondary btn-sm">Ver</button></td>
+                </tr>
+                <tr>
+                  <td>
+                    <div class="user-cell">
+                      <div class="user-avatar" style="background:var(--success);">JR</div>
+                      <div>
+                        <div style="font-weight:600;font-size:14px;">Juli&aacute;n Ram&iacute;rez</div>
+                        <div style="font-size:12px;color:var(--text-secondary);">julian@stays.co</div>
+                      </div>
+                    </div>
+                  </td>
+                  <td><span class="badge-sm" style="background:var(--accent-soft);color:var(--accent);">Enterprise</span></td>
+                  <td>24</td>
+                  <td>312</td>
+                  <td><span class="badge-sm badge-active">Activo</span></td>
+                  <td><button class="btn btn-secondary btn-sm">Ver</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Tabla limpia con avatares generados por iniciales, badges de plan y estado con c&oacute;digo de color. B&uacute;squeda global con &iacute;cono integrado + filtros por plan/estado. CTAs secundarios en cada fila para no saturar visualmente.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ===================== SCREEN 4: SIRE / TRA ===================== -->
+  <div class="flow-section" id="s4">
+    <div class="flow-section-header">
+      <div class="flow-number">4</div>
+      <div>
+        <h2>SIRE / TRA &mdash; Cumplimiento Legal</h2>
+        <p>Monitoreo de registros legales ante Migraci&oacute;n Colombia y generaci&oacute;n autom&aacute;tica de TRA</p>
+      </div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div>
+        <div class="screen-dot yellow"></div>
+        <div class="screen-dot green"></div>
+        <div class="screen-url">https://admin.alohost.co/compliance</div>
+      </div>
+      <div class="screen-body">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-logo">Alo<span>Host</span> <span class="sidebar-badge">SUPER</span></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="4" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/></svg></span> Dashboard</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3.5"/><path d="M17 21c0-3.866-3.134-6-8-6s-8 2.134-8 6"/><circle cx="18" cy="8" r="2.5"/><path d="M22 21c0-2.761-1.791-4.5-4-4.5"/></svg></span> Cuentas Admin</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg></span> Propiedades</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg></span> Reservas Global</div>
+          <div class="side-divider"></div>
+          <div class="side-item active"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></span> SIRE / TRA</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Suscripciones</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg></span> Anal&iacute;tica</div>
+          <div class="side-divider"></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Config IA</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span> Configuraci&oacute;n</div>
+        </div>
+        <!-- Main -->
+        <div class="main-content">
+          <div class="main-header">
+            <h2>Cumplimiento Legal &mdash; SIRE / TRA</h2>
+            <button class="btn btn-primary" style="display:inline-flex;align-items:center;gap:6px;">
+              <span class="icon-inline" style="width:16px;height:16px;"><svg viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115.36-6.36L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15.36 6.36L3 16"/></svg></span>
+              Sincronizar con SIRE
+            </button>
+          </div>
+
+          <!-- Stats -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">Registros Enviados Hoy</div>
+              <div class="stat-value" style="color:var(--success);">127</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Pendientes</div>
+              <div class="stat-value" style="color:var(--warning);">8</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Fallidos</div>
+              <div class="stat-value" style="color:var(--danger);">3</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Tasa de &Eacute;xito</div>
+              <div class="stat-value" style="color:var(--primary);">97.8%</div>
+            </div>
+          </div>
+
+          <div class="two-col">
+            <!-- Records Table -->
+            <div class="table-wrapper">
+              <div class="table-header">
+                <h3>Registros SIRE Recientes</h3>
+              </div>
+              <table>
+                <thead>
+                  <tr><th>Hu&eacute;sped</th><th>Propiedad</th><th>Estado</th></tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="font-size:13px;">Mar&iacute;a Gonz&aacute;lez<br><span style="color:var(--text-secondary);font-size:11px;">CC 1023456789</span></td>
+                    <td style="font-size:13px;">Apt. Poblado #12</td>
+                    <td><span class="badge-sm badge-active">Enviado</span></td>
+                  </tr>
+                  <tr>
+                    <td style="font-size:13px;">John Smith<br><span style="color:var(--text-secondary);font-size:11px;">Pasaporte US789456</span></td>
+                    <td style="font-size:13px;">Casa Laureles</td>
+                    <td><span class="badge-sm badge-active">Enviado</span></td>
+                  </tr>
+                  <tr>
+                    <td style="font-size:13px;">Pedro Ruiz<br><span style="color:var(--text-secondary);font-size:11px;">CC 8904567123</span></td>
+                    <td style="font-size:13px;">Studio Centro</td>
+                    <td><span class="badge-sm badge-pending">Pendiente</span></td>
+                  </tr>
+                  <tr>
+                    <td style="font-size:13px;">Emma Wilson<br><span style="color:var(--text-secondary);font-size:11px;">Pasaporte UK123</span></td>
+                    <td style="font-size:13px;">Loft Envigado</td>
+                    <td><span class="badge-sm badge-suspended">Error</span></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- TRA Preview -->
+            <div>
+              <div class="chart-placeholder">
+                <h3>TRA &mdash; Tarjeta de Registro</h3>
+                <div style="background:var(--bg-secondary);border-radius:var(--radius-md);padding:20px;border:1px dashed var(--border-default);">
+                  <div style="font-size:12px;color:var(--text-secondary);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+                    <span style="display:inline-flex;width:14px;height:14px;color:var(--text-secondary);">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+                    </span>
+                    Vista previa TRA Generada
+                  </div>
+                  <div style="background:var(--bg-card);border-radius:var(--radius-sm);padding:16px;border:1px solid var(--border-light);">
+                    <div style="font-weight:700;font-size:14px;margin-bottom:8px;color:var(--text-primary);">TARJETA DE REGISTRO DE ALOJAMIENTO</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;">
+                      <div><span style="color:var(--text-secondary);">Nombre:</span> Mar&iacute;a Gonz&aacute;lez</div>
+                      <div><span style="color:var(--text-secondary);">Doc:</span> CC 1023456789</div>
+                      <div><span style="color:var(--text-secondary);">Check-in:</span> 12/04/2026</div>
+                      <div><span style="color:var(--text-secondary);">Check-out:</span> 15/04/2026</div>
+                      <div><span style="color:var(--text-secondary);">Propiedad:</span> Apt. Poblado #12</div>
+                      <div><span style="color:var(--text-secondary);">NIT:</span> 901234567-8</div>
+                    </div>
+                  </div>
+                  <div style="margin-top:12px;display:flex;gap:8px;">
+                    <button class="btn btn-primary btn-sm" style="display:inline-flex;align-items:center;gap:6px;">
+                      <span class="icon-inline"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></span>
+                      Descargar PDF
+                    </button>
+                    <button class="btn btn-secondary btn-sm" style="display:inline-flex;align-items:center;gap:6px;">
+                      <span class="icon-inline"><svg viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115.36-6.36L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15.36 6.36L3 16"/></svg></span>
+                      Re-enviar a SIRE
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Panel de cumplimiento con m&eacute;tricas de &eacute;xito/fallo prominentes para acci&oacute;n r&aacute;pida. Vista previa de TRA inline evita salir del flujo. Los registros fallidos tienen CTA directa de reintento. Todo automatizado &mdash; el super admin solo supervisa excepciones.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ===================== SCREEN 5: SUBSCRIPTIONS ===================== -->
+  <div class="flow-section" id="s5">
+    <div class="flow-section-header">
+      <div class="flow-number">5</div>
+      <div>
+        <h2>Gesti&oacute;n de Suscripciones</h2>
+        <p>Planes, pagos y ciclos de facturaci&oacute;n de todos los administradores</p>
+      </div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div>
+        <div class="screen-dot yellow"></div>
+        <div class="screen-dot green"></div>
+        <div class="screen-url">https://admin.alohost.co/subscriptions</div>
+      </div>
+      <div class="screen-body">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-logo">Alo<span>Host</span> <span class="sidebar-badge">SUPER</span></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="4" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/></svg></span> Dashboard</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3.5"/><path d="M17 21c0-3.866-3.134-6-8-6s-8 2.134-8 6"/><circle cx="18" cy="8" r="2.5"/><path d="M22 21c0-2.761-1.791-4.5-4-4.5"/></svg></span> Cuentas Admin</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg></span> Propiedades</div>
+          <div class="side-divider"></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></span> SIRE / TRA</div>
+          <div class="side-item active"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Suscripciones</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg></span> Anal&iacute;tica</div>
+          <div class="side-divider"></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Config IA</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span> Configuraci&oacute;n</div>
+        </div>
+        <!-- Main -->
+        <div class="main-content">
+          <div class="main-header">
+            <h2>Suscripciones</h2>
+            <button class="btn btn-primary" style="display:inline-flex;align-items:center;gap:6px;">
+              <span class="icon-inline" style="width:16px;height:16px;"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span>
+              Crear Plan
+            </button>
+          </div>
+
+          <!-- Plan Cards -->
+          <div class="settings-grid" style="margin-bottom:32px;">
+            <div class="setting-card" style="border-top:3px solid var(--warning);">
+              <div class="setting-icon" style="background:rgba(224,121,18,0.1);color:var(--warning);">
+                <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              </div>
+              <h4>Plan Starter</h4>
+              <p>Hasta 3 propiedades</p>
+              <div style="font-family:var(--font-display);font-size:28px;font-weight:700;margin:12px 0;">$49.900<span style="font-size:14px;color:var(--text-secondary);font-weight:400;">/mes</span></div>
+              <div style="font-size:12px;color:var(--text-secondary);">423 suscriptores activos</div>
+            </div>
+            <div class="setting-card" style="border-top:3px solid var(--primary);">
+              <div class="setting-icon" style="background:var(--primary-soft);color:var(--primary);">
+                <svg viewBox="0 0 24 24"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              </div>
+              <h4>Plan Pro</h4>
+              <p>Hasta 15 propiedades + IA completa</p>
+              <div style="font-family:var(--font-display);font-size:28px;font-weight:700;margin:12px 0;">$149.900<span style="font-size:14px;color:var(--text-secondary);font-weight:400;">/mes</span></div>
+              <div style="font-size:12px;color:var(--text-secondary);">612 suscriptores activos</div>
+            </div>
+            <div class="setting-card" style="border-top:3px solid var(--accent);">
+              <div class="setting-icon" style="background:var(--accent-soft);color:var(--accent);">
+                <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="1.5"/><line x1="9" y1="6" x2="9" y2="6.01"/><line x1="12" y1="6" x2="12" y2="6.01"/><line x1="15" y1="6" x2="15" y2="6.01"/><line x1="9" y1="10" x2="9" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="15" y1="10" x2="15" y2="10.01"/><line x1="9" y1="14" x2="9" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="15" y1="14" x2="15" y2="14.01"/><path d="M10 22v-4h4v4"/></svg>
+              </div>
+              <h4>Plan Enterprise</h4>
+              <p>Propiedades ilimitadas + API</p>
+              <div style="font-family:var(--font-display);font-size:28px;font-weight:700;margin:12px 0;">$399.900<span style="font-size:14px;color:var(--text-secondary);font-weight:400;">/mes</span></div>
+              <div style="font-size:12px;color:var(--text-secondary);">212 suscriptores activos</div>
+            </div>
+          </div>
+
+          <!-- SaaS KPIs -->
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-label">MRR Total</div>
+              <div class="stat-value" style="color:var(--success);">$186M</div>
+              <div class="stat-change up">
+                <span class="icon-inline"><svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg></span>
+                18% MoM
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Churn Rate</div>
+              <div class="stat-value">2.3%</div>
+              <div class="stat-change up">
+                <span class="icon-inline"><svg viewBox="0 0 24 24"><polyline points="23 18 13.5 8.5 8.5 13.5 1 6"/><polyline points="17 18 23 18 23 12"/></svg></span>
+                -0.5% vs mes pasado
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">ARPU</div>
+              <div class="stat-value">$149K</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-label">Pagos Fallidos</div>
+              <div class="stat-value" style="color:var(--danger);">7</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Planes como cards con color y precio destacado para escaneo r&aacute;pido. KPIs SaaS (MRR, Churn, ARPU) en grid inferior. El super admin puede crear/editar planes y gestionar pagos fallidos desde esta vista.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ===================== SCREEN 6: ANALYTICS ===================== -->
+  <div class="flow-section" id="s6">
+    <div class="flow-section-header">
+      <div class="flow-number">6</div>
+      <div>
+        <h2>Anal&iacute;tica Global</h2>
+        <p>M&eacute;tricas de rendimiento de la plataforma, adopci&oacute;n de IA y tendencias</p>
+      </div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div>
+        <div class="screen-dot yellow"></div>
+        <div class="screen-dot green"></div>
+        <div class="screen-url">https://admin.alohost.co/analytics</div>
+      </div>
+      <div class="screen-body">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-logo">Alo<span>Host</span> <span class="sidebar-badge">SUPER</span></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="4" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/></svg></span> Dashboard</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3.5"/><path d="M17 21c0-3.866-3.134-6-8-6s-8 2.134-8 6"/><circle cx="18" cy="8" r="2.5"/><path d="M22 21c0-2.761-1.791-4.5-4-4.5"/></svg></span> Cuentas Admin</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg></span> Propiedades</div>
+          <div class="side-divider"></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></span> SIRE / TRA</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Suscripciones</div>
+          <div class="side-item active"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg></span> Anal&iacute;tica</div>
+          <div class="side-divider"></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Config IA</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span> Configuraci&oacute;n</div>
+        </div>
+        <!-- Main -->
+        <div class="main-content">
+          <div class="main-header">
+            <h2>Anal&iacute;tica Global</h2>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-secondary btn-sm" style="background:var(--primary-soft);border-color:var(--primary);color:var(--primary);">7 d&iacute;as</button>
+              <button class="btn btn-secondary btn-sm">30 d&iacute;as</button>
+              <button class="btn btn-secondary btn-sm">90 d&iacute;as</button>
+              <button class="btn btn-secondary btn-sm">Personalizado</button>
+            </div>
+          </div>
+
+          <div class="two-col" style="margin-bottom:24px;">
+            <!-- AI Performance -->
+            <div class="chart-placeholder">
+              <h3>Rendimiento de la IA</h3>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                <div style="text-align:center;padding:16px;">
+                  <div style="font-family:var(--font-display);font-size:40px;font-weight:700;color:var(--primary);letter-spacing:-0.03em;">98.5%</div>
+                  <div style="font-size:12px;color:var(--text-secondary);">Resoluci&oacute;n autom&aacute;tica</div>
+                </div>
+                <div style="text-align:center;padding:16px;">
+                  <div style="font-family:var(--font-display);font-size:40px;font-weight:700;color:var(--accent);letter-spacing:-0.03em;">4.8</div>
+                  <div style="font-size:12px;color:var(--text-secondary);">Satisfacci&oacute;n hu&eacute;sped</div>
+                </div>
+                <div style="text-align:center;padding:16px;">
+                  <div style="font-family:var(--font-display);font-size:40px;font-weight:700;color:var(--success);letter-spacing:-0.03em;">1.2s</div>
+                  <div style="font-size:12px;color:var(--text-secondary);">Tiempo respuesta IA</div>
+                </div>
+                <div style="text-align:center;padding:16px;">
+                  <div style="font-family:var(--font-display);font-size:40px;font-weight:700;color:var(--accent);letter-spacing:-0.03em;">90%</div>
+                  <div style="font-size:12px;color:var(--text-secondary);">Reducci&oacute;n contacto host</div>
+                </div>
+              </div>
+            </div>
+            <!-- Platform Growth Chart -->
+            <div class="chart-placeholder">
+              <h3>Crecimiento de Plataforma</h3>
+              <div class="chart-bars">
+                <div class="chart-bar" style="height:30%;background:var(--primary);"><span class="chart-bar-value">312</span><span class="chart-bar-label">Ene</span></div>
+                <div class="chart-bar" style="height:40%;background:var(--primary);"><span class="chart-bar-value">487</span><span class="chart-bar-label">Feb</span></div>
+                <div class="chart-bar" style="height:55%;background:var(--primary);"><span class="chart-bar-value">623</span><span class="chart-bar-label">Mar</span></div>
+                <div class="chart-bar" style="height:65%;background:var(--primary);"><span class="chart-bar-value">789</span><span class="chart-bar-label">Abr</span></div>
+                <div class="chart-bar" style="height:80%;background:var(--primary);"><span class="chart-bar-value">945</span><span class="chart-bar-label">May</span></div>
+                <div class="chart-bar" style="height:100%;background:linear-gradient(to top,var(--primary),var(--accent));"><span class="chart-bar-value">1,247</span><span class="chart-bar-label">Jun</span></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top Cities -->
+          <div class="chart-placeholder">
+            <h3>Top Ciudades por Reservas</h3>
+            <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:16px;">
+              <div style="text-align:center;">
+                <div class="city-circle" style="background:linear-gradient(135deg,var(--primary),var(--primary-light));">
+                  <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg>
+                </div>
+                <div style="font-weight:600;font-size:14px;">Medell&iacute;n</div>
+                <div style="font-size:12px;color:var(--text-secondary);">34% de reservas</div>
+              </div>
+              <div style="text-align:center;">
+                <div class="city-circle" style="background:linear-gradient(135deg,var(--accent),var(--accent-light));">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                </div>
+                <div style="font-weight:600;font-size:14px;">Cartagena</div>
+                <div style="font-size:12px;color:var(--text-secondary);">28% de reservas</div>
+              </div>
+              <div style="text-align:center;">
+                <div class="city-circle" style="background:linear-gradient(135deg,var(--accent),var(--warning));">
+                  <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="1.5"/><line x1="9" y1="6" x2="9" y2="6.01"/><line x1="12" y1="6" x2="12" y2="6.01"/><line x1="15" y1="6" x2="15" y2="6.01"/><line x1="9" y1="10" x2="9" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="15" y1="10" x2="15" y2="10.01"/><line x1="9" y1="14" x2="9" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="15" y1="14" x2="15" y2="14.01"/><path d="M10 22v-4h4v4"/></svg>
+                </div>
+                <div style="font-weight:600;font-size:14px;">Bogot&aacute;</div>
+                <div style="font-size:12px;color:var(--text-secondary);">22% de reservas</div>
+              </div>
+              <div style="text-align:center;">
+                <div class="city-circle" style="background:linear-gradient(135deg,var(--warning),var(--danger));">
+                  <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+                </div>
+                <div style="font-weight:600;font-size:14px;">Santa Marta</div>
+                <div style="font-size:12px;color:var(--text-secondary);">10% de reservas</div>
+              </div>
+              <div style="text-align:center;">
+                <div class="city-circle" style="background:linear-gradient(135deg,var(--success),#81ECEC);">
+                  <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+                </div>
+                <div style="font-weight:600;font-size:14px;">Cali</div>
+                <div style="font-size:12px;color:var(--text-secondary);">6% de reservas</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Analytics con m&eacute;tricas de IA como hero &mdash; demuestra el valor del producto. Filtros temporales inline. Distribuci&oacute;n geogr&aacute;fica visual con &iacute;conos SVG en c&iacute;rculos de color. Todo orientado a toma de decisiones del super admin sobre la plataforma.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ===================== SCREEN 7: AI CONFIG ===================== -->
+  <div class="flow-section" id="s7">
+    <div class="flow-section-header">
+      <div class="flow-number">7</div>
+      <div>
+        <h2>Configuraci&oacute;n del Agente IA</h2>
+        <p>Personalizaci&oacute;n global del comportamiento, idiomas, l&iacute;mites y escalamiento del agente Alo</p>
+      </div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div>
+        <div class="screen-dot yellow"></div>
+        <div class="screen-dot green"></div>
+        <div class="screen-url">https://admin.alohost.co/ai-config</div>
+      </div>
+      <div class="screen-body">
+        <!-- Sidebar -->
+        <div class="sidebar">
+          <div class="sidebar-logo">Alo<span>Host</span> <span class="sidebar-badge">SUPER</span></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="4" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/></svg></span> Dashboard</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3.5"/><path d="M17 21c0-3.866-3.134-6-8-6s-8 2.134-8 6"/><circle cx="18" cy="8" r="2.5"/><path d="M22 21c0-2.761-1.791-4.5-4-4.5"/></svg></span> Cuentas Admin</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg></span> Propiedades</div>
+          <div class="side-divider"></div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg></span> SIRE / TRA</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg></span> Suscripciones</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg></span> Anal&iacute;tica</div>
+          <div class="side-divider"></div>
+          <div class="side-item active"><span class="side-icon"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Config IA</div>
+          <div class="side-item"><span class="side-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg></span> Configuraci&oacute;n</div>
+        </div>
+        <!-- Main -->
+        <div class="main-content">
+          <div class="main-header">
+            <h2>Configuraci&oacute;n del Agente Alo</h2>
+            <button class="btn btn-primary" style="display:inline-flex;align-items:center;gap:6px;">
+              <span class="icon-inline" style="width:16px;height:16px;"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></span>
+              Guardar Cambios
+            </button>
+          </div>
+
+          <!-- Settings Cards -->
+          <div class="settings-grid" style="margin-bottom:32px;">
+            <div class="setting-card">
+              <div class="setting-icon" style="background:rgba(0,132,137,0.1);color:var(--accent);">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+              </div>
+              <h4>Idiomas Soportados</h4>
+              <p>Espa&ntilde;ol, Ingl&eacute;s, Portugu&eacute;s, Franc&eacute;s</p>
+              <div class="toggle-wrapper" style="margin-top:12px;">
+                <div class="toggle active"></div>
+                <span style="font-size:12px;color:var(--text-secondary);">Auto-detectar idioma</span>
+              </div>
+            </div>
+            <div class="setting-card">
+              <div class="setting-icon" style="background:rgba(224,121,18,0.1);color:var(--warning);">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              </div>
+              <h4>Tiempo de Escalamiento</h4>
+              <p>Escalar al admin si no se resuelve en:</p>
+              <div style="font-family:var(--font-display);font-size:28px;font-weight:700;margin-top:8px;">5 min</div>
+            </div>
+            <div class="setting-card">
+              <div class="setting-icon" style="background:var(--primary-soft);color:var(--primary);">
+                <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4H6z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+              </div>
+              <h4>Venta de Servicios</h4>
+              <p>IA sugiere servicios extra autom&aacute;ticamente</p>
+              <div class="toggle-wrapper" style="margin-top:12px;">
+                <div class="toggle active"></div>
+                <span style="font-size:12px;color:var(--text-secondary);">Sugerencias activas</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI Behavior Rules -->
+          <div class="chart-placeholder">
+            <h3>Reglas de Comportamiento de la IA</h3>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px;">
+              <div class="rule-row">
+                <div class="rule-row-text">
+                  <h5>Check-in autom&aacute;tico completo</h5>
+                  <p>La IA gu&iacute;a todo el proceso sin intervenci&oacute;n del admin</p>
+                </div>
+                <div class="toggle active"></div>
+              </div>
+              <div class="rule-row">
+                <div class="rule-row-text">
+                  <h5>Env&iacute;o autom&aacute;tico de contratos</h5>
+                  <p>Enviar contrato y documentos legales al hu&eacute;sped pre-check-in</p>
+                </div>
+                <div class="toggle active"></div>
+              </div>
+              <div class="rule-row">
+                <div class="rule-row-text">
+                  <h5>Validaci&oacute;n de identidad obligatoria</h5>
+                  <p>Requerir foto de ID + selfie para completar check-in</p>
+                </div>
+                <div class="toggle active"></div>
+              </div>
+              <div class="rule-row">
+                <div class="rule-row-text">
+                  <h5>Recordatorio de check-out</h5>
+                  <p>Enviar recordatorio 2h antes del check-out</p>
+                </div>
+                <div class="toggle active"></div>
+              </div>
+              <div class="rule-row">
+                <div class="rule-row-text">
+                  <h5>Recolecci&oacute;n de review post-estancia</h5>
+                  <p>Solicitar calificaci&oacute;n al hu&eacute;sped despu&eacute;s del check-out</p>
+                </div>
+                <div class="toggle"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Configuraci&oacute;n de IA como toggles claros con descripci&oacute;n. El super admin controla el comportamiento global del agente. Cards de configuraci&oacute;n arriba para settings r&aacute;pidos, lista de reglas detalladas abajo. Dise&ntilde;o scannable para gesti&oacute;n eficiente.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Footer -->
+<div class="footer">
+  <div style="max-width:1400px;margin:0 auto;">
+    <p>AloHost UX Flows v1.0 &mdash; <a href="design-system.html">Design System</a> &middot; <a href="superadmin.html">Super Admin</a> &middot; <a href="admin.html">Admin</a> &middot; <a href="guest-mobile.html">Hu&eacute;sped</a> &middot; <a href="admin-app.html">App Admin</a> &middot; <a href="flowmap.html">Mapa de Flujos</a></p>
+  </div>
+</div>
+
+<script>
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth', block: 'start' });
+  document.querySelectorAll('.step-pill').forEach(function(p) { p.classList.remove('active'); });
+  event.target.classList.add('active');
+}
+</script>
+
+</body>
+</html>

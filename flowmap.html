@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AloHost — Mapa de Flujos UX</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="icons.css">
+<script src="theme.js"></script>
+<script src="icons.js"></script>
+<style>
+.container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+
+/* Hero */
+.hero {
+  padding: 72px 40px 48px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 900px;
+  height: 900px;
+  background: radial-gradient(circle, var(--primary-soft), transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.hero-content { position: relative; z-index: 1; }
+.hero h1 {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+.hero h1 span {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero p {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ===== Section headers ===== */
+.section-title {
+  font-family: var(--font-display);
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  text-align: center;
+  margin-bottom: 12px;
+  color: var(--text-primary);
+}
+.section-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 15px;
+  margin-bottom: 40px;
+  line-height: 1.5;
+}
+
+/* ===== AI Core Interaction Map ===== */
+.interaction-map {
+  padding: 60px 0 40px;
+}
+.interaction-grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 32px;
+  align-items: center;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.interaction-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.platform-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 28px;
+  text-align: center;
+  transition: var(--transition);
+  position: relative;
+}
+.platform-card:hover {
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-2px);
+}
+.platform-card .p-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+  color: var(--primary);
+  background: var(--primary-soft);
+}
+.platform-card .p-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.platform-card h3 {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  letter-spacing: -0.02em;
+}
+.platform-card p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+/* Connection lines */
+.interaction-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+.connection-lines {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.connection-line-left,
+.connection-line-right {
+  position: absolute;
+  top: 50%;
+  height: 2px;
+  width: 48px;
+  background: linear-gradient(90deg, var(--border-light), var(--primary), var(--border-light));
+  opacity: 0.5;
+}
+.connection-line-left { left: -48px; }
+.connection-line-right { right: -48px; }
+
+/* AI Core orb */
+.ai-core-wrapper {
+  position: relative;
+  width: 180px;
+  height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.ai-core-pulse {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  animation: pulse-ring 3s ease-in-out infinite;
+}
+.ai-core-pulse-2 {
+  position: absolute;
+  width: 130%;
+  height: 130%;
+  border-radius: 50%;
+  background: var(--primary-soft);
+  opacity: 0.3;
+  animation: pulse-ring 3s ease-in-out infinite 0.5s;
+}
+@keyframes pulse-ring {
+  0%, 100% { transform: scale(0.85); opacity: 0.4; }
+  50% { transform: scale(1); opacity: 0.15; }
+}
+.ai-core {
+  position: relative;
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 50px var(--primary-glow), 0 0 100px rgba(255, 56, 92, 0.15);
+  animation: core-glow 3s ease-in-out infinite alternate;
+  z-index: 2;
+}
+@keyframes core-glow {
+  from { box-shadow: 0 0 40px var(--primary-glow), 0 0 80px rgba(255, 56, 92, 0.1); }
+  to { box-shadow: 0 0 60px var(--primary-glow), 0 0 120px rgba(255, 56, 92, 0.25); }
+}
+.ai-core .core-icon {
+  color: #fff;
+  margin-bottom: 4px;
+}
+.ai-core .core-icon svg {
+  width: 40px;
+  height: 40px;
+  stroke: #fff;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.ai-core .core-label {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+
+/* ===== Journey Flows ===== */
+.journeys-section {
+  padding: 40px 0 20px;
+}
+.journey-block {
+  margin-bottom: 56px;
+}
+.journey-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.journey-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border-radius: var(--radius-full);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  letter-spacing: 0.02em;
+}
+.journey-badge .icon svg {
+  width: 16px;
+  height: 16px;
+}
+.journey-badge--guest {
+  background: var(--primary-soft);
+  color: var(--primary);
+  border: 1px solid rgba(255, 56, 92, 0.2);
+}
+.journey-badge--admin {
+  background: var(--accent-soft);
+  color: var(--accent);
+  border: 1px solid rgba(0, 132, 137, 0.2);
+}
+.journey-badge--escalation {
+  background: var(--warning-light);
+  color: var(--warning);
+  border: 1px solid rgba(224, 121, 18, 0.25);
+}
+
+/* Flow row */
+.flow-row {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 12px;
+  -webkit-overflow-scrolling: touch;
+}
+.flow-node {
+  min-width: 150px;
+  max-width: 170px;
+  flex: 1 0 auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 18px 14px;
+  text-align: center;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  position: relative;
+}
+.flow-node:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+  border-color: var(--border-default);
+}
+.flow-node .node-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  margin-bottom: 2px;
+}
+.flow-node .node-icon svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.flow-node .node-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+.flow-node .node-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+  line-height: 1.3;
+}
+
+/* AI badge on flow node */
+.flow-node.ai-node .node-icon {
+  background: var(--primary-soft);
+  color: var(--primary);
+}
+.flow-node.ai-node {
+  border-color: rgba(255, 56, 92, 0.18);
+}
+.ai-tag {
+  position: absolute;
+  top: -8px;
+  right: -6px;
+  background: var(--primary);
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: var(--radius-full);
+  letter-spacing: 0.03em;
+  line-height: 1.4;
+}
+
+/* Arrow connector */
+.flow-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 36px;
+  color: var(--text-tertiary);
+}
+.flow-arrow svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.flow-arrow--bi svg {
+  stroke: var(--primary-light);
+  opacity: 0.7;
+}
+
+/* ===== Feature Matrix ===== */
+.matrix-section {
+  padding: 40px 0;
+}
+.matrix-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+.matrix-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.matrix-wrap thead {
+  background: var(--bg-secondary);
+}
+.matrix-wrap th {
+  text-align: left;
+  padding: 14px 20px;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  border-bottom: 1px solid var(--border-light);
+}
+.matrix-wrap th:not(:first-child) { text-align: center; }
+.matrix-wrap td {
+  padding: 14px 20px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--text-primary);
+}
+.matrix-wrap td:not(:first-child) { text-align: center; }
+.matrix-wrap tr:last-child td { border-bottom: none; }
+.matrix-wrap tr:hover { background: var(--bg-hover); }
+
+.cell-active {
+  color: var(--success);
+  font-weight: 600;
+  font-size: 13px;
+}
+.cell-inactive {
+  color: var(--text-tertiary);
+  font-size: 14px;
+}
+
+/* ===== Impact Stats ===== */
+.impact-section {
+  padding: 40px 0;
+}
+.impact-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+.impact-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 36px 28px;
+  text-align: center;
+  transition: var(--transition);
+}
+.impact-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--primary);
+}
+.impact-card .impact-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+}
+.impact-card .impact-icon svg {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.impact-value {
+  font-family: var(--font-display);
+  font-size: 48px;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  line-height: 1.1;
+  margin-bottom: 8px;
+}
+.impact-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ===== Integrations ===== */
+.integrations-section {
+  padding: 40px 0 60px;
+}
+.integrations-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 20px;
+}
+.integration-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-xl);
+  padding: 32px 20px;
+  text-align: center;
+  transition: var(--transition);
+}
+.integration-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-card-hover);
+}
+.integration-card .int-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 14px;
+}
+.integration-card .int-icon svg {
+  width: 26px;
+  height: 26px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.integration-card h4 {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+.integration-card .int-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+/* ===== Footer ===== */
+.site-footer {
+  background: var(--sidebar-bg);
+  padding: 40px;
+  text-align: center;
+  border-top: 1px solid var(--border-light);
+}
+.site-footer p {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 14px;
+}
+.site-footer a {
+  color: rgba(255, 255, 255, 0.6);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+.site-footer a:hover { color: #fff; }
+
+/* ===== Responsive ===== */
+@media (max-width: 1100px) {
+  .interaction-grid { grid-template-columns: 1fr; gap: 24px; }
+  .interaction-col { flex-direction: row; }
+  .connection-line-left, .connection-line-right { display: none; }
+  .impact-grid { grid-template-columns: repeat(2, 1fr); }
+  .integrations-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .container { padding: 0 20px; }
+  .hero { padding: 48px 20px 32px; }
+  .hero h1 { font-size: 32px; }
+  .interaction-col { flex-direction: column; }
+  .integrations-grid { grid-template-columns: repeat(2, 1fr); }
+  .impact-grid { grid-template-columns: 1fr 1fr; }
+  .flow-node { min-width: 130px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== Top Nav ===== -->
+<nav class="top-nav">
+  <div class="top-nav-left">
+    <a href="design-system.html" class="logo">Alo<span>Host</span></a>
+    <div class="nav-links">
+      <a href="design-system.html" class="nav-link">Design System</a>
+      <a href="superadmin.html" class="nav-link">Super Admin</a>
+      <a href="admin.html" class="nav-link">Admin</a>
+      <a href="guest-mobile.html" class="nav-link">Huesped</a>
+      <a href="admin-app.html" class="nav-link">App Admin</a>
+      <a href="flowmap.html" class="nav-link active">Mapa de Flujos</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ===== Hero ===== -->
+<section class="hero">
+  <div class="hero-content">
+    <h1>Mapa de <span>Flujos UX</span></h1>
+    <p>Arquitectura de informacion y flujos de interaccion entre las 4 plataformas AloHost con el Agente IA como nucleo central.</p>
+  </div>
+</section>
+
+<!-- ===== AI as Center: Interaction Diagram ===== -->
+<section class="interaction-map">
+  <div class="container">
+    <h2 class="section-title">El Agente IA como Nucleo</h2>
+    <p class="section-subtitle">Las 4 plataformas se conectan al agente IA central que orquesta toda la experiencia</p>
+
+    <div class="interaction-grid">
+      <!-- Left column -->
+      <div class="interaction-col">
+        <div class="platform-card">
+          <div class="p-icon">
+            <svg viewBox="0 0 24 24"><rect x="4" y="2" width="16" height="20" rx="1.5"/><line x1="9" y1="6" x2="9" y2="6.01"/><line x1="12" y1="6" x2="12" y2="6.01"/><line x1="15" y1="6" x2="15" y2="6.01"/><line x1="9" y1="10" x2="9" y2="10.01"/><line x1="12" y1="10" x2="12" y2="10.01"/><line x1="15" y1="10" x2="15" y2="10.01"/><line x1="9" y1="14" x2="9" y2="14.01"/><line x1="12" y1="14" x2="12" y2="14.01"/><line x1="15" y1="14" x2="15" y2="14.01"/><path d="M10 22v-4h4v4"/></svg>
+          </div>
+          <h3>Super Admin Web</h3>
+          <p>Configura comportamiento global de la IA</p>
+        </div>
+        <div class="platform-card">
+          <div class="p-icon" style="background: var(--accent-soft); color: var(--accent);">
+            <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg>
+          </div>
+          <h3>Admin Web</h3>
+          <p>Observa y configura la IA por propiedad</p>
+        </div>
+      </div>
+
+      <!-- Center: AI Core -->
+      <div class="interaction-center">
+        <div class="connection-line-left" style="position:absolute;top:50%;left:-48px;width:48px;height:2px;background:linear-gradient(90deg,transparent,var(--primary));opacity:0.4;"></div>
+        <div class="connection-line-right" style="position:absolute;top:50%;right:-48px;width:48px;height:2px;background:linear-gradient(90deg,var(--primary),transparent);opacity:0.4;"></div>
+        <div class="ai-core-wrapper">
+          <div class="ai-core-pulse-2"></div>
+          <div class="ai-core-pulse"></div>
+          <div class="ai-core">
+            <span class="core-icon">
+              <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+            </span>
+            <span class="core-label">Alo IA</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right column -->
+      <div class="interaction-col">
+        <div class="platform-card">
+          <div class="p-icon" style="background: var(--warning-light); color: var(--warning);">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21c0-4.418-3.582-7-8-7s-8 2.582-8 7"/></svg>
+          </div>
+          <h3>Huesped Web Movil</h3>
+          <p>Interaccion directa con la IA 24/7</p>
+        </div>
+        <div class="platform-card">
+          <div class="p-icon" style="background: var(--ota-stays-bg); color: var(--ota-stays);">
+            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          </div>
+          <h3>App Admin</h3>
+          <p>Recibe escalamientos de la IA</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== 5 Journey Flows ===== -->
+<section class="journeys-section">
+  <div class="container">
+    <h2 class="section-title">Flujos de Experiencia</h2>
+    <p class="section-subtitle">5 journeys que cubren todo el ciclo de vida: pre-estancia, durante, post-estancia, gestion admin y escalamiento IA</p>
+
+    <!-- Flow 1: Guest Pre-Stay -->
+    <div class="journey-block">
+      <div class="journey-header">
+        <span class="journey-badge journey-badge--guest">
+          <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21c0-4.418-3.582-7-8-7s-8 2.582-8 7"/></svg></span>
+          HUESPED — PRE-ESTANCIA
+        </span>
+      </div>
+      <div class="flow-row">
+        <!-- Node 1: Link sent -->
+        <div class="flow-node ai-node">
+          <span class="ai-tag">IA</span>
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </div>
+          <span class="node-title">Link Enviado</span>
+          <span class="node-sub">WhatsApp / Email</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 2: Welcome -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21c0-4.418-3.582-7-8-7s-8 2.582-8 7"/></svg>
+          </div>
+          <span class="node-title">Bienvenida</span>
+          <span class="node-sub">Landing personal</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 3: Personal Data -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+          </div>
+          <span class="node-title">Datos Personales</span>
+          <span class="node-sub">Formulario paso a paso</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 4: ID Verification -->
+        <div class="flow-node ai-node">
+          <span class="ai-tag">IA</span>
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M23 19a2 2 0 01-2 2H3a2 2 0 01-2-2V8a2 2 0 012-2h4l2-3h6l2 3h4a2 2 0 012 2v11z"/><circle cx="12" cy="13" r="4"/></svg>
+          </div>
+          <span class="node-title">Verificacion ID</span>
+          <span class="node-sub">Foto + Selfie</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 5: Contract -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <span class="node-title">Firma Contrato</span>
+          <span class="node-sub">Digital</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 6: SIRE -->
+        <div class="flow-node ai-node">
+          <span class="ai-tag">IA</span>
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/></svg>
+          </div>
+          <span class="node-title">Registro SIRE</span>
+          <span class="node-sub">Automatico</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 7: Check-in OK -->
+        <div class="flow-node">
+          <div class="node-icon" style="background: rgba(0,138,5,0.08); color: var(--success);">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg>
+          </div>
+          <span class="node-title">Check-in OK</span>
+          <span class="node-sub">Acceso liberado</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow 2: Guest During Stay -->
+    <div class="journey-block">
+      <div class="journey-header">
+        <span class="journey-badge journey-badge--guest">
+          <span class="icon"><svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg></span>
+          HUESPED — DURANTE ESTANCIA
+        </span>
+      </div>
+      <div class="flow-row">
+        <!-- Node 1: Stay Home -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg>
+          </div>
+          <span class="node-title">Home Estancia</span>
+          <span class="node-sub">Hub central</span>
+        </div>
+        <div class="flow-arrow flow-arrow--bi"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="8 8 4 12 8 16"/><polyline points="16 8 20 12 16 16"/></svg></div>
+
+        <!-- Node 2: AI Chat -->
+        <div class="flow-node ai-node">
+          <span class="ai-tag">IA</span>
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+          </div>
+          <span class="node-title">Chat Alo IA</span>
+          <span class="node-sub">24/7 disponible</span>
+        </div>
+        <div class="flow-arrow flow-arrow--bi"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="8 8 4 12 8 16"/><polyline points="16 8 20 12 16 16"/></svg></div>
+
+        <!-- Node 3: Extra Services -->
+        <div class="flow-node ai-node">
+          <span class="ai-tag">IA</span>
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4H6z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          </div>
+          <span class="node-title">Servicios Extra</span>
+          <span class="node-sub">IA sugiere y vende</span>
+        </div>
+        <div class="flow-arrow flow-arrow--bi"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="8 8 4 12 8 16"/><polyline points="16 8 20 12 16 16"/></svg></div>
+
+        <!-- Node 4: Local Info -->
+        <div class="flow-node ai-node">
+          <span class="ai-tag">IA</span>
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+          </div>
+          <span class="node-title">Info Local</span>
+          <span class="node-sub">Restaurantes, tours</span>
+        </div>
+        <div class="flow-arrow flow-arrow--bi"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="8 8 4 12 8 16"/><polyline points="16 8 20 12 16 16"/></svg></div>
+
+        <!-- Node 5: Support -->
+        <div class="flow-node ai-node">
+          <span class="ai-tag">IA</span>
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          </div>
+          <span class="node-title">Soporte</span>
+          <span class="node-sub">IA resuelve 98%</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow 3: Guest Post-Stay -->
+    <div class="journey-block">
+      <div class="journey-header">
+        <span class="journey-badge journey-badge--guest">
+          <span class="icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></span>
+          HUESPED — POST-ESTANCIA
+        </span>
+      </div>
+      <div class="flow-row">
+        <!-- Node 1: Reminder -->
+        <div class="flow-node ai-node">
+          <span class="ai-tag">IA</span>
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <span class="node-title">Recordatorio</span>
+          <span class="node-sub">IA 2h antes</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 2: Expense Summary -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <span class="node-title">Resumen Gastos</span>
+          <span class="node-sub">Estancia + extras</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 3: Review -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+          </div>
+          <span class="node-title">Review</span>
+          <span class="node-sub">Calificacion</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 4: Check-out -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+          </div>
+          <span class="node-title">Check-out</span>
+          <span class="node-sub">Automatico</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 5: Access Revoked -->
+        <div class="flow-node ai-node">
+          <span class="ai-tag">IA</span>
+          <div class="node-icon" style="background: rgba(193,53,21,0.08); color: var(--danger);">
+            <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+          </div>
+          <span class="node-title">Acceso Revocado</span>
+          <span class="node-sub">Automatico</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow 4: Admin Daily -->
+    <div class="journey-block">
+      <div class="journey-header">
+        <span class="journey-badge journey-badge--admin">
+          <span class="icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="4" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/></svg></span>
+          ADMIN — GESTION DIARIA
+        </span>
+      </div>
+      <div class="flow-row">
+        <!-- Node 1: Dashboard -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="4" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/></svg>
+          </div>
+          <span class="node-title">Dashboard</span>
+          <span class="node-sub">Resumen del dia</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 2: AI Briefing -->
+        <div class="flow-node ai-node">
+          <span class="ai-tag">IA</span>
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+          </div>
+          <span class="node-title">Briefing IA</span>
+          <span class="node-sub">Resumen automatico</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 3: Calendar -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+          </div>
+          <span class="node-title">Calendario</span>
+          <span class="node-sub">Reservas</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 4: Monitor Check-in -->
+        <div class="flow-node ai-node">
+          <span class="ai-tag">IA</span>
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+          </div>
+          <span class="node-title">Monitor Check-in</span>
+          <span class="node-sub">IA ejecuta, admin observa</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 5: Monetization -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <span class="node-title">Monetizacion</span>
+          <span class="node-sub">Servicios extra</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 6: Legal -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5.25-3.5 9.74-8 11-4.5-1.26-8-5.75-8-11V6l8-4z"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
+          <span class="node-title">Legal</span>
+          <span class="node-sub">SIRE / TRA auto</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Flow 5: AI Escalation -->
+    <div class="journey-block">
+      <div class="journey-header">
+        <span class="journey-badge journey-badge--escalation">
+          <span class="icon"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></span>
+          ESCALAMIENTO IA &rarr; ADMIN APP
+        </span>
+      </div>
+      <div class="flow-row">
+        <!-- Node 1: AI Can't Resolve -->
+        <div class="flow-node ai-node">
+          <span class="ai-tag">IA</span>
+          <div class="node-icon" style="background: rgba(224,121,18,0.08); color: var(--warning);">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          </div>
+          <span class="node-title">IA No Resuelve</span>
+          <span class="node-sub">Problema complejo</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 2: Push Notification -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+          </div>
+          <span class="node-title">Push Notification</span>
+          <span class="node-sub">App Admin</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 3: Full Context -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+          </div>
+          <span class="node-title">Contexto Completo</span>
+          <span class="node-sub">Chat + analisis IA</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 4: Admin Responds -->
+        <div class="flow-node">
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+          </div>
+          <span class="node-title">Admin Responde</span>
+          <span class="node-sub">En su idioma</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 5: AI Translates -->
+        <div class="flow-node ai-node">
+          <span class="ai-tag">IA</span>
+          <div class="node-icon">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+          </div>
+          <span class="node-title">IA Traduce</span>
+          <span class="node-sub">Idioma huesped</span>
+        </div>
+        <div class="flow-arrow"><svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></div>
+
+        <!-- Node 6: Resolved -->
+        <div class="flow-node">
+          <div class="node-icon" style="background: rgba(0,138,5,0.08); color: var(--success);">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg>
+          </div>
+          <span class="node-title">Resuelto</span>
+          <span class="node-sub">Transparente</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ===== Feature Matrix Table ===== -->
+<section class="matrix-section">
+  <div class="container">
+    <h2 class="section-title">Matriz de Funcionalidades por Plataforma</h2>
+    <p class="section-subtitle">Responsabilidades de cada plataforma en las funcionalidades clave del ecosistema</p>
+
+    <div class="matrix-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Funcionalidad</th>
+            <th>Super Admin</th>
+            <th>Admin Web</th>
+            <th>Huesped Movil</th>
+            <th>App Admin</th>
+            <th>Agente IA</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Check-in automatico</td>
+            <td><span class="cell-active">Config</span></td>
+            <td><span class="cell-active">Monitor</span></td>
+            <td><span class="cell-active">Ejecuta</span></td>
+            <td><span class="cell-active">Notifica</span></td>
+            <td><span class="cell-active">Guia</span></td>
+          </tr>
+          <tr>
+            <td>Check-out automatizado</td>
+            <td><span class="cell-inactive">&mdash;</span></td>
+            <td><span class="cell-active">Monitor</span></td>
+            <td><span class="cell-active">Ejecuta</span></td>
+            <td><span class="cell-active">Notifica</span></td>
+            <td><span class="cell-active">Gestiona</span></td>
+          </tr>
+          <tr>
+            <td>Verificacion identidad</td>
+            <td><span class="cell-active">Config</span></td>
+            <td><span class="cell-active">Revisa</span></td>
+            <td><span class="cell-active">Envia</span></td>
+            <td><span class="cell-inactive">&mdash;</span></td>
+            <td><span class="cell-active">Valida</span></td>
+          </tr>
+          <tr>
+            <td>Contratos digitales</td>
+            <td><span class="cell-inactive">&mdash;</span></td>
+            <td><span class="cell-active">Configura</span></td>
+            <td><span class="cell-active">Firma</span></td>
+            <td><span class="cell-active">Notifica</span></td>
+            <td><span class="cell-active">Envia</span></td>
+          </tr>
+          <tr>
+            <td>SIRE / TRA</td>
+            <td><span class="cell-active">Global</span></td>
+            <td><span class="cell-active">Por propiedad</span></td>
+            <td><span class="cell-inactive">&mdash;</span></td>
+            <td><span class="cell-active">Alertas</span></td>
+            <td><span class="cell-active">Automatiza</span></td>
+          </tr>
+          <tr>
+            <td>Venta servicios extra</td>
+            <td><span class="cell-inactive">&mdash;</span></td>
+            <td><span class="cell-active">Configura</span></td>
+            <td><span class="cell-active">Compra</span></td>
+            <td><span class="cell-active">Aprueba</span></td>
+            <td><span class="cell-active">Sugiere</span></td>
+          </tr>
+          <tr>
+            <td>Anti-overbooking</td>
+            <td><span class="cell-inactive">&mdash;</span></td>
+            <td><span class="cell-active">Alertas</span></td>
+            <td><span class="cell-inactive">&mdash;</span></td>
+            <td><span class="cell-active">Notifica</span></td>
+            <td><span class="cell-active">Bloquea</span></td>
+          </tr>
+          <tr>
+            <td>Chat con huesped</td>
+            <td><span class="cell-inactive">&mdash;</span></td>
+            <td><span class="cell-active">Lee logs</span></td>
+            <td><span class="cell-active">Conversa</span></td>
+            <td><span class="cell-active">Escala</span></td>
+            <td><span class="cell-active">Responde 24/7</span></td>
+          </tr>
+          <tr>
+            <td>Integraciones PMS</td>
+            <td><span class="cell-active">Global</span></td>
+            <td><span class="cell-active">Conecta</span></td>
+            <td><span class="cell-inactive">&mdash;</span></td>
+            <td><span class="cell-inactive">&mdash;</span></td>
+            <td><span class="cell-active">Sincroniza</span></td>
+          </tr>
+          <tr>
+            <td>Analitica / Reportes</td>
+            <td><span class="cell-active">Plataforma</span></td>
+            <td><span class="cell-active">Propiedades</span></td>
+            <td><span class="cell-inactive">&mdash;</span></td>
+            <td><span class="cell-active">Resumen</span></td>
+            <td><span class="cell-active">Insights</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Impact Stats ===== -->
+<section class="impact-section">
+  <div class="container">
+    <h2 class="section-title">Impacto Esperado del Agente IA</h2>
+    <p class="section-subtitle">Metricas objetivo basadas en la automatizacion IA del 98% de interacciones</p>
+
+    <div class="impact-grid">
+      <div class="impact-card">
+        <div class="impact-icon" style="background: var(--primary-soft); color: var(--primary);">
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+        </div>
+        <div class="impact-value" style="color: var(--primary);">98%</div>
+        <div class="impact-label">Consultas resueltas por IA sin intervencion del admin</div>
+      </div>
+
+      <div class="impact-card">
+        <div class="impact-icon" style="background: var(--accent-soft); color: var(--accent);">
+          <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        </div>
+        <div class="impact-value" style="color: var(--accent);">90%</div>
+        <div class="impact-label">Reduccion de comunicacion directa anfitrion-huesped</div>
+      </div>
+
+      <div class="impact-card">
+        <div class="impact-icon" style="background: rgba(0,138,5,0.08); color: var(--success);">
+          <svg viewBox="0 0 24 24"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div class="impact-value" style="color: var(--success);">+35%</div>
+        <div class="impact-label">Incremento en ingresos por servicios extra vendidos por IA</div>
+      </div>
+
+      <div class="impact-card">
+        <div class="impact-icon" style="background: rgba(66,139,255,0.08); color: var(--info);">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        </div>
+        <div class="impact-value" style="color: var(--info);">3 min</div>
+        <div class="impact-label">Tiempo promedio de check-in digital completo</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Integrations Grid ===== -->
+<section class="integrations-section">
+  <div class="container">
+    <h2 class="section-title">Integraciones del Ecosistema</h2>
+    <p class="section-subtitle">Conexiones con plataformas de reservas, PMS y servicios gubernamentales</p>
+
+    <div class="integrations-grid">
+      <!-- Airbnb -->
+      <div class="integration-card">
+        <div class="int-icon" style="background: var(--ota-airbnb-bg); color: var(--ota-airbnb);">
+          <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg>
+        </div>
+        <h4>Airbnb</h4>
+        <span class="int-sub">Reservas + sync calendarios</span>
+      </div>
+
+      <!-- Booking.com -->
+      <div class="integration-card">
+        <div class="int-icon" style="background: var(--ota-booking-bg); color: var(--ota-booking);">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <h4>Booking.com</h4>
+        <span class="int-sub">Reservas + sync calendarios</span>
+      </div>
+
+      <!-- Stays PMS -->
+      <div class="integration-card">
+        <div class="int-icon" style="background: var(--ota-stays-bg); color: var(--ota-stays);">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+        </div>
+        <h4>Stays PMS</h4>
+        <span class="int-sub">Channel manager</span>
+      </div>
+
+      <!-- SIRE Colombia -->
+      <div class="integration-card">
+        <div class="int-icon" style="background: var(--ota-direct-bg); color: var(--ota-direct);">
+          <svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5.25-3.5 9.74-8 11-4.5-1.26-8-5.75-8-11V6l8-4z"/><polyline points="9 12 11 14 15 10"/></svg>
+        </div>
+        <h4>SIRE Colombia</h4>
+        <span class="int-sub">Migracion automatica</span>
+      </div>
+
+      <!-- WhatsApp -->
+      <div class="integration-card">
+        <div class="int-icon" style="background: rgba(37,211,102,0.08); color: #25D366;">
+          <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        </div>
+        <h4>WhatsApp</h4>
+        <span class="int-sub">Notificaciones + IA chat</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== Footer ===== -->
+<footer class="site-footer">
+  <div class="container">
+    <p>AloHost UX Flows v2.0 &mdash; <a href="design-system.html">Design System</a> &middot; <a href="superadmin.html">Super Admin</a> &middot; <a href="admin.html">Admin</a> &middot; <a href="guest-mobile.html">Huesped</a> &middot; <a href="admin-app.html">App Admin</a> &middot; <a href="flowmap.html">Mapa de Flujos</a></p>
+  </div>
+</footer>
+
+</body>
+</html>

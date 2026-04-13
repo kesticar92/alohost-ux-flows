@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AloHost — Design System</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="icons.css">
+<script src="theme.js"></script>
+<script src="icons.js"></script>
+<style>
+.container { max-width: 1400px; margin: 0 auto; padding: 0 40px; }
+
+/* Hero */
+.hero {
+  background: linear-gradient(135deg, #222 0%, #111 50%, var(--primary-dark) 100%);
+  padding: 100px 0 80px; position: relative; overflow: hidden;
+}
+.hero::before { content:''; position:absolute; top:-50%; right:-20%; width:600px; height:600px; background:radial-gradient(circle,rgba(255,56,92,0.25),transparent 70%); border-radius:50%; }
+.hero::after { content:''; position:absolute; bottom:-30%; left:-10%; width:400px; height:400px; background:radial-gradient(circle,rgba(0,132,137,0.15),transparent 70%); border-radius:50%; }
+.hero-content { position:relative; z-index:1; }
+.hero h1 {
+  font-family:var(--font-display); font-size:64px; font-weight:800; color:white;
+  letter-spacing:-3px; margin-bottom:12px; line-height:1;
+}
+.hero h1 span {
+  background:linear-gradient(135deg,var(--primary-light),var(--accent-light));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.hero p { font-size:20px; color:rgba(255,255,255,0.5); max-width:620px; font-weight:400; letter-spacing:-0.02em; line-height:1.6; }
+.badge-version {
+  display:inline-flex; align-items:center; gap:8px;
+  background:rgba(255,56,92,0.15); border:1px solid rgba(255,56,92,0.25);
+  color:var(--primary-light); padding:6px 18px; border-radius:var(--radius-full);
+  font-size:13px; font-weight:600; margin-bottom:24px;
+}
+
+/* Sections */
+.section { padding:72px 0; }
+.section-title { font-family:var(--font-display); font-size:32px; font-weight:700; margin-bottom:8px; color:var(--text-primary); letter-spacing:-0.04em; }
+.section-subtitle { font-size:16px; color:var(--text-secondary); margin-bottom:40px; line-height:1.6; }
+.section-label { font-size:13px; font-weight:600; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; margin-bottom:16px; }
+
+/* Platform Cards */
+.platform-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:24px; }
+.platform-card {
+  background:var(--bg-card); border-radius:var(--radius-xl); padding:32px;
+  border:1px solid var(--border-light); transition:var(--transition);
+  cursor:pointer; position:relative; overflow:hidden; text-decoration:none; display:block;
+}
+.platform-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.platform-card:nth-child(1)::before { background:var(--primary); }
+.platform-card:nth-child(2)::before { background:var(--accent); }
+.platform-card:nth-child(3)::before { background:var(--warning); }
+.platform-card:nth-child(4)::before { background:var(--info); }
+.platform-card:hover { transform:translateY(-6px); box-shadow:var(--shadow-xl); border-color:transparent; }
+.platform-icon {
+  width:56px; height:56px; border-radius:var(--radius-lg);
+  display:flex; align-items:center; justify-content:center; margin-bottom:20px;
+}
+.platform-icon svg { width:28px; height:28px; stroke:currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.platform-card h3 { font-family:var(--font-display); font-size:20px; margin-bottom:4px; letter-spacing:-0.03em; color:var(--text-primary); }
+.platform-card .platform-type { font-size:13px; color:var(--text-secondary); margin-bottom:16px; }
+.platform-card ul { list-style:none; }
+.platform-card ul li { font-size:13px; color:var(--text-secondary); padding:4px 0; display:flex; align-items:center; gap:8px; }
+.platform-card ul li svg { width:14px; height:14px; stroke:var(--primary); fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0; }
+.link-btn { display:inline-flex; align-items:center; gap:6px; margin-top:20px; font-size:14px; font-weight:600; color:var(--primary); text-decoration:none; transition:var(--transition); }
+.link-btn:hover { gap:10px; }
+.link-btn svg { width:16px; height:16px; stroke:currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+
+/* Colors */
+.color-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:20px; }
+.color-card { border-radius:var(--radius-lg); overflow:hidden; box-shadow:var(--shadow-card); background:var(--bg-card); transition:var(--transition); border:1px solid var(--border-light); }
+.color-card:hover { transform:translateY(-4px); box-shadow:var(--shadow-card-hover); }
+.color-swatch { height:120px; display:flex; align-items:flex-end; padding:12px; }
+.color-swatch span { font-size:12px; font-weight:600; background:rgba(255,255,255,0.9); padding:4px 10px; border-radius:var(--radius-sm); color:#222; font-family:var(--font-mono); }
+.color-info { padding:16px; }
+.color-info h4 { font-size:14px; font-weight:600; color:var(--text-primary); }
+.color-info p { font-size:12px; color:var(--text-secondary); margin-top:2px; }
+
+/* OTA */
+.ota-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:16px; }
+.ota-demo { padding:24px 20px; border-radius:var(--radius-lg); text-align:center; transition:var(--transition); cursor:pointer; }
+.ota-demo:hover { transform:translateY(-4px); }
+.ota-demo-icon { width:40px; height:40px; border-radius:var(--radius-md); display:inline-flex; align-items:center; justify-content:center; margin-bottom:12px; }
+.ota-demo-icon svg { width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.ota-demo h4 { font-size:14px; font-weight:600; margin-top:4px; }
+.ota-demo p { font-size:12px; margin-top:2px; }
+
+/* Typography */
+.type-sample { padding:24px 0; border-bottom:1px solid var(--border-light); }
+.type-sample:last-child { border-bottom:none; }
+.type-label { font-size:12px; font-weight:600; color:var(--primary); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+.type-meta { font-size:12px; color:var(--text-tertiary); margin-top:4px; font-family:var(--font-mono); }
+.type-display { font-family:var(--font-display); font-size:48px; font-weight:800; letter-spacing:-2px; color:var(--text-primary); }
+.type-h1 { font-family:var(--font-display); font-size:36px; font-weight:700; letter-spacing:-1.5px; color:var(--text-primary); }
+.type-h2 { font-family:var(--font-display); font-size:28px; font-weight:700; letter-spacing:-1px; color:var(--text-primary); }
+.type-h3 { font-family:var(--font-display); font-size:22px; font-weight:600; letter-spacing:-0.5px; color:var(--text-primary); }
+.type-body { font-size:16px; color:var(--text-secondary); line-height:1.6; }
+.type-small { font-size:14px; color:var(--text-tertiary); }
+.type-caption { font-size:12px; font-weight:500; color:var(--text-tertiary); text-transform:uppercase; letter-spacing:0.5px; }
+
+/* Buttons */
+.btn-grid { display:flex; flex-wrap:wrap; gap:16px; align-items:center; margin-bottom:32px; }
+
+/* Badges */
+.badge-row { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:24px; }
+.badge { display:inline-flex; align-items:center; gap:6px; padding:6px 14px; border-radius:var(--radius-full); font-size:12px; font-weight:600; }
+.badge svg { width:12px; height:12px; stroke:currentColor; fill:none; stroke-width:2; stroke-linecap:round; stroke-linejoin:round; }
+.badge-success { background:rgba(0,138,5,0.08); color:var(--success); }
+.badge-warning { background:rgba(224,121,18,0.08); color:var(--warning); }
+.badge-danger { background:rgba(193,53,21,0.08); color:var(--danger); }
+.badge-info { background:rgba(66,139,255,0.1); color:var(--info); }
+.badge-ai { background:rgba(108,92,231,0.08); color:#6C5CE7; }
+
+/* Status */
+.status-row { display:flex; gap:24px; flex-wrap:wrap; }
+.status-item { display:flex; align-items:center; gap:8px; font-size:14px; color:var(--text-primary); }
+.status-dot { width:10px; height:10px; border-radius:50%; }
+.status-dot.online { background:var(--success); box-shadow:0 0 6px rgba(0,138,5,0.5); }
+.status-dot.away { background:var(--warning); }
+.status-dot.busy { background:var(--danger); }
+.status-dot.offline { background:var(--text-tertiary); }
+
+/* Inputs */
+.input-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:24px; }
+.input-group { margin-bottom:20px; }
+.input-label { display:block; font-size:13px; font-weight:600; color:var(--text-primary); margin-bottom:6px; }
+.input-field {
+  width:100%; padding:12px 16px; border:1px solid var(--border-default);
+  border-radius:var(--radius-sm); font-family:var(--font-primary); font-size:14px;
+  transition:var(--transition); background:var(--bg-input); color:var(--text-primary);
+}
+.input-field:focus { outline:none; border-color:var(--text-primary); box-shadow:0 0 0 2px var(--bg-primary), 0 0 0 4px var(--text-primary); }
+.input-field::placeholder { color:var(--text-tertiary); }
+
+/* AI Section */
+.ai-section { background:#222222; padding:80px 0; }
+.ai-section .section-title { color:white; }
+.ai-section .section-subtitle { color:rgba(255,255,255,0.5); }
+.ai-layout { display:grid; grid-template-columns:420px 1fr; gap:60px; align-items:start; margin-top:40px; }
+.ai-chat-demo { max-width:420px; background:#1A1A1A; border-radius:var(--radius-xl); overflow:hidden; border:1px solid rgba(255,255,255,0.08); box-shadow:var(--shadow-xl); }
+.ai-chat-header { padding:20px 24px; background:linear-gradient(135deg,var(--primary),var(--primary-dark)); display:flex; align-items:center; gap:12px; }
+.ai-avatar {
+  width:40px; height:40px; border-radius:50%; background:rgba(255,255,255,0.2);
+  display:flex; align-items:center; justify-content:center; position:relative; color:white;
+}
+.ai-avatar svg { width:22px; height:22px; stroke:currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.ai-avatar::after { content:''; position:absolute; bottom:0; right:0; width:12px; height:12px; background:var(--success); border-radius:50%; border:2px solid var(--primary-dark); }
+.ai-chat-header h4 { color:white; font-size:16px; font-weight:600; }
+.ai-chat-header span { color:rgba(255,255,255,0.7); font-size:12px; }
+.ai-chat-body { padding:24px; display:flex; flex-direction:column; gap:16px; }
+.chat-bubble { max-width:85%; padding:14px 18px; border-radius:18px; font-size:14px; line-height:1.5; }
+.chat-bubble.ai { background:rgba(255,56,92,0.08); color:rgba(255,255,255,0.85); border-bottom-left-radius:4px; align-self:flex-start; }
+.chat-bubble.user { background:var(--primary); color:white; border-bottom-right-radius:4px; align-self:flex-end; }
+.chat-bubble .ai-label { font-size:11px; font-weight:600; color:var(--primary-light); margin-bottom:4px; display:flex; align-items:center; gap:4px; }
+.chat-bubble .ai-label svg { width:12px; height:12px; stroke:var(--primary-light); fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.ai-suggestions { display:flex; flex-wrap:wrap; gap:8px; padding:0 24px 20px; }
+.ai-suggestion { padding:8px 16px; background:rgba(255,56,92,0.08); border:1px solid rgba(255,56,92,0.15); border-radius:var(--radius-full); color:var(--primary-light); font-size:12px; font-weight:500; cursor:pointer; transition:var(--transition); }
+.ai-suggestion:hover { background:var(--primary); color:white; }
+.ai-feature-grid { display:grid; gap:20px; }
+.ai-feature-card {
+  background:rgba(255,255,255,0.04); border-radius:var(--radius-xl); padding:28px;
+  border:1px solid rgba(255,255,255,0.06); transition:var(--transition);
+}
+.ai-feature-card:hover { background:rgba(255,255,255,0.06); border-color:rgba(255,255,255,0.1); transform:translateY(-2px); }
+.ai-feature-icon {
+  width:48px; height:48px; border-radius:var(--radius-lg);
+  display:flex; align-items:center; justify-content:center; margin-bottom:16px;
+}
+.ai-feature-icon svg { width:24px; height:24px; stroke:currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.ai-feature-card h3 { font-family:var(--font-display); font-size:17px; font-weight:600; margin-bottom:6px; color:white; letter-spacing:-0.02em; }
+.ai-feature-card p { font-size:14px; color:rgba(255,255,255,0.5); line-height:1.6; }
+
+/* Dark Mode Section */
+.card-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:24px; }
+.feature-card {
+  background:var(--bg-card); border-radius:var(--radius-xl); padding:32px;
+  box-shadow:var(--shadow-card); transition:var(--transition); border:1px solid var(--border-light);
+}
+.feature-card:hover { box-shadow:var(--shadow-card-hover); transform:translateY(-4px); }
+.feature-card-icon {
+  width:52px; height:52px; border-radius:var(--radius-lg);
+  display:flex; align-items:center; justify-content:center; margin-bottom:20px;
+}
+.feature-card-icon svg { width:24px; height:24px; stroke:currentColor; fill:none; stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; }
+.feature-card h3 { font-family:var(--font-display); font-size:18px; font-weight:600; margin-bottom:8px; color:var(--text-primary); letter-spacing:-0.02em; }
+.feature-card p { font-size:14px; color:var(--text-secondary); line-height:1.6; }
+
+/* Icon Library */
+.icon-library-grid {
+  display:grid; grid-template-columns:repeat(auto-fill, minmax(100px, 1fr)); gap:16px;
+}
+.icon-showcase {
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:20px 12px; border:1px solid var(--border-light); border-radius:var(--radius-md);
+  background:var(--bg-card); transition:var(--transition); cursor:default;
+}
+.icon-showcase:hover { border-color:var(--primary); background:var(--primary-soft); transform:translateY(-2px); box-shadow:var(--shadow-md); }
+.icon-showcase svg {
+  width:24px; height:24px; stroke:var(--text-primary); fill:none;
+  stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; margin-bottom:10px;
+}
+.icon-showcase:hover svg { stroke:var(--primary); }
+.icon-showcase span { font-size:11px; color:var(--text-secondary); font-weight:500; text-align:center; line-height:1.3; }
+.icon-showcase:hover span { color:var(--primary); }
+
+/* Nav Demo */
+.nav-demo { background:#222222; border-radius:var(--radius-xl); overflow:hidden; box-shadow:var(--shadow-xl); }
+.nav-sidebar { width:260px; padding:24px 16px; display:flex; flex-direction:column; gap:4px; }
+.nav-logo { font-family:var(--font-display); font-size:22px; font-weight:800; color:white; padding:8px 12px; margin-bottom:24px; letter-spacing:-0.5px; }
+.nav-logo span { color:var(--primary); }
+.nav-item {
+  display:flex; align-items:center; gap:12px; padding:12px 16px;
+  border-radius:var(--radius-sm); color:rgba(255,255,255,0.5);
+  font-size:14px; font-weight:500; transition:var(--transition); cursor:pointer;
+}
+.nav-item:hover { background:rgba(255,255,255,0.05); color:rgba(255,255,255,0.8); }
+.nav-item.active { background:rgba(255,56,92,0.12); color:var(--primary); font-weight:600; }
+.nav-item svg {
+  width:18px; height:18px; stroke:currentColor; fill:none;
+  stroke-width:1.5; stroke-linecap:round; stroke-linejoin:round; flex-shrink:0;
+}
+.nav-divider { height:1px; background:rgba(255,255,255,0.06); margin:12px 0; }
+
+/* Responsive */
+@media (max-width:900px) {
+  .ai-layout { grid-template-columns:1fr; }
+  .hero h1 { font-size:44px; letter-spacing:-2px; }
+}
+@media (max-width:600px) {
+  .container { padding:0 20px; }
+  .hero h1 { font-size:36px; }
+}
+</style>
+</head>
+<body>
+
+<!-- Top Nav -->
+<nav class="top-nav">
+  <div class="top-nav-left">
+    <a href="design-system.html" class="logo">Alo<span>Host</span></a>
+    <div class="nav-links">
+      <a href="design-system.html" class="nav-link active">Design System</a>
+      <a href="superadmin.html" class="nav-link">Super Admin</a>
+      <a href="admin.html" class="nav-link">Admin</a>
+      <a href="guest-mobile.html" class="nav-link">Huesped</a>
+      <a href="admin-app.html" class="nav-link">App Admin</a>
+      <a href="flowmap.html" class="nav-link">Mapa de Flujos</a>
+    </div>
+  </div>
+</nav>
+
+<!-- 1. Hero -->
+<div class="hero">
+  <div class="container hero-content">
+    <div class="badge-version">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+      v2.0 — Apple Fonts + Airbnb Colors + Dark Mode
+    </div>
+    <h1>Alo<span>Host</span></h1>
+    <p>Sistema de diseno para la plataforma inteligente de gestion de alojamientos turisticos con IA integrada.</p>
+  </div>
+</div>
+
+<!-- 2. Plataformas -->
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">Plataformas</h2>
+    <p class="section-subtitle">Cuatro experiencias disenadas para cada rol del ecosistema AloHost</p>
+    <div class="platform-grid">
+
+      <a href="superadmin.html" class="platform-card">
+        <div class="platform-icon" style="background:var(--primary-soft); color:var(--primary);">
+          <svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5.25-3.5 9.74-8 11-4.5-1.26-8-5.75-8-11V6l8-4z"/></svg>
+        </div>
+        <h3>Super Admin</h3>
+        <p class="platform-type">Aplicacion Web Desktop</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Control total de la plataforma</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Gestion de suscripciones</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Analitica global</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Configuracion SIRE/TRA</li>
+        </ul>
+        <span class="link-btn">Explorar flujo <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></span>
+      </a>
+
+      <a href="admin.html" class="platform-card">
+        <div class="platform-icon" style="background:var(--accent-soft); color:var(--accent);">
+          <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg>
+        </div>
+        <h3>Admin (Anfitrion)</h3>
+        <p class="platform-type">Aplicacion Web Desktop</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Panel de reservas centralizado</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Gestion de propiedades</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Check-in/out automatico</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Venta de servicios extra</li>
+        </ul>
+        <span class="link-btn">Explorar flujo <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></span>
+      </a>
+
+      <a href="guest-mobile.html" class="platform-card">
+        <div class="platform-icon" style="background:rgba(224,121,18,0.08); color:var(--warning);">
+          <svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+        </div>
+        <h3>Huesped (User)</h3>
+        <p class="platform-type">Web App Movil</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Check-in digital con IA</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Asistente IA 24/7</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Servicios extras on-demand</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Guia de estancia</li>
+        </ul>
+        <span class="link-btn">Explorar flujo <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></span>
+      </a>
+
+      <a href="admin-app.html" class="platform-card">
+        <div class="platform-icon" style="background:rgba(66,139,255,0.1); color:var(--info);">
+          <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        </div>
+        <h3>App Admin</h3>
+        <p class="platform-type">Aplicacion Movil Nativa</p>
+        <ul>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Notificaciones push criticas</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Aprobacion rapida de acciones</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Vista rapida de reservas</li>
+          <li><svg viewBox="0 0 24 24"><polyline points="9 6 15 12 9 18"/></svg>Escalamiento de IA</li>
+        </ul>
+        <span class="link-btn">Explorar flujo <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="14 7 19 12 14 17"/></svg></span>
+      </a>
+
+    </div>
+  </div>
+</div>
+
+<!-- 3. Paleta de Colores -->
+<div class="section" style="background:var(--bg-secondary);">
+  <div class="container">
+    <h2 class="section-title">Paleta de Colores — Airbnb Inspired</h2>
+    <p class="section-subtitle">Rausch Red como primario, Teal como acento, con soporte completo de dark mode</p>
+    <div class="color-grid">
+      <div class="color-card">
+        <div class="color-swatch" style="background:linear-gradient(135deg,#FF385C,#D70466);"><span>#FF385C</span></div>
+        <div class="color-info"><h4>Primary — Rausch</h4><p>CTAs, brand, acciones principales</p></div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:linear-gradient(135deg,#FF5A7D,#FF385C);"><span>#FF5A7D</span></div>
+        <div class="color-info"><h4>Primary Light</h4><p>Hovers, estados activos</p></div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:linear-gradient(135deg,#008489,#00A699);"><span>#008489</span></div>
+        <div class="color-info"><h4>Accent — Teal</h4><p>Check-in, acciones secundarias</p></div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:linear-gradient(135deg,#222222,#484848);"><span>#222222</span></div>
+        <div class="color-info"><h4>Dark — Helo</h4><p>Texto principal, sidebar, fondos oscuros</p></div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:linear-gradient(135deg,#008A05,#00B812);"><span>#008A05</span></div>
+        <div class="color-info"><h4>Success</h4><p>Confirmaciones, verificaciones</p></div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:linear-gradient(135deg,#E07912,#F09000);"><span>#E07912</span></div>
+        <div class="color-info"><h4>Warning</h4><p>Alertas, pendientes</p></div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:linear-gradient(135deg,#C13515,#E04020);"><span>#C13515</span></div>
+        <div class="color-info"><h4>Danger</h4><p>Errores, cancelaciones</p></div>
+      </div>
+      <div class="color-card">
+        <div class="color-swatch" style="background:linear-gradient(135deg,#717171,#B0B0B0);"><span>#717171</span></div>
+        <div class="color-info"><h4>Gray — Foggy</h4><p>Texto secundario, bordes, placeholders</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. OTA Adaptive Colors -->
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">Colores Adaptativos por OTA</h2>
+    <p class="section-subtitle">La interfaz toma los colores de marca de cada OTA cuando una reserva proviene de ella</p>
+    <div class="ota-grid">
+
+      <div class="ota-demo" style="background:var(--ota-airbnb-bg); border:2px solid var(--ota-airbnb-border);">
+        <div class="ota-demo-icon" style="background:rgba(255,56,92,0.12); color:var(--ota-airbnb);">
+          <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg>
+        </div>
+        <h4 style="color:var(--ota-airbnb);">Airbnb</h4>
+        <p style="color:var(--text-secondary);">#FF385C</p>
+        <span class="ota-badge" data-ota="airbnb" style="margin-top:8px;">Airbnb</span>
+      </div>
+
+      <div class="ota-demo" style="background:var(--ota-booking-bg); border:2px solid var(--ota-booking-border);">
+        <div class="ota-demo-icon" style="background:rgba(0,53,128,0.12); color:var(--ota-booking);">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        </div>
+        <h4 style="color:var(--ota-booking);">Booking.com</h4>
+        <p style="color:var(--text-secondary);">#003580</p>
+        <span class="ota-badge" data-ota="booking" style="margin-top:8px;">Booking</span>
+      </div>
+
+      <div class="ota-demo" style="background:var(--ota-vrbo-bg); border:2px solid var(--ota-vrbo-border);">
+        <div class="ota-demo-icon" style="background:rgba(59,89,152,0.12); color:var(--ota-vrbo);">
+          <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        </div>
+        <h4 style="color:var(--ota-vrbo);">VRBO</h4>
+        <p style="color:var(--text-secondary);">#3B5998</p>
+        <span class="ota-badge" data-ota="vrbo" style="margin-top:8px;">VRBO</span>
+      </div>
+
+      <div class="ota-demo" style="background:var(--ota-stays-bg); border:2px solid var(--ota-stays-border);">
+        <div class="ota-demo-icon" style="background:rgba(108,92,231,0.12); color:var(--ota-stays);">
+          <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/><path d="M9 1v4m6-4v4M9 19v4m6-4v4M1 9h4m-4 6h4M19 9h4m-4 6h4"/></svg>
+        </div>
+        <h4 style="color:var(--ota-stays);">Stays PMS</h4>
+        <p style="color:var(--text-secondary);">#6C5CE7</p>
+        <span class="ota-badge" data-ota="stays" style="margin-top:8px;">Stays</span>
+      </div>
+
+      <div class="ota-demo" style="background:var(--ota-direct-bg); border:2px solid var(--ota-direct-border);">
+        <div class="ota-demo-icon" style="background:rgba(0,132,137,0.12); color:var(--ota-direct);">
+          <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <h4 style="color:var(--ota-direct);">Directa</h4>
+        <p style="color:var(--text-secondary);">#008489</p>
+        <span class="ota-badge" data-ota="direct" style="margin-top:8px;">Directa</span>
+      </div>
+
+      <div class="ota-demo" style="background:var(--ota-expedia-bg); border:2px solid var(--ota-expedia-border);">
+        <div class="ota-demo-icon" style="background:rgba(251,206,0,0.15); color:#A07800;">
+          <svg viewBox="0 0 24 24"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+        </div>
+        <h4 style="color:#A07800;">Expedia</h4>
+        <p style="color:var(--text-secondary);">#FBCE00</p>
+        <span class="ota-badge" data-ota="expedia" style="margin-top:8px;">Expedia</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- 5. Tipografia -->
+<div class="section" style="background:var(--bg-secondary);">
+  <div class="container">
+    <h2 class="section-title">Tipografia — Apple System Fonts</h2>
+    <p class="section-subtitle">SF Pro Display & SF Pro Text — la misma familia tipografica que usa Apple en sus productos</p>
+
+    <div class="type-sample">
+      <div class="type-label">Display — SF Pro Display 800</div>
+      <div class="type-display">Gestion inteligente</div>
+      <div class="type-meta">48px / 800 / letter-spacing: -2px</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-label">Heading 1 — SF Pro Display 700</div>
+      <div class="type-h1">Panel de Reservas</div>
+      <div class="type-meta">36px / 700 / letter-spacing: -1.5px</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-label">Heading 2 — SF Pro Display 700</div>
+      <div class="type-h2">Check-in Automatico</div>
+      <div class="type-meta">28px / 700 / letter-spacing: -1px</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-label">Heading 3 — SF Pro Text 600</div>
+      <div class="type-h3">Servicios Adicionales</div>
+      <div class="type-meta">22px / 600 / letter-spacing: -0.5px</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-label">Body — SF Pro Text 400</div>
+      <div class="type-body">Tu huesped completo el check-in digital exitosamente. Los documentos legales han sido firmados y el registro SIRE se actualizo automaticamente.</div>
+      <div class="type-meta">16px / 400 / line-height: 1.6</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-label">Small — SF Pro Text 400</div>
+      <div class="type-small">Ultima actualizacion: hace 5 minutos</div>
+      <div class="type-meta">14px / 400</div>
+    </div>
+    <div class="type-sample">
+      <div class="type-label">Caption — SF Pro Text 500</div>
+      <div class="type-caption">Estado de reserva</div>
+      <div class="type-meta">12px / 500 / uppercase / letter-spacing: 0.5px</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- 6. Botones -->
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">Botones</h2>
+    <p class="section-subtitle">Jerarquia clara inspirada en el minimalismo de Apple con el rojo Rausch de Airbnb</p>
+
+    <div class="section-label">Primarios — Tamanos</div>
+    <div class="btn-grid">
+      <button class="btn btn-primary btn-lg">Crear Reserva</button>
+      <button class="btn btn-primary">Check-in Digital</button>
+      <button class="btn btn-primary btn-sm">Guardar</button>
+    </div>
+
+    <div class="section-label">Variantes</div>
+    <div class="btn-grid">
+      <button class="btn btn-accent">Completar Check-in</button>
+      <button class="btn btn-secondary">Cancelar</button>
+      <button class="btn btn-ghost">Ver Detalles</button>
+      <button class="btn btn-danger">Eliminar</button>
+    </div>
+  </div>
+</div>
+
+<!-- 7. Badges & Estados -->
+<div class="section" style="background:var(--bg-secondary);">
+  <div class="container">
+    <h2 class="section-title">Badges & Estados</h2>
+    <p class="section-subtitle">Indicadores visuales claros, incluyendo badges adaptativos por OTA</p>
+
+    <div class="section-label">Estado de Reserva</div>
+    <div class="badge-row">
+      <span class="badge badge-success">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        Confirmada
+      </span>
+      <span class="badge badge-warning">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Pendiente
+      </span>
+      <span class="badge badge-danger">
+        <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Cancelada
+      </span>
+      <span class="badge badge-info">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        En proceso
+      </span>
+      <span class="badge badge-ai">
+        <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+        IA Activa
+      </span>
+    </div>
+
+    <div class="section-label" style="margin-top:32px;">OTA Badges</div>
+    <div class="badge-row">
+      <span class="ota-badge" data-ota="airbnb">Airbnb</span>
+      <span class="ota-badge" data-ota="booking">Booking.com</span>
+      <span class="ota-badge" data-ota="vrbo">VRBO</span>
+      <span class="ota-badge" data-ota="stays">Stays</span>
+      <span class="ota-badge" data-ota="direct">Directa</span>
+      <span class="ota-badge" data-ota="expedia">Expedia</span>
+    </div>
+
+    <div class="section-label" style="margin-top:32px;">Indicadores de Estado</div>
+    <div class="status-row">
+      <div class="status-item"><div class="status-dot online"></div> Propiedad activa</div>
+      <div class="status-item"><div class="status-dot away"></div> Check-in pendiente</div>
+      <div class="status-item"><div class="status-dot busy"></div> Overbooking detectado</div>
+      <div class="status-item"><div class="status-dot offline"></div> Propiedad inactiva</div>
+    </div>
+  </div>
+</div>
+
+<!-- 8. Formularios -->
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">Formularios</h2>
+    <p class="section-subtitle">Campos con foco tipo Apple (doble borde) y estilo limpio Airbnb</p>
+    <div class="input-grid">
+      <div class="input-group">
+        <label class="input-label">Nombre de la propiedad</label>
+        <input type="text" class="input-field" placeholder="Ej: Apartamento Centro Medellin">
+      </div>
+      <div class="input-group">
+        <label class="input-label">Email del huesped</label>
+        <input type="email" class="input-field" placeholder="huesped@email.com">
+      </div>
+      <div class="input-group">
+        <label class="input-label">Fecha de Check-in</label>
+        <input type="date" class="input-field">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 9. AI Agent Section -->
+<div class="ai-section">
+  <div class="container">
+    <h2 class="section-title">Agente IA — Alo</h2>
+    <p class="section-subtitle">Asistente inteligente que acompana al huesped durante toda su estancia</p>
+
+    <div class="ai-layout">
+      <!-- Chat Demo -->
+      <div class="ai-chat-demo">
+        <div class="ai-chat-header">
+          <div class="ai-avatar">
+            <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+          </div>
+          <div>
+            <h4>Alo — Asistente IA</h4>
+            <span>Siempre disponible</span>
+          </div>
+        </div>
+        <div class="ai-chat-body">
+          <div class="chat-bubble ai">
+            <div class="ai-label">
+              <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+              Alo IA
+            </div>
+            Hola Maria! Bienvenida al Apartamento Vista Mar. Tu check-in esta listo. Necesitas ayuda con algo?
+          </div>
+          <div class="chat-bubble user">Como llego desde el aeropuerto?</div>
+          <div class="chat-bubble ai">
+            <div class="ai-label">
+              <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+              Alo IA
+            </div>
+            Puedo organizar transporte privado por $45.000 COP, o aqui tienes las rutas en transporte publico... Deseas que reserve el transporte?
+          </div>
+        </div>
+        <div class="ai-suggestions">
+          <span class="ai-suggestion">Si, reservar transporte</span>
+          <span class="ai-suggestion">WiFi y accesos</span>
+          <span class="ai-suggestion">Restaurantes cerca</span>
+        </div>
+      </div>
+
+      <!-- Feature Cards -->
+      <div class="ai-feature-grid">
+        <div class="ai-feature-card">
+          <div class="ai-feature-icon" style="background:rgba(255,56,92,0.12); color:var(--primary);">
+            <svg viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.5"/><path d="M9 1v4m6-4v4M9 19v4m6-4v4M1 9h4m-4 6h4M19 9h4m-4 6h4"/></svg>
+          </div>
+          <h3>Contexto Inteligente</h3>
+          <p>Alo conoce la propiedad, reglas, servicios disponibles y preferencias del huesped para dar respuestas precisas.</p>
+        </div>
+        <div class="ai-feature-card">
+          <div class="ai-feature-icon" style="background:rgba(0,132,137,0.12); color:var(--accent);">
+            <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4H6z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          </div>
+          <h3>Venta de Servicios</h3>
+          <p>Sugiere y procesa servicios adicionales como transporte, limpieza extra, early check-in de forma natural.</p>
+        </div>
+        <div class="ai-feature-card">
+          <div class="ai-feature-icon" style="background:rgba(193,53,21,0.12); color:var(--danger);">
+            <svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5.25-3.5 9.74-8 11-4.5-1.26-8-5.75-8-11V6l8-4z"/><polyline points="9 12 11 14 15 10"/></svg>
+          </div>
+          <h3>Escalamiento Inteligente</h3>
+          <p>Solo contacta al anfitrion cuando la IA no puede resolver. Reduce la interaccion en un 90%.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 10. Dark Mode Section -->
+<div class="section" style="background:var(--bg-secondary);">
+  <div class="container">
+    <h2 class="section-title">Dark Mode</h2>
+    <p class="section-subtitle">Modo oscuro adaptativo que respeta las preferencias del dispositivo. Usa el boton flotante en la esquina inferior derecha.</p>
+    <div class="card-grid">
+      <div class="feature-card">
+        <div class="feature-card-icon" style="background:rgba(66,139,255,0.1); color:var(--info);">
+          <svg viewBox="0 0 24 24"><rect x="7" y="2" width="10" height="20" rx="2"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+        </div>
+        <h3>Adaptativo al Sistema</h3>
+        <p>Detecta automaticamente si tu dispositivo usa modo oscuro o claro y se adapta al instante.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon" style="background:var(--primary-soft); color:var(--primary);">
+          <svg viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115.36-6.36L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15.36 6.36L3 16"/></svg>
+        </div>
+        <h3>Toggle Manual</h3>
+        <p>El usuario puede alternar manualmente con el boton flotante. La preferencia se guarda en localStorage.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-card-icon" style="background:rgba(0,138,5,0.08); color:var(--success);">
+          <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        </div>
+        <h3>Colores OTA Adaptados</h3>
+        <p>Los colores de cada OTA se ajustan para mantener contraste y legibilidad en ambos modos.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 11. Biblioteca de Iconos -->
+<div class="section">
+  <div class="container">
+    <h2 class="section-title">Biblioteca de Iconos</h2>
+    <p class="section-subtitle">Iconos SVG stroke-based, 1.5px, estilo Apple SF Symbols. Todos disponibles via icons.js</p>
+    <div class="icon-library-grid">
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="4" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/></svg>
+        <span>dashboard</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+        <span>calendar</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg>
+        <span>home</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M20 21c0-4.418-3.582-7-8-7s-8 2.582-8 7"/></svg>
+        <span>user</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3.5"/><path d="M17 21c0-3.866-3.134-6-8-6s-8 2.134-8 6"/><circle cx="18" cy="8" r="2.5"/><path d="M22 21c0-2.761-1.791-4.5-4-4.5"/></svg>
+        <span>users</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
+        <span>search</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        <span>plus</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+        <span>check</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <span>bell</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><path d="M12 2l8 4v6c0 5.25-3.5 9.74-8 11-4.5-1.26-8-5.75-8-11V6l8-4z"/></svg>
+        <span>shield</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        <span>key</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><path d="M2 8.82a15 15 0 0120 0"/><path d="M5 12.86a10 10 0 0114 0"/><path d="M8.5 16.9a5 5 0 017 0"/><circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/></svg>
+        <span>wifi</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        <span>map-pin</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><path d="M5 17h14M5 17a2 2 0 01-2-2v-3a1 1 0 011-1h1l2-4h10l2 4h1a1 1 0 011 1v3a2 2 0 01-2 2M5 17a2 2 0 002 2h1a2 2 0 002-2M14 17a2 2 0 002 2h1a2 2 0 002-2"/></svg>
+        <span>car</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><path d="M3 7v10"/><path d="M21 7v10"/><path d="M3 17h18"/><path d="M3 12h18"/><path d="M3 12V9a2 2 0 012-2h14a2 2 0 012 2v3"/><circle cx="7" cy="9.5" r="1.5"/></svg>
+        <span>bed</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+        <span>star</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        <span>clock</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+        <span>globe</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+        <span>file-text</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+        <span>sparkle</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+        <span>send</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><rect x="2" y="4" width="20" height="16" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        <span>credit-card</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+        <span>dollar-sign</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg>
+        <span>bar-chart</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+        <span>settings</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+        <span>link</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><line x1="4" y1="6" x2="20" y2="6"/><line x1="7" y1="12" x2="17" y2="12"/><line x1="10" y1="18" x2="14" y2="18"/></svg>
+        <span>filter</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/><circle cx="12" cy="12" r="3"/></svg>
+        <span>eye</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg>
+        <span>lock</span>
+      </div>
+
+      <div class="icon-showcase">
+        <svg viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 01-.9 3.8 8.5 8.5 0 01-7.6 4.7 8.38 8.38 0 01-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 01-.9-3.8 8.5 8.5 0 014.7-7.6 8.38 8.38 0 013.8-.9h.5a8.48 8.48 0 018 8v.5z"/></svg>
+        <span>message-circle</span>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- 12. Navegacion Sidebar Demo -->
+<div class="section" style="background:var(--bg-secondary);">
+  <div class="container">
+    <h2 class="section-title">Navegacion — Sidebar</h2>
+    <p class="section-subtitle">Sidebar oscuro estilo Airbnb con tipografia Apple y highlight Rausch Red</p>
+    <div class="nav-demo">
+      <div class="nav-sidebar">
+        <div class="nav-logo">Alo<span>Host</span></div>
+
+        <div class="nav-item active">
+          <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="4" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="11" width="7" height="10" rx="1.5"/></svg>
+          Dashboard
+        </div>
+        <div class="nav-item">
+          <svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="17" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="16" y1="2" x2="16" y2="6"/></svg>
+          Reservas
+        </div>
+        <div class="nav-item">
+          <svg viewBox="0 0 24 24"><path d="M3 10.5L12 3l9 7.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1v-9.5z"/><path d="M9 21V14h6v7"/></svg>
+          Propiedades
+        </div>
+        <div class="nav-item">
+          <svg viewBox="0 0 24 24"><circle cx="9" cy="7" r="3.5"/><path d="M17 21c0-3.866-3.134-6-8-6s-8 2.134-8 6"/><circle cx="18" cy="8" r="2.5"/><path d="M22 21c0-2.761-1.791-4.5-4-4.5"/></svg>
+          Huespedes
+        </div>
+
+        <div class="nav-divider"></div>
+
+        <div class="nav-item">
+          <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+          Agente IA
+        </div>
+        <div class="nav-item">
+          <svg viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          Monetizacion
+        </div>
+        <div class="nav-item">
+          <svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><line x1="10" y1="9" x2="8" y2="9"/></svg>
+          SIRE / TRA
+        </div>
+
+        <div class="nav-divider"></div>
+
+        <div class="nav-item">
+          <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+          Configuracion
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 13. Footer -->
+<div class="footer">
+  <div class="container">
+    <p>AloHost Design System v2.0 — <a href="design-system.html">Design System</a> · <a href="superadmin.html">Super Admin</a> · <a href="admin.html">Admin</a> · <a href="guest-mobile.html">Huesped</a> · <a href="admin-app.html">App Admin</a> · <a href="flowmap.html">Mapa de Flujos</a></p>
+  </div>
+</div>
+
+</body>
+</html>
