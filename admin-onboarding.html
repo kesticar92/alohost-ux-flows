@@ -1,0 +1,1524 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AloHost — Onboarding Admin &amp; Configuración</title>
+<link rel="stylesheet" href="theme.css">
+<link rel="stylesheet" href="icons.css">
+<link rel="stylesheet" href="preview-toggle.css">
+<script src="theme.js"></script>
+<script src="icons.js"></script>
+<script src="preview-toggle.js"></script>
+<style>
+.flow-header{background:linear-gradient(135deg,#222 0%,#0a2540 50%,#003566 100%);padding:60px 40px 40px;position:relative;overflow:hidden}
+.flow-header::before{content:'';position:absolute;top:-50%;right:-10%;width:500px;height:500px;background:radial-gradient(circle,rgba(255,56,92,0.2),transparent 70%);border-radius:50%}
+.flow-header-content{position:relative;z-index:1;max-width:1400px;margin:0 auto}
+.flow-badge{display:inline-block;background:rgba(255,56,92,0.2);border:1px solid rgba(255,56,92,0.3);color:var(--primary-light);padding:6px 16px;border-radius:var(--radius-full);font-size:12px;font-weight:600;margin-bottom:16px}
+.flow-header h1{font-family:var(--font-display);font-size:42px;font-weight:800;color:#fff;margin-bottom:8px;letter-spacing:-0.03em}
+.flow-header p{font-size:18px;color:rgba(255,255,255,0.6);max-width:600px}
+
+.side-icon{width:20px;height:20px;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0;font-size:0}
+.side-icon svg{width:100%;height:100%;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* Wizard Progress Bar */
+.wizard-progress{display:flex;align-items:center;justify-content:center;gap:0;margin-bottom:40px;padding:0 20px}
+.wizard-step{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--font-display);font-size:14px;font-weight:700;flex-shrink:0;transition:var(--transition);position:relative;z-index:1}
+.wizard-step.done{background:var(--success);color:#fff}
+.wizard-step.active{background:linear-gradient(to bottom,var(--primary),var(--primary-dark));color:#fff;box-shadow:0 4px 16px var(--primary-glow)}
+.wizard-step.pending{background:var(--bg-tertiary);color:var(--text-tertiary)}
+.wizard-line{width:60px;height:3px;flex-shrink:0;transition:var(--transition)}
+.wizard-line.done{background:var(--success)}
+.wizard-line.active{background:linear-gradient(to right,var(--success),var(--primary))}
+.wizard-line.pending{background:var(--border-light)}
+
+/* Wizard Container */
+.wizard-container{max-width:640px;margin:0 auto;padding:40px 32px}
+.wizard-container.wide{max-width:860px}
+.wizard-container h2{font-family:var(--font-display);font-size:28px;font-weight:700;letter-spacing:-0.03em;text-align:center;margin-bottom:8px;color:var(--text-primary)}
+.wizard-container .subtitle{font-size:15px;color:var(--text-secondary);text-align:center;margin-bottom:32px;line-height:1.5}
+
+/* Form Elements */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.form-group{margin-bottom:20px}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--text-primary);margin-bottom:6px}
+.form-group .form-input{width:100%;padding:12px 16px;border:1.5px solid var(--border-default);border-radius:var(--radius-md);font-size:14px;font-family:var(--font-primary);background:var(--bg-input);color:var(--text-primary)}
+.form-group .form-input:focus{outline:none;border-color:var(--text-primary);box-shadow:0 0 0 3px rgba(0,0,0,0.06)}
+
+/* OTA Grid */
+.ota-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:24px}
+.ota-card-connect{background:var(--bg-card);border:1.5px solid var(--border-light);border-radius:var(--radius-lg);padding:24px;text-align:center;transition:var(--transition);position:relative;overflow:hidden}
+.ota-card-connect:hover{border-color:var(--border-strong);box-shadow:var(--shadow-md)}
+.ota-card-connect.connected{border-color:var(--success)}
+.ota-card-connect .ota-icon-area{width:56px;height:56px;border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:22px;font-weight:800;color:#fff}
+.ota-card-connect .ota-name{font-size:15px;font-weight:600;margin-bottom:4px}
+.ota-card-connect .ota-desc{font-size:12px;color:var(--text-secondary);margin-bottom:16px}
+.ota-card-connect .connected-badge{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius-full);background:rgba(0,138,5,0.08);color:var(--success);font-size:12px;font-weight:600}
+.ota-card-connect .connect-btn{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:var(--radius-full);background:var(--bg-secondary);color:var(--text-primary);font-size:12px;font-weight:600;border:1px solid var(--border-default);cursor:pointer;transition:var(--transition)}
+.ota-card-connect .connect-btn:hover{border-color:var(--text-primary);background:var(--bg-hover)}
+
+/* Option Cards */
+.option-cards{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:32px}
+.option-card{background:var(--bg-card);border:2px solid var(--border-light);border-radius:var(--radius-lg);padding:32px 24px;text-align:center;cursor:pointer;transition:var(--transition)}
+.option-card:hover{border-color:var(--primary);box-shadow:var(--shadow-lg);transform:translateY(-2px)}
+.option-card .option-icon{width:64px;height:64px;border-radius:50%;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.option-card .option-icon svg{width:28px;height:28px;stroke:var(--primary);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.option-card h3{font-size:17px;font-weight:700;margin-bottom:8px;letter-spacing:-0.02em}
+.option-card p{font-size:13px;color:var(--text-secondary);margin-bottom:20px;line-height:1.5}
+
+/* Imported Properties */
+.imported-props{display:flex;flex-direction:column;gap:12px}
+.imported-prop{display:flex;align-items:center;gap:16px;background:var(--bg-secondary);border-radius:var(--radius-md);padding:16px;border:1px solid var(--border-light)}
+.imported-prop .prop-thumb{width:64px;height:48px;border-radius:var(--radius-sm);background:linear-gradient(135deg,var(--bg-tertiary),var(--border-default));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.imported-prop .prop-thumb svg{width:24px;height:24px;stroke:var(--text-tertiary);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.imported-prop .prop-info{flex:1}
+.imported-prop .prop-info h4{font-size:14px;font-weight:600;margin-bottom:2px}
+.imported-prop .prop-info p{font-size:12px;color:var(--text-secondary)}
+
+/* Config Tab Stepper */
+.config-tabs{display:flex;gap:4px;margin-bottom:32px;padding:4px;background:var(--bg-secondary);border-radius:var(--radius-full);overflow-x:auto}
+.config-tab{padding:10px 20px;border-radius:var(--radius-full);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:var(--transition);white-space:nowrap}
+.config-tab:hover{color:var(--text-primary);background:var(--bg-hover)}
+.config-tab.active{background:var(--bg-card);color:var(--text-primary);font-weight:600;box-shadow:var(--shadow-sm)}
+
+/* Amenity Grid */
+.amenity-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.amenity-item{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;background:var(--bg-secondary);border-radius:var(--radius-md);border:1px solid var(--border-light);transition:var(--transition)}
+.amenity-item:hover{border-color:var(--border-strong)}
+.amenity-item.active{border-color:var(--primary);background:var(--primary-soft)}
+.amenity-label{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:500}
+.amenity-label svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* Toggle */
+.toggle-wrapper{display:flex;align-items:center;gap:12px}
+.toggle{width:44px;height:24px;background:var(--border-default);border-radius:var(--radius-full);position:relative;cursor:pointer;transition:var(--transition);flex-shrink:0}
+.toggle.active{background:var(--primary)}
+.toggle::after{content:'';position:absolute;top:2px;left:2px;width:20px;height:20px;background:#fff;border-radius:50%;transition:var(--transition);box-shadow:0 1px 3px rgba(0,0,0,0.2)}
+.toggle.active::after{left:22px}
+.toggle-sm{width:36px;height:20px}
+.toggle-sm::after{width:16px;height:16px}
+.toggle-sm.active::after{left:18px}
+
+/* Rule Rows */
+.rule-row{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;background:var(--bg-secondary);border-radius:var(--radius-md);margin-bottom:8px}
+.rule-row-text h5{font-weight:600;font-size:14px;margin-bottom:2px}
+.rule-row-text p{font-size:12px;color:var(--text-secondary)}
+
+/* Time Picker */
+.time-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:24px}
+.time-picker{background:var(--bg-secondary);border-radius:var(--radius-md);padding:16px;border:1px solid var(--border-light)}
+.time-picker label{display:block;font-size:12px;font-weight:600;color:var(--text-secondary);margin-bottom:8px}
+.time-picker .time-value{font-size:24px;font-weight:700;font-family:var(--font-display);color:var(--text-primary);letter-spacing:-0.03em}
+
+/* OTA Tabs */
+.ota-tabs{display:flex;gap:4px;margin-bottom:24px;padding:4px;background:var(--bg-secondary);border-radius:var(--radius-full)}
+.ota-tab{padding:10px 24px;border-radius:var(--radius-full);font-size:13px;font-weight:500;color:var(--text-secondary);cursor:pointer;transition:var(--transition)}
+.ota-tab:hover{color:var(--text-primary)}
+.ota-tab.active{color:#fff;font-weight:600;box-shadow:var(--shadow-sm)}
+
+/* OTA Preview Message */
+.ota-preview{background:var(--bg-secondary);border-radius:var(--radius-lg);padding:20px;border:1px solid var(--border-light);margin-top:24px}
+.ota-preview-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;font-size:13px;font-weight:600;color:var(--text-secondary)}
+.ota-preview-header svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:1.5}
+.ota-msg{background:#fff;border-radius:16px 16px 16px 4px;padding:14px 18px;font-size:13px;line-height:1.6;color:#222;max-width:85%;box-shadow:var(--shadow-sm)}
+[data-theme="dark"] .ota-msg{background:var(--bg-tertiary);color:var(--text-primary)}
+
+/* AI Config Preview */
+.ai-chat-preview{background:#1a1a1a;border-radius:var(--radius-lg);padding:24px;margin-top:24px;display:flex;flex-direction:column;gap:12px}
+.ai-chat-preview h4{font-size:14px;font-weight:600;color:#fff;display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.ai-chat-preview h4 svg{width:16px;height:16px;stroke:var(--primary);fill:none;stroke-width:1.5}
+.ai-msg{padding:12px 16px;font-size:13px;line-height:1.5;max-width:85%}
+.ai-msg.bot{align-self:flex-start;background:rgba(255,56,92,0.15);color:rgba(255,255,255,0.9);border-radius:16px 16px 16px 4px}
+.ai-msg.guest{align-self:flex-end;background:var(--primary);color:#fff;border-radius:16px 16px 4px 16px}
+
+/* Completion Screen */
+.completion-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:32px}
+.completion-card{background:var(--bg-card);border:1px solid var(--border-light);border-radius:var(--radius-lg);padding:24px;text-align:center;transition:var(--transition)}
+.completion-card:hover{box-shadow:var(--shadow-md);transform:translateY(-2px)}
+.completion-card .comp-icon{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 12px}
+.completion-card .comp-icon svg{width:24px;height:24px;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+.completion-card .comp-value{font-family:var(--font-display);font-size:24px;font-weight:700;margin-bottom:4px;letter-spacing:-0.03em}
+.completion-card .comp-label{font-size:13px;color:var(--text-secondary)}
+
+/* Confetti Dots */
+.confetti-container{position:relative;overflow:hidden;padding-top:40px;padding-bottom:40px}
+.confetti-dot{position:absolute;border-radius:50%;opacity:0.6;animation:confettiFall 3s ease-in-out infinite}
+@keyframes confettiFall{0%{transform:translateY(-20px) rotate(0deg);opacity:0}20%{opacity:0.6}80%{opacity:0.6}100%{transform:translateY(40px) rotate(360deg);opacity:0}}
+
+/* Upload Area */
+.upload-area{border:2px dashed var(--border-default);border-radius:var(--radius-lg);padding:32px;text-align:center;cursor:pointer;transition:var(--transition);background:var(--bg-secondary)}
+.upload-area:hover{border-color:var(--primary);background:var(--primary-soft)}
+.upload-area svg{width:32px;height:32px;stroke:var(--text-tertiary);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;margin-bottom:8px}
+.upload-area p{font-size:13px;color:var(--text-secondary)}
+.upload-area span{font-size:12px;color:var(--text-tertiary)}
+
+/* Capacity Grid */
+.capacity-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.capacity-item{background:var(--bg-secondary);border-radius:var(--radius-md);padding:16px;text-align:center;border:1px solid var(--border-light)}
+.capacity-item label{display:block;font-size:12px;color:var(--text-secondary);margin-bottom:8px;font-weight:500}
+.capacity-item .capacity-value{font-family:var(--font-display);font-size:28px;font-weight:700;color:var(--text-primary);letter-spacing:-0.03em}
+
+/* Wizard Logo */
+.wizard-logo{text-align:center;margin-bottom:32px;font-family:var(--font-display);font-size:28px;font-weight:800;color:var(--text-primary)}
+.wizard-logo span{color:var(--primary)}
+
+/* Full width screen body for wizards */
+.screen-body-full{min-height:600px;background:var(--bg-primary)}
+.screen-body-full .main-content{background:var(--bg-primary)}
+
+/* Checkbox-style */
+.check-list{display:flex;flex-wrap:wrap;gap:12px}
+.check-item{display:flex;align-items:center;gap:8px;padding:8px 16px;background:var(--bg-secondary);border-radius:var(--radius-full);border:1px solid var(--border-light);font-size:13px;font-weight:500;cursor:pointer;transition:var(--transition)}
+.check-item.checked{background:var(--primary-soft);border-color:var(--primary);color:var(--primary)}
+.check-box{width:18px;height:18px;border-radius:4px;border:1.5px solid var(--border-default);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--transition)}
+.check-item.checked .check-box{background:var(--primary);border-color:var(--primary)}
+.check-item.checked .check-box svg{stroke:#fff}
+.check-box svg{width:12px;height:12px;stroke:transparent;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round}
+
+/* Section Divider inside wizard */
+.wizard-divider{height:1px;background:var(--border-light);margin:24px 0}
+
+/* Link small */
+.link-sm{font-size:13px;color:var(--text-secondary);text-align:center;margin-top:16px}
+.link-sm a{color:var(--primary);text-decoration:none;font-weight:600}
+.link-sm a:hover{text-decoration:underline}
+
+/* Note bar */
+.note-bar{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--bg-secondary);border-radius:var(--radius-md);border:1px solid var(--border-light);font-size:13px;color:var(--text-secondary)}
+.note-bar svg{width:16px;height:16px;stroke:var(--info);fill:none;stroke-width:1.5;flex-shrink:0}
+</style>
+</head>
+<body>
+
+<nav class="top-nav">
+  <div class="top-nav-left">
+    <a href="design-system.html" class="logo">Alo<span>Host</span></a>
+    <div class="nav-links">
+      <a href="design-system.html" class="nav-link">Design System</a>
+      <a href="superadmin.html" class="nav-link">Super Admin</a>
+      <a href="admin.html" class="nav-link">Admin</a>
+      <a href="admin-onboarding.html" class="nav-link active">Onboarding</a>
+      <a href="guest-mobile.html" class="nav-link">Hu&eacute;sped</a>
+      <a href="admin-app.html" class="nav-link">App Admin</a>
+      <a href="flowmap.html" class="nav-link">Mapa de Flujos</a>
+    </div>
+  </div>
+</nav>
+
+<div class="flow-header">
+  <div class="flow-header-content">
+    <div class="flow-badge">CONFIGURACI&Oacute;N</div>
+    <h1>Onboarding &amp; Configuraci&oacute;n</h1>
+    <p>Flujo completo de registro del anfitri&oacute;n, configuraci&oacute;n de propiedades y personalizaci&oacute;n por OTA</p>
+  </div>
+</div>
+
+<div class="screens-container">
+
+  <div class="steps-row">
+    <div class="step-pill active" onclick="scrollToSection('s1')">1. Registro</div>
+    <div class="step-pill" onclick="scrollToSection('s2')">2. Negocio</div>
+    <div class="step-pill" onclick="scrollToSection('s3')">3. Conectar OTAs</div>
+    <div class="step-pill" onclick="scrollToSection('s4')">4. Agregar Propiedad</div>
+    <div class="step-pill" onclick="scrollToSection('s5')">5. Configurar Propiedad</div>
+    <div class="step-pill" onclick="scrollToSection('s5b')">5b. Amenidades</div>
+    <div class="step-pill" onclick="scrollToSection('s5c')">5c. Normas</div>
+    <div class="step-pill" onclick="scrollToSection('s6')">6. Personalizar por OTA</div>
+    <div class="step-pill" onclick="scrollToSection('s7')">7. Config IA</div>
+    <div class="step-pill" onclick="scrollToSection('s8')">8. Dashboard Listo</div>
+  </div>
+
+  <!-- ============================================================
+       SCREEN 1 — Registro de Cuenta
+       ============================================================ -->
+  <div class="flow-section" id="s1">
+    <div class="flow-section-header">
+      <div class="flow-number">1</div>
+      <div><h2>Registro de Cuenta</h2><p>Creaci&oacute;n de cuenta para el anfitri&oacute;n con datos b&aacute;sicos</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/registro</div>
+      </div>
+      <div class="screen-body-full">
+        <div class="main-content" style="background:var(--bg-primary);">
+          <div class="wizard-progress">
+            <div class="wizard-step active">1</div>
+            <div class="wizard-line active"></div>
+            <div class="wizard-step pending">2</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">3</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">4</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">5</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">6</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">7</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">8</div>
+          </div>
+
+          <div class="wizard-container">
+            <div class="wizard-logo">Alo<span>Host</span></div>
+            <h2>Crea tu cuenta de Anfitri&oacute;n</h2>
+            <p class="subtitle">Empieza a gestionar tus propiedades con inteligencia artificial</p>
+
+            <div class="form-group">
+              <label>Nombre completo</label>
+              <input type="text" class="form-input" placeholder="Carlos Andr&eacute;s Restrepo" value="Carlos Andr&eacute;s Restrepo">
+            </div>
+            <div class="form-group">
+              <label>Correo electr&oacute;nico</label>
+              <input type="email" class="form-input" placeholder="carlos@ejemplo.com" value="carlos@lofthouse.co">
+            </div>
+            <div class="form-group">
+              <label>Tel&eacute;fono</label>
+              <input type="tel" class="form-input" placeholder="+57 300 123 4567" value="+57 311 456 7890">
+            </div>
+            <div class="form-group">
+              <label>Contrase&ntilde;a</label>
+              <input type="password" class="form-input" value="passwordseguro123">
+            </div>
+
+            <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:8px;">Registrarme</button>
+
+            <div class="link-sm">&iquest;Ya tienes cuenta? <a href="#">Inicia sesi&oacute;n</a></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Formulario minimalista y centrado para reducir fricci&oacute;n. La barra de progreso superior da visibilidad del proceso completo. Logo prominente para reforzar marca. El flujo es secuencial y guiado — el anfitri&oacute;n nunca se siente perdido.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 2 — Datos del Negocio
+       ============================================================ -->
+  <div class="flow-section" id="s2">
+    <div class="flow-section-header">
+      <div class="flow-number">2</div>
+      <div><h2>Datos del Negocio</h2><p>Informaci&oacute;n fiscal y legal necesaria para cumplimiento SIRE/TRA</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/onboarding/negocio</div>
+      </div>
+      <div class="screen-body-full">
+        <div class="main-content" style="background:var(--bg-primary);">
+          <div class="wizard-progress">
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step active">2</div>
+            <div class="wizard-line active"></div>
+            <div class="wizard-step pending">3</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">4</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">5</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">6</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">7</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">8</div>
+          </div>
+
+          <div class="wizard-container">
+            <h2>Informaci&oacute;n de tu Negocio</h2>
+            <p class="subtitle">Estos datos son necesarios para el cumplimiento legal SIRE/TRA en Colombia</p>
+
+            <div class="form-group">
+              <label>Nombre del negocio</label>
+              <input type="text" class="form-input" placeholder="Lofthouse Hospitality S.A.S." value="Lofthouse Hospitality S.A.S.">
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label>NIT o C&eacute;dula</label>
+                <input type="text" class="form-input" placeholder="900.123.456-7" value="901.456.789-3">
+              </div>
+              <div class="form-group">
+                <label>Tipo de persona</label>
+                <select class="form-input">
+                  <option>Jur&iacute;dica</option>
+                  <option>Natural</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Direcci&oacute;n fiscal</label>
+              <input type="text" class="form-input" placeholder="Cra 43A #7-50, Of. 1201" value="Cra 43A #7-50, Of. 1201">
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Ciudad</label>
+                <input type="text" class="form-input" placeholder="Medell&iacute;n" value="Medell&iacute;n">
+              </div>
+              <div class="form-group">
+                <label>Departamento</label>
+                <select class="form-input">
+                  <option>Antioquia</option>
+                  <option>Cundinamarca</option>
+                  <option>Valle del Cauca</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Documento RUT</label>
+              <div class="upload-area">
+                <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                <p>Arrastra tu archivo RUT aqu&iacute; o haz clic para seleccionar</p>
+                <span>PDF, JPG o PNG — M&aacute;x. 5MB</span>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-top:8px;">
+              <button class="btn btn-secondary" style="flex:1;justify-content:center;">Atr&aacute;s</button>
+              <button class="btn btn-primary btn-lg" style="flex:2;justify-content:center;">Continuar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Se solicitan datos fiscales de forma temprana para habilitar el cumplimiento SIRE/TRA desde el inicio. El upload de RUT es drag &amp; drop para facilitar el proceso. Se muestra contexto legal claro ("necesario para cumplimiento SIRE/TRA") para justificar la solicitud de datos sensibles.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 3 — Conectar OTAs
+       ============================================================ -->
+  <div class="flow-section" id="s3">
+    <div class="flow-section-header">
+      <div class="flow-number">3</div>
+      <div><h2>Conectar OTAs</h2><p>Sincronizar plataformas de reservas para centralizar operaciones</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/onboarding/otas</div>
+      </div>
+      <div class="screen-body-full">
+        <div class="main-content" style="background:var(--bg-primary);">
+          <div class="wizard-progress">
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step active">3</div>
+            <div class="wizard-line active"></div>
+            <div class="wizard-step pending">4</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">5</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">6</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">7</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">8</div>
+          </div>
+
+          <div class="wizard-container wide">
+            <h2>Conecta tus Plataformas</h2>
+            <p class="subtitle">Sincroniza tus reservas desde las OTAs donde publicas</p>
+
+            <div class="ota-grid">
+              <!-- Airbnb — Connected -->
+              <div class="ota-card-connect connected">
+                <div class="ota-icon-area" style="background:#FF385C;">
+                  <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
+                <div class="ota-name">Airbnb</div>
+                <div class="ota-desc">Sincronizar reservas y calendarios</div>
+                <div class="connected-badge">
+                  <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--success);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg>
+                  Conectado
+                </div>
+              </div>
+
+              <!-- Booking — Connected -->
+              <div class="ota-card-connect connected">
+                <div class="ota-icon-area" style="background:#003580;">
+                  <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M8 7h8"/><path d="M8 11h8"/><path d="M8 15h4"/></svg>
+                </div>
+                <div class="ota-name">Booking.com</div>
+                <div class="ota-desc">Sincronizar reservas y tarifas</div>
+                <div class="connected-badge">
+                  <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:var(--success);fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg>
+                  Conectado
+                </div>
+              </div>
+
+              <!-- VRBO -->
+              <div class="ota-card-connect">
+                <div class="ota-icon-area" style="background:#3B5998;">
+                  <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><path d="M9 22V12h6v10"/></svg>
+                </div>
+                <div class="ota-name">VRBO</div>
+                <div class="ota-desc">Conectar y sincronizar reservas</div>
+                <div class="connect-btn">
+                  <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                  Conectar
+                </div>
+              </div>
+
+              <!-- Expedia -->
+              <div class="ota-card-connect">
+                <div class="ota-icon-area" style="background:#FBCE00;">
+                  <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#333;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
+                </div>
+                <div class="ota-name">Expedia</div>
+                <div class="ota-desc">Importar reservas autom&aacute;ticamente</div>
+                <div class="connect-btn">
+                  <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                  Conectar
+                </div>
+              </div>
+
+              <!-- Stays PMS -->
+              <div class="ota-card-connect">
+                <div class="ota-icon-area" style="background:#6C5CE7;">
+                  <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg>
+                </div>
+                <div class="ota-name">Stays PMS</div>
+                <div class="ota-desc">Integrar channel manager</div>
+                <div class="connect-btn">
+                  <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                  Conectar
+                </div>
+              </div>
+
+              <!-- Reserva Directa -->
+              <div class="ota-card-connect">
+                <div class="ota-icon-area" style="background:#008489;">
+                  <svg viewBox="0 0 24 24" style="width:28px;height:28px;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                </div>
+                <div class="ota-name">Reserva Directa</div>
+                <div class="ota-desc">Motor de reservas propio</div>
+                <div class="connect-btn">
+                  <svg viewBox="0 0 24 24" style="width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                  Conectar
+                </div>
+              </div>
+            </div>
+
+            <div class="note-bar">
+              <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              Puedes conectar m&aacute;s plataformas despu&eacute;s desde Configuraci&oacute;n
+            </div>
+
+            <div style="display:flex;gap:12px;margin-top:24px;">
+              <button class="btn btn-secondary" style="flex:1;justify-content:center;">Atr&aacute;s</button>
+              <button class="btn btn-primary btn-lg" style="flex:2;justify-content:center;">Continuar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Grid visual de OTAs con colores de marca para reconocimiento instant&aacute;neo. Estado de conexi&oacute;n claro (verde = conectado). Se permite continuar sin conectar todas — reduce fricci&oacute;n. Nota inferior tranquiliza que pueden agregar m&aacute;s despu&eacute;s.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 4 — Agregar Propiedad
+       ============================================================ -->
+  <div class="flow-section" id="s4">
+    <div class="flow-section-header">
+      <div class="flow-number">4</div>
+      <div><h2>Agregar Propiedad</h2><p>Importar propiedades existentes o crear una nueva desde cero</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/onboarding/propiedades</div>
+      </div>
+      <div class="screen-body-full">
+        <div class="main-content" style="background:var(--bg-primary);">
+          <div class="wizard-progress">
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step active">4</div>
+            <div class="wizard-line active"></div>
+            <div class="wizard-step pending">5</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">6</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">7</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">8</div>
+          </div>
+
+          <div class="wizard-container wide">
+            <h2>Agrega tu Primera Propiedad</h2>
+            <p class="subtitle">Si ya tienes propiedades en Airbnb o Booking, las importaremos autom&aacute;ticamente</p>
+
+            <div class="option-cards">
+              <div class="option-card">
+                <div class="option-icon">
+                  <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                </div>
+                <h3>Importar desde OTA</h3>
+                <p>Traer propiedades ya publicadas en tus OTAs conectadas</p>
+                <button class="btn btn-primary">Importar Propiedades</button>
+              </div>
+              <div class="option-card">
+                <div class="option-icon">
+                  <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><line x1="12" y1="10" x2="12" y2="16"/><line x1="9" y1="13" x2="15" y2="13"/></svg>
+                </div>
+                <h3>Crear Manualmente</h3>
+                <p>Agregar una nueva propiedad desde cero</p>
+                <button class="btn btn-secondary">Crear Propiedad</button>
+              </div>
+            </div>
+
+            <div class="wizard-divider"></div>
+
+            <h3 style="font-size:16px;font-weight:600;margin-bottom:16px;display:flex;align-items:center;gap:8px;">
+              <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:var(--success);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+              Propiedades detectadas
+            </h3>
+
+            <div class="imported-props">
+              <div class="imported-prop">
+                <div class="prop-thumb" style="background:linear-gradient(135deg,#2a1a3e,#4a2a6e);">
+                  <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
+                <div class="prop-info">
+                  <h4>Loft Poblado — Vista Ciudad</h4>
+                  <p>Medell&iacute;n, El Poblado — 4 hu&eacute;spedes, 1 hab, 1 ba&ntilde;o</p>
+                </div>
+                <span class="ota-badge" data-ota="airbnb">Airbnb</span>
+              </div>
+              <div class="imported-prop">
+                <div class="prop-thumb" style="background:linear-gradient(135deg,#1a2a3e,#2a4a6e);">
+                  <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
+                <div class="prop-info">
+                  <h4>Apartamento Centro Hist&oacute;rico</h4>
+                  <p>Cartagena, Centro — 6 hu&eacute;spedes, 2 hab, 2 ba&ntilde;os</p>
+                </div>
+                <span class="ota-badge" data-ota="booking">Booking</span>
+              </div>
+              <div class="imported-prop">
+                <div class="prop-thumb" style="background:linear-gradient(135deg,#1a3a2e,#2a5a4e);">
+                  <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                </div>
+                <div class="prop-info">
+                  <h4>Casa Laureles con Jard&iacute;n</h4>
+                  <p>Medell&iacute;n, Laureles — 8 hu&eacute;spedes, 3 hab, 2 ba&ntilde;os</p>
+                </div>
+                <span class="ota-badge" data-ota="airbnb">Airbnb</span>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-top:24px;">
+              <button class="btn btn-secondary" style="flex:1;justify-content:center;">Atr&aacute;s</button>
+              <button class="btn btn-primary btn-lg" style="flex:2;justify-content:center;">Continuar con 3 propiedades</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Dos caminos claros: importar o crear manualmente. La detecci&oacute;n autom&aacute;tica de propiedades desde OTAs conectadas ahorra tiempo al anfitri&oacute;n. Thumbnails y badges de OTA dan contexto visual inmediato. El bot&oacute;n indica cu&aacute;ntas propiedades se importar&aacute;n.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 5 — Configurar Propiedad (Datos Básicos)
+       ============================================================ -->
+  <div class="flow-section" id="s5">
+    <div class="flow-section-header">
+      <div class="flow-number">5</div>
+      <div><h2>Configurar Propiedad — Datos B&aacute;sicos</h2><p>Informaci&oacute;n esencial de la propiedad, capacidad y descripci&oacute;n</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/propiedades/loft-poblado/configurar</div>
+      </div>
+      <div class="screen-body-full">
+        <div class="main-content" style="background:var(--bg-primary);">
+          <div class="wizard-progress">
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step active">5</div>
+            <div class="wizard-line active"></div>
+            <div class="wizard-step pending">6</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">7</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">8</div>
+          </div>
+
+          <div class="wizard-container wide">
+            <h2>Configura: Loft Poblado</h2>
+            <p class="subtitle">Completa la informaci&oacute;n de tu propiedad paso a paso</p>
+
+            <div class="config-tabs">
+              <div class="config-tab active">Datos B&aacute;sicos</div>
+              <div class="config-tab">Amenidades</div>
+              <div class="config-tab">Normas</div>
+              <div class="config-tab">Check-in/out</div>
+              <div class="config-tab">Fotos</div>
+              <div class="config-tab">IA</div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Nombre de la propiedad</label>
+                <input type="text" class="form-input" value="Loft Poblado — Vista Ciudad">
+              </div>
+              <div class="form-group">
+                <label>Tipo de propiedad</label>
+                <select class="form-input">
+                  <option>Loft</option>
+                  <option>Apartamento</option>
+                  <option>Casa</option>
+                  <option>Habitaci&oacute;n</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Direcci&oacute;n</label>
+              <input type="text" class="form-input" value="Calle 10 #43E-31, El Poblado">
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Ciudad</label>
+                <input type="text" class="form-input" value="Medell&iacute;n">
+              </div>
+              <div class="form-group">
+                <label>Barrio / Zona</label>
+                <input type="text" class="form-input" value="El Poblado">
+              </div>
+            </div>
+
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:12px;margin-top:8px;">Capacidad</label>
+            <div class="capacity-grid">
+              <div class="capacity-item">
+                <label>Hu&eacute;spedes m&aacute;x</label>
+                <div class="capacity-value">4</div>
+              </div>
+              <div class="capacity-item">
+                <label>Habitaciones</label>
+                <div class="capacity-value">1</div>
+              </div>
+              <div class="capacity-item">
+                <label>Camas</label>
+                <div class="capacity-value">2</div>
+              </div>
+              <div class="capacity-item">
+                <label>Ba&ntilde;os</label>
+                <div class="capacity-value">1</div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Descripci&oacute;n</label>
+              <textarea class="form-input" rows="4" style="resize:vertical;">Hermoso loft en el coraz&oacute;n de El Poblado con vista panor&aacute;mica a la ciudad. Totalmente amoblado con dise&ntilde;o moderno, cocina integral y zona de trabajo. A pocos pasos de restaurantes, bares y transporte p&uacute;blico.</textarea>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-top:8px;">
+              <button class="btn btn-secondary" style="flex:1;justify-content:center;">Atr&aacute;s</button>
+              <button class="btn btn-primary btn-lg" style="flex:2;justify-content:center;">Siguiente: Amenidades</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Sub-tabs dentro del wizard permiten navegar entre secciones de configuraci&oacute;n de propiedad sin salir del flujo. Los datos importados se pre-llenan autom&aacute;ticamente. Capacidad usa inputs num&eacute;ricos grandes y claros. El bot&oacute;n indica el siguiente sub-paso.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 5B — Amenidades
+       ============================================================ -->
+  <div class="flow-section" id="s5b">
+    <div class="flow-section-header">
+      <div class="flow-number">5b</div>
+      <div><h2>Configurar Propiedad — Amenidades</h2><p>Seleccionar las comodidades disponibles en la propiedad</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/propiedades/loft-poblado/configurar#amenidades</div>
+      </div>
+      <div class="screen-body-full">
+        <div class="main-content" style="background:var(--bg-primary);">
+          <div class="wizard-progress">
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step active">5</div>
+            <div class="wizard-line active"></div>
+            <div class="wizard-step pending">6</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">7</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">8</div>
+          </div>
+
+          <div class="wizard-container wide">
+            <h2>Configura: Loft Poblado</h2>
+            <p class="subtitle">Selecciona las amenidades disponibles en tu propiedad</p>
+
+            <div class="config-tabs">
+              <div class="config-tab">Datos B&aacute;sicos</div>
+              <div class="config-tab active">Amenidades</div>
+              <div class="config-tab">Normas</div>
+              <div class="config-tab">Check-in/out</div>
+              <div class="config-tab">Fotos</div>
+              <div class="config-tab">IA</div>
+            </div>
+
+            <div class="amenity-grid">
+              <!-- WiFi — ON -->
+              <div class="amenity-item active">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><path d="M5 12.55a11 11 0 0114.08 0"/><path d="M1.42 9a16 16 0 0121.16 0"/><path d="M8.53 16.11a6 6 0 016.95 0"/><circle cx="12" cy="20" r="1"/></svg>
+                  WiFi
+                </div>
+                <div class="toggle active toggle-sm"></div>
+              </div>
+              <!-- AC — ON -->
+              <div class="amenity-item active">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><path d="M12 3v18"/><path d="M5.5 6.5l13 11"/><path d="M18.5 6.5l-13 11"/><path d="M3 12h18"/></svg>
+                  Aire Acond.
+                </div>
+                <div class="toggle active toggle-sm"></div>
+              </div>
+              <!-- Cocina — ON -->
+              <div class="amenity-item active">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+                  Cocina
+                </div>
+                <div class="toggle active toggle-sm"></div>
+              </div>
+              <!-- Lavadora — OFF -->
+              <div class="amenity-item">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="12" cy="14" r="4"/><line x1="8" y1="6" x2="8" y2="6.01"/></svg>
+                  Lavadora
+                </div>
+                <div class="toggle toggle-sm"></div>
+              </div>
+              <!-- TV — ON -->
+              <div class="amenity-item active">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg>
+                  TV
+                </div>
+                <div class="toggle active toggle-sm"></div>
+              </div>
+              <!-- Estacionamiento — OFF -->
+              <div class="amenity-item">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 17V7h4a3 3 0 010 6H9"/></svg>
+                  Parking
+                </div>
+                <div class="toggle toggle-sm"></div>
+              </div>
+              <!-- Piscina — OFF -->
+              <div class="amenity-item">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><path d="M2 20c2-1 4-1 6 0s4 1 6 0 4-1 6 0"/><path d="M2 16c2-1 4-1 6 0s4 1 6 0 4-1 6 0"/><path d="M6 12V4"/><path d="M18 12V4"/></svg>
+                  Piscina
+                </div>
+                <div class="toggle toggle-sm"></div>
+              </div>
+              <!-- Gimnasio — OFF -->
+              <div class="amenity-item">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><path d="M6 5v14"/><path d="M18 5v14"/><path d="M6 12h12"/><path d="M3 8v8"/><path d="M21 8v8"/></svg>
+                  Gimnasio
+                </div>
+                <div class="toggle toggle-sm"></div>
+              </div>
+              <!-- Terraza — OFF -->
+              <div class="amenity-item">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                  Terraza
+                </div>
+                <div class="toggle toggle-sm"></div>
+              </div>
+              <!-- Vista al mar — OFF -->
+              <div class="amenity-item">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+                  Vista al mar
+                </div>
+                <div class="toggle toggle-sm"></div>
+              </div>
+              <!-- Calefacción — OFF -->
+              <div class="amenity-item">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><path d="M9 9h.01"/><path d="M15 9h.01"/></svg>
+                  Calefacci&oacute;n
+                </div>
+                <div class="toggle toggle-sm"></div>
+              </div>
+              <!-- Secadora — OFF -->
+              <div class="amenity-item">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><rect x="2" y="2" width="20" height="20" rx="2"/><circle cx="12" cy="14" r="4"/><circle cx="12" cy="14" r="1"/></svg>
+                  Secadora
+                </div>
+                <div class="toggle toggle-sm"></div>
+              </div>
+              <!-- Plancha — OFF -->
+              <div class="amenity-item">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></svg>
+                  Plancha
+                </div>
+                <div class="toggle toggle-sm"></div>
+              </div>
+              <!-- Caja fuerte — OFF -->
+              <div class="amenity-item">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="12" cy="12" r="3"/><path d="M12 9v-1"/></svg>
+                  Caja fuerte
+                </div>
+                <div class="toggle toggle-sm"></div>
+              </div>
+              <!-- Agua caliente — ON -->
+              <div class="amenity-item active">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><path d="M12 2c-5 7-8 11-8 14a8 8 0 0016 0c0-3-3-7-8-14z"/></svg>
+                  Agua caliente
+                </div>
+                <div class="toggle active toggle-sm"></div>
+              </div>
+              <!-- Ascensor — OFF -->
+              <div class="amenity-item">
+                <div class="amenity-label">
+                  <svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="8 8 12 4 16 8"/><polyline points="8 16 12 20 16 16"/></svg>
+                  Ascensor
+                </div>
+                <div class="toggle toggle-sm"></div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-top:32px;">
+              <button class="btn btn-secondary" style="flex:1;justify-content:center;">Atr&aacute;s</button>
+              <button class="btn btn-primary btn-lg" style="flex:2;justify-content:center;">Siguiente: Normas</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Grid de amenidades con toggle individual permite activar/desactivar r&aacute;pidamente. Los &iacute;conos SVG hacen cada amenidad reconocible al instante. Las activas tienen borde primario y fondo tintado para feedback visual claro. Importadas de la OTA se pre-activan.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 5C — Normas y Horarios
+       ============================================================ -->
+  <div class="flow-section" id="s5c">
+    <div class="flow-section-header">
+      <div class="flow-number">5c</div>
+      <div><h2>Configurar Propiedad — Normas y Horarios</h2><p>Definir reglas de la casa, horarios de check-in/out y restricciones</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/propiedades/loft-poblado/configurar#normas</div>
+      </div>
+      <div class="screen-body-full">
+        <div class="main-content" style="background:var(--bg-primary);">
+          <div class="wizard-progress">
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step active">5</div>
+            <div class="wizard-line active"></div>
+            <div class="wizard-step pending">6</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">7</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">8</div>
+          </div>
+
+          <div class="wizard-container wide">
+            <h2>Configura: Loft Poblado</h2>
+            <p class="subtitle">Define las normas y horarios de tu propiedad</p>
+
+            <div class="config-tabs">
+              <div class="config-tab">Datos B&aacute;sicos</div>
+              <div class="config-tab">Amenidades</div>
+              <div class="config-tab active">Normas</div>
+              <div class="config-tab">Check-in/out</div>
+              <div class="config-tab">Fotos</div>
+              <div class="config-tab">IA</div>
+            </div>
+
+            <h3 style="font-size:16px;font-weight:600;margin-bottom:16px;">Horarios</h3>
+            <div class="time-grid">
+              <div class="time-picker">
+                <label>Hora de Check-in</label>
+                <div class="time-value">3:00 PM</div>
+              </div>
+              <div class="time-picker">
+                <label>Hora de Check-out</label>
+                <div class="time-value">11:00 AM</div>
+              </div>
+            </div>
+
+            <h3 style="font-size:16px;font-weight:600;margin-bottom:16px;">Reglas de la casa</h3>
+            <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:24px;">
+              <div class="rule-row">
+                <div class="rule-row-text">
+                  <h5>Mascotas permitidas</h5>
+                  <p>Los hu&eacute;spedes pueden llevar mascotas</p>
+                </div>
+                <div class="toggle"></div>
+              </div>
+              <div class="rule-row">
+                <div class="rule-row-text">
+                  <h5>Fumar permitido</h5>
+                  <p>Se permite fumar dentro de la propiedad</p>
+                </div>
+                <div class="toggle"></div>
+              </div>
+              <div class="rule-row">
+                <div class="rule-row-text">
+                  <h5>Fiestas permitidas</h5>
+                  <p>Se permiten eventos y reuniones</p>
+                </div>
+                <div class="toggle"></div>
+              </div>
+              <div class="rule-row">
+                <div class="rule-row-text">
+                  <h5>Ni&ntilde;os bienvenidos</h5>
+                  <p>Adecuado para familias con ni&ntilde;os</p>
+                </div>
+                <div class="toggle active"></div>
+              </div>
+            </div>
+
+            <h3 style="font-size:16px;font-weight:600;margin-bottom:16px;">Horario de silencio</h3>
+            <div class="time-grid" style="margin-bottom:24px;">
+              <div class="time-picker">
+                <label>Desde</label>
+                <div class="time-value">10:00 PM</div>
+              </div>
+              <div class="time-picker">
+                <label>Hasta</label>
+                <div class="time-value">7:00 AM</div>
+              </div>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Ocupaci&oacute;n m&aacute;xima</label>
+                <div style="display:flex;align-items:center;gap:8px;">
+                  <input type="text" class="form-input" value="4" style="width:80px;text-align:center;font-size:18px;font-weight:700;">
+                  <span style="font-size:14px;color:var(--text-secondary);">personas</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Reglas adicionales</label>
+              <textarea class="form-input" rows="3" style="resize:vertical;">No se permite el uso de velas. Se requiere dep&oacute;sito de seguridad de $200.000 COP. Favor mantener el volumen bajo despu&eacute;s de las 10 PM.</textarea>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-top:8px;">
+              <button class="btn btn-secondary" style="flex:1;justify-content:center;">Atr&aacute;s</button>
+              <button class="btn btn-primary btn-lg" style="flex:2;justify-content:center;">Siguiente: Check-in/out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Horarios de check-in/out con presentaci&oacute;n tipogr&aacute;fica grande para claridad. Toggles para reglas binarias (s&iacute;/no) mantienen la interfaz limpia. Horario de silencio y ocupaci&oacute;n m&aacute;xima son datos cr&iacute;ticos para la IA del agente. El textarea permite reglas personalizadas.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 6 — Personalizar por OTA
+       ============================================================ -->
+  <div class="flow-section" id="s6">
+    <div class="flow-section-header">
+      <div class="flow-number">6</div>
+      <div><h2>Personalizar por OTA</h2><p>Configuraci&oacute;n de mensajes y comportamiento espec&iacute;fico por plataforma</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/onboarding/ota-config</div>
+      </div>
+      <div class="screen-body-full">
+        <div class="main-content" style="background:var(--bg-primary);">
+          <div class="wizard-progress">
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step active">6</div>
+            <div class="wizard-line active"></div>
+            <div class="wizard-step pending">7</div>
+            <div class="wizard-line pending"></div>
+            <div class="wizard-step pending">8</div>
+          </div>
+
+          <div class="wizard-container wide">
+            <h2>Personalizaci&oacute;n por OTA</h2>
+            <p class="subtitle">Configura mensajes y reglas espec&iacute;ficas para cada plataforma</p>
+
+            <div class="ota-tabs">
+              <div class="ota-tab active" style="background:#FF385C;">Airbnb</div>
+              <div class="ota-tab">Booking.com</div>
+              <div class="ota-tab">Directo</div>
+            </div>
+
+            <div style="border:2px solid rgba(255,56,92,0.2);border-radius:var(--radius-lg);padding:24px;background:rgba(255,56,92,0.03);">
+              <div class="form-group">
+                <label style="color:#FF385C;">Mensaje de bienvenida Airbnb</label>
+                <textarea class="form-input" rows="3" style="resize:vertical;border-color:rgba(255,56,92,0.3);">Hola {{guest_name}}! Bienvenido a nuestro Loft en El Poblado. Soy Alo, tu asistente virtual. Estoy aqu&iacute; para ayudarte durante toda tu estad&iacute;a. &iquest;Necesitas instrucciones de llegada?</textarea>
+              </div>
+              <div class="form-group">
+                <label style="color:#FF385C;">Instrucciones de check-in para Airbnb</label>
+                <textarea class="form-input" rows="3" style="resize:vertical;border-color:rgba(255,56,92,0.3);">Para tu check-in: 1) Llega a Calle 10 #43E-31. 2) Ingresa el c&oacute;digo {{door_code}} en la cerradura inteligente. 3) Tu loft es el piso 5, puerta 502. 4) El WiFi es "LoftPoblado" con clave {{wifi_pass}}.</textarea>
+              </div>
+              <div class="form-group">
+                <label style="color:#FF385C;">Reglas de la casa (Airbnb)</label>
+                <textarea class="form-input" rows="2" style="resize:vertical;border-color:rgba(255,56,92,0.3);">Check-in: 3:00 PM | Check-out: 11:00 AM | No fumar | No fiestas | Silencio despu&eacute;s de 10 PM | M&aacute;x. 4 hu&eacute;spedes</textarea>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:8px;">
+                <div class="rule-row" style="background:rgba(255,56,92,0.05);">
+                  <div class="rule-row-text">
+                    <h5>Auto-responder rese&ntilde;as</h5>
+                    <p>El agente IA responder&aacute; rese&ntilde;as de hu&eacute;spedes autom&aacute;ticamente</p>
+                  </div>
+                  <div class="toggle active"></div>
+                </div>
+                <div class="rule-row" style="background:rgba(255,56,92,0.05);">
+                  <div class="rule-row-text">
+                    <h5>Enviar gu&iacute;a de ciudad</h5>
+                    <p>Enviar recomendaciones locales al hu&eacute;sped antes de su llegada</p>
+                  </div>
+                  <div class="toggle active"></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- OTA Preview -->
+            <div class="ota-preview">
+              <div class="ota-preview-header">
+                <svg viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                Vista previa — As&iacute; ver&aacute; el hu&eacute;sped en Airbnb
+              </div>
+              <div style="background:rgba(255,56,92,0.06);border-radius:var(--radius-md);padding:16px;border:1px solid rgba(255,56,92,0.15);">
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+                  <div style="width:32px;height:32px;border-radius:50%;background:var(--primary);display:flex;align-items:center;justify-content:center;">
+                    <svg viewBox="0 0 24 24" style="width:16px;height:16px;stroke:#fff;fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+                  </div>
+                  <div>
+                    <div style="font-size:13px;font-weight:600;">Alo — Asistente IA</div>
+                    <div style="font-size:11px;color:var(--text-tertiary);">Hace 1 minuto</div>
+                  </div>
+                </div>
+                <div class="ota-msg">Hola Ana! Bienvenida a nuestro Loft en El Poblado. Soy Alo, tu asistente virtual. Estoy aqu&iacute; para ayudarte durante toda tu estad&iacute;a. &iquest;Necesitas instrucciones de llegada?</div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-top:24px;">
+              <button class="btn btn-secondary" style="flex:1;justify-content:center;">Atr&aacute;s</button>
+              <button class="btn btn-primary btn-lg" style="flex:2;justify-content:center;">Continuar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Tabs con color de marca de cada OTA para contexto visual inmediato. Mensajes con variables din&aacute;micas ({{guest_name}}, {{door_code}}) que se reemplazan autom&aacute;ticamente. La vista previa muestra el resultado real para el hu&eacute;sped. Toggles por OTA permiten comportamiento granular.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 7 — Configuración del Agente IA
+       ============================================================ -->
+  <div class="flow-section" id="s7">
+    <div class="flow-section-header">
+      <div class="flow-number">7</div>
+      <div><h2>Configuraci&oacute;n del Agente IA</h2><p>Personalizar el comportamiento del asistente virtual Alo</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/onboarding/ia</div>
+      </div>
+      <div class="screen-body-full">
+        <div class="main-content" style="background:var(--bg-primary);">
+          <div class="wizard-progress">
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step active">7</div>
+            <div class="wizard-line active"></div>
+            <div class="wizard-step pending">8</div>
+          </div>
+
+          <div class="wizard-container wide">
+            <h2>Personaliza tu Agente IA</h2>
+            <p class="subtitle">Alo se comunicar&aacute; con tus hu&eacute;spedes por ti</p>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:32px;">
+              <div>
+                <div class="form-group">
+                  <label>Nombre del asistente</label>
+                  <input type="text" class="form-input" value="Alo" placeholder="Nombre del agente">
+                </div>
+
+                <div class="form-group">
+                  <label>Tono de comunicaci&oacute;n</label>
+                  <select class="form-input">
+                    <option>Amigable</option>
+                    <option>Profesional</option>
+                    <option>Casual</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label>Idiomas</label>
+                  <div class="check-list">
+                    <div class="check-item checked">
+                      <div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                      Espa&ntilde;ol
+                    </div>
+                    <div class="check-item checked">
+                      <div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                      Ingl&eacute;s
+                    </div>
+                    <div class="check-item">
+                      <div class="check-box"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+                      Portugu&eacute;s
+                    </div>
+                  </div>
+                </div>
+
+                <div class="wizard-divider"></div>
+
+                <div style="display:flex;flex-direction:column;gap:8px;">
+                  <div class="rule-row">
+                    <div class="rule-row-text">
+                      <h5>Responder autom&aacute;ticamente consultas</h5>
+                      <p>El agente contesta preguntas frecuentes sin intervenci&oacute;n</p>
+                    </div>
+                    <div class="toggle active"></div>
+                  </div>
+                  <div class="rule-row">
+                    <div class="rule-row-text">
+                      <h5>Ofrecer servicios extra proactivamente</h5>
+                      <p>Sugerir transporte, tours y late checkout</p>
+                    </div>
+                    <div class="toggle active"></div>
+                  </div>
+                  <div class="rule-row">
+                    <div class="rule-row-text">
+                      <h5>Escalar al anfitri&oacute;n si no puede resolver</h5>
+                      <p>Transferir al humano cuando la IA no tiene respuesta</p>
+                    </div>
+                    <div class="toggle active"></div>
+                  </div>
+                  <div class="rule-row">
+                    <div class="rule-row-text">
+                      <h5>Enviar resumen diario al anfitri&oacute;n</h5>
+                      <p>Reporte autom&aacute;tico con actividad del d&iacute;a</p>
+                    </div>
+                    <div class="toggle active"></div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <label style="display:block;font-size:13px;font-weight:600;margin-bottom:12px;">Vista previa de conversaci&oacute;n</label>
+                <div class="ai-chat-preview">
+                  <h4>
+                    <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+                    Agente Alo
+                  </h4>
+                  <div class="ai-msg bot">
+                    <div style="font-size:11px;font-weight:600;color:var(--primary-light);margin-bottom:4px;">Alo</div>
+                    Hola Maria! Bienvenida al Loft Poblado. Soy Alo, tu asistente virtual. Tu check-in es hoy a las 3:00 PM. &iquest;Necesitas indicaciones para llegar?
+                  </div>
+                  <div class="ai-msg guest">
+                    <div style="font-size:11px;font-weight:600;margin-bottom:4px;opacity:0.8;">Maria G.</div>
+                    S&iacute; por favor, vengo desde el aeropuerto. &iquest;C&oacute;mo llego?
+                  </div>
+                  <div class="ai-msg bot">
+                    <div style="font-size:11px;font-weight:600;color:var(--primary-light);margin-bottom:4px;">Alo</div>
+                    Desde el aeropuerto Jos&eacute; Mar&iacute;a C&oacute;rdova puedes tomar un taxi (aprox. $80.000 COP, 45 min) o usar nuestro servicio de transporte privado por $95.000 COP con veh&iacute;culo exclusivo. &iquest;Te gustar&iacute;a que reserve el transporte?
+                  </div>
+                  <div class="ai-msg guest">
+                    <div style="font-size:11px;font-weight:600;margin-bottom:4px;opacity:0.8;">Maria G.</div>
+                    S&iacute;, reserva el transporte privado por favor
+                  </div>
+                  <div class="ai-msg bot">
+                    <div style="font-size:11px;font-weight:600;color:var(--primary-light);margin-bottom:4px;">Alo</div>
+                    Listo! He reservado tu transporte privado. Un conductor te esperar&aacute; en la sala de llegadas con un letrero con tu nombre. Te enviar&eacute; los detalles por WhatsApp.
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:12px;margin-top:32px;">
+              <button class="btn btn-secondary" style="flex:1;justify-content:center;">Atr&aacute;s</button>
+              <button class="btn btn-primary btn-lg" style="flex:2;justify-content:center;">Finalizar configuraci&oacute;n</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Layout de dos columnas: configuraci&oacute;n a la izquierda, preview en vivo a la derecha. La conversaci&oacute;n de ejemplo demuestra el valor de la IA — incluyendo upsell de servicios extra. Toggles para capacidades del agente dan control granular. El tono configurable permite adaptar a la marca del anfitri&oacute;n.</p>
+    </div>
+  </div>
+
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 8 — Dashboard Listo
+       ============================================================ -->
+  <div class="flow-section" id="s8">
+    <div class="flow-section-header">
+      <div class="flow-number">8</div>
+      <div><h2>Dashboard Listo</h2><p>Configuraci&oacute;n completada — el anfitri&oacute;n est&aacute; listo para operar</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/dashboard</div>
+      </div>
+      <div class="screen-body-full">
+        <div class="main-content" style="background:var(--bg-primary);">
+          <div class="wizard-progress">
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+            <div class="wizard-line done"></div>
+            <div class="wizard-step done" style="background:var(--success);box-shadow:0 4px 16px rgba(0,138,5,0.3);"><svg viewBox="0 0 24 24" style="width:18px;height:18px;stroke:#fff;fill:none;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg></div>
+          </div>
+
+          <div class="wizard-container wide" style="text-align:center;position:relative;">
+            <!-- Confetti decoration -->
+            <div class="confetti-container" style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;">
+              <div class="confetti-dot" style="width:8px;height:8px;background:var(--primary);top:10%;left:15%;animation-delay:0s;"></div>
+              <div class="confetti-dot" style="width:6px;height:6px;background:var(--accent);top:5%;left:35%;animation-delay:0.5s;"></div>
+              <div class="confetti-dot" style="width:10px;height:10px;background:var(--success);top:15%;left:55%;animation-delay:1s;"></div>
+              <div class="confetti-dot" style="width:7px;height:7px;background:var(--warning);top:8%;left:75%;animation-delay:1.5s;"></div>
+              <div class="confetti-dot" style="width:9px;height:9px;background:var(--primary);top:20%;left:85%;animation-delay:0.3s;"></div>
+              <div class="confetti-dot" style="width:6px;height:6px;background:var(--info);top:12%;left:25%;animation-delay:0.8s;"></div>
+              <div class="confetti-dot" style="width:8px;height:8px;background:var(--accent);top:3%;left:65%;animation-delay:2s;"></div>
+              <div class="confetti-dot" style="width:5px;height:5px;background:var(--success);top:18%;left:45%;animation-delay:1.2s;"></div>
+              <div class="confetti-dot" style="width:7px;height:7px;background:var(--primary-light);top:7%;left:90%;animation-delay:0.7s;"></div>
+              <div class="confetti-dot" style="width:6px;height:6px;background:var(--warning);top:22%;left:10%;animation-delay:1.8s;"></div>
+            </div>
+
+            <div style="position:relative;z-index:1;">
+              <div style="width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--success),#00C853);display:flex;align-items:center;justify-content:center;margin:0 auto 24px;box-shadow:0 8px 24px rgba(0,138,5,0.3);">
+                <svg viewBox="0 0 24 24" style="width:36px;height:36px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+
+              <h2 style="font-size:36px;margin-bottom:8px;">Todo Listo!</h2>
+              <p class="subtitle" style="margin-bottom:40px;">Tu cuenta est&aacute; configurada. Bienvenido a AloHost.</p>
+
+              <div class="completion-grid">
+                <div class="completion-card">
+                  <div class="comp-icon" style="background:linear-gradient(135deg,var(--primary),var(--primary-dark));">
+                    <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  </div>
+                  <div class="comp-value">3</div>
+                  <div class="comp-label">Propiedades configuradas</div>
+                </div>
+                <div class="completion-card">
+                  <div class="comp-icon" style="background:linear-gradient(135deg,#003580,#0052CC);">
+                    <svg viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/></svg>
+                  </div>
+                  <div class="comp-value">2</div>
+                  <div class="comp-label">OTAs conectadas</div>
+                </div>
+                <div class="completion-card">
+                  <div class="comp-icon" style="background:linear-gradient(135deg,var(--accent),var(--accent-light));">
+                    <svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
+                  </div>
+                  <div class="comp-value" style="font-size:18px;">Activo</div>
+                  <div class="comp-label">Agente IA</div>
+                </div>
+                <div class="completion-card">
+                  <div class="comp-icon" style="background:linear-gradient(135deg,var(--success),#00C853);">
+                    <svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><polyline points="9 14 11 16 15 12"/></svg>
+                  </div>
+                  <div class="comp-value" style="font-size:18px;">Listo</div>
+                  <div class="comp-label">SIRE / TRA</div>
+                </div>
+              </div>
+
+              <button class="btn btn-primary btn-lg" style="padding:16px 48px;font-size:17px;border-radius:var(--radius-lg);">
+                <svg viewBox="0 0 24 24" style="width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+                Ir al Dashboard
+              </button>
+
+              <p style="font-size:13px;color:var(--text-tertiary);margin-top:24px;">Tu agente Alo ya est&aacute; listo para recibir hu&eacute;spedes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="screen-annotation">
+      <h4>Decisi&oacute;n UX</h4>
+      <p>Pantalla de celebraci&oacute;n con confetti visual y resumen de logros. Las 4 tarjetas de completitud refuerzan el valor creado durante el onboarding. CTA prominente hacia el dashboard. La barra de progreso completamente verde da satisfacci&oacute;n de logro. Mensaje final refuerza que la IA ya est&aacute; operativa.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>AloHost &mdash; Prototipo UX &middot; Onboarding Admin &amp; Configuraci&oacute;n</p>
+</div>
+
+<script>
+function scrollToSection(id) {
+  document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+  document.querySelectorAll('.step-pill').forEach(function(p) {
+    var num = id.replace('s','');
+    var pillText = p.textContent.trim();
+    var isMatch = pillText.startsWith(num + '.') || pillText.startsWith(num + ' ');
+    if (id === 's5b') isMatch = pillText.indexOf('Amenidades') !== -1;
+    if (id === 's5c') isMatch = pillText.indexOf('Normas') !== -1;
+    p.classList.toggle('active', isMatch);
+  });
+}
+
+window.addEventListener('scroll', function() {
+  var sections = document.querySelectorAll('.flow-section');
+  var pills = document.querySelectorAll('.step-pill');
+  var scrollPos = window.scrollY + 200;
+  var current = '';
+  sections.forEach(function(s) {
+    if (s.offsetTop <= scrollPos) current = s.id;
+  });
+  if (current) {
+    pills.forEach(function(p) {
+      var num = current.replace('s','');
+      var pillText = p.textContent.trim();
+      var isMatch = pillText.startsWith(num + '.') || pillText.startsWith(num + ' ');
+      if (current === 's5b') isMatch = pillText.indexOf('Amenidades') !== -1;
+      if (current === 's5c') isMatch = pillText.indexOf('Normas') !== -1;
+      p.classList.toggle('active', isMatch);
+    });
+  }
+});
+</script>
+</body>
+</html>
