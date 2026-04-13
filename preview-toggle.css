@@ -1,0 +1,547 @@
+/* =============================================
+   Preview Mode Toggle — Light/Dark Mockup Switcher
+   COMPREHENSIVE overrides for ALL phone and
+   desktop mockup elements.
+   ============================================= */
+
+/* ============ TOGGLE BAR ============ */
+.preview-bar {
+  position: sticky;
+  top: 64px;
+  z-index: 90;
+  background: rgba(255,255,255,0.85);
+  border-bottom: 1px solid #EBEBEB;
+  padding: 10px 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+.preview-bar span.preview-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: #717171;
+}
+.preview-switch {
+  display: flex;
+  background: #F7F7F7;
+  border: 1px solid #EBEBEB;
+  border-radius: 9999px;
+  padding: 3px;
+  gap: 2px;
+}
+.preview-switch button {
+  padding: 6px 20px;
+  border-radius: 9999px;
+  border: none;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', system-ui, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  background: transparent;
+  color: #717171;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.preview-switch button .p-icon { width: 16px; height: 16px; display: flex; align-items: center; }
+.preview-switch button .p-icon svg { width: 100%; height: 100%; }
+.preview-switch button.active {
+  background: #fff;
+  color: #222;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04);
+}
+.preview-switch button:not(.active):hover { color: #222; }
+
+
+/* =================================================================
+   =================================================================
+   LIGHT MODE — DESKTOP MOCKUPS (.screen-mockup)
+   =================================================================
+   ================================================================= */
+
+/* Mockup container */
+[data-preview="light"] .screen-mockup {
+  background: #fff !important;
+  border-color: #EBEBEB !important;
+}
+
+/* Browser bar */
+[data-preview="light"] .screen-mockup .screen-bar {
+  background: #F7F7F7 !important;
+  border-color: #EBEBEB !important;
+}
+[data-preview="light"] .screen-mockup .screen-url {
+  background: #fff !important;
+  color: #717171 !important;
+  border-color: #EBEBEB !important;
+}
+
+/* Sidebar — Light */
+[data-preview="light"] .screen-mockup .sidebar {
+  background: #FAFAFA !important;
+  border-right: 1px solid #EBEBEB !important;
+}
+[data-preview="light"] .screen-mockup .sidebar-logo {
+  color: #222 !important;
+}
+[data-preview="light"] .screen-mockup .side-item {
+  color: #717171 !important;
+}
+[data-preview="light"] .screen-mockup .side-item:hover {
+  background: #F0F0F0 !important;
+  color: #222 !important;
+}
+[data-preview="light"] .screen-mockup .side-item.active {
+  background: rgba(255,56,92,0.06) !important;
+  color: #FF385C !important;
+}
+[data-preview="light"] .screen-mockup .side-divider {
+  background: #EBEBEB !important;
+}
+
+/* Login screen BG override */
+[data-preview="light"] .screen-mockup > div[style*="background:linear-gradient"] {
+  background: #F7F7F7 !important;
+}
+[data-preview="light"] .screen-mockup > div[style*="background:linear-gradient"] div[style*="font-size:36px"] {
+  color: #222 !important;
+}
+[data-preview="light"] .screen-mockup > div[style*="background:linear-gradient"] p {
+  color: #717171 !important;
+}
+[data-preview="light"] .screen-mockup > div[style*="background:linear-gradient"] label {
+  color: #717171 !important;
+}
+[data-preview="light"] .screen-mockup > div[style*="background:linear-gradient"] input {
+  background: #fff !important;
+  border-color: #DDD !important;
+  color: #222 !important;
+}
+[data-preview="light"] .screen-mockup > div[style*="background:linear-gradient"] span {
+  color: #B0B0B0 !important;
+}
+[data-preview="light"] .screen-mockup > div[style*="background:linear-gradient"] div[style*="background:rgba(255,255,255"] {
+  background: #fff !important;
+  border-color: #EBEBEB !important;
+}
+
+/* Footer */
+[data-preview="light"] .footer {
+  background: #F7F7F7 !important;
+}
+[data-preview="light"] .footer p { color: #717171 !important; }
+[data-preview="light"] .footer a { color: #222 !important; }
+
+
+/* =================================================================
+   =================================================================
+   DARK MODE — DESKTOP MOCKUPS (.screen-mockup)
+   =================================================================
+   ================================================================= */
+
+[data-preview="dark"] .screen-mockup {
+  background: #1A1A1A;
+  border-color: #333;
+}
+[data-preview="dark"] .screen-mockup .screen-bar {
+  background: #1A1A1A;
+  border-color: #333;
+}
+[data-preview="dark"] .screen-mockup .screen-url {
+  background: #222;
+  color: #888;
+  border-color: #333;
+}
+
+/* Sidebar — Dark */
+[data-preview="dark"] .screen-mockup .sidebar {
+  background: #111 !important;
+  border-right: 1px solid #222;
+}
+[data-preview="dark"] .screen-mockup .sidebar-logo { color: #fff !important; }
+[data-preview="dark"] .screen-mockup .side-item { color: rgba(255,255,255,0.6) !important; }
+[data-preview="dark"] .screen-mockup .side-item:hover { background: rgba(255,255,255,0.08) !important; color: #fff !important; }
+[data-preview="dark"] .screen-mockup .side-item.active { background: rgba(255,56,92,0.12) !important; color: #FF385C !important; }
+[data-preview="dark"] .screen-mockup .side-divider { background: rgba(255,255,255,0.06) !important; }
+
+/* Main content — Dark */
+[data-preview="dark"] .screen-mockup .main-content {
+  background: #1A1A1A !important;
+  color: #fff !important;
+}
+[data-preview="dark"] .screen-mockup .main-content h2,
+[data-preview="dark"] .screen-mockup .main-content h3,
+[data-preview="dark"] .screen-mockup .main-content h4,
+[data-preview="dark"] .screen-mockup .main-content h5 { color: #fff !important; }
+[data-preview="dark"] .screen-mockup .main-header h2 { color: #fff !important; }
+[data-preview="dark"] .screen-mockup .stat-card { background: #222 !important; border-color: #333 !important; }
+[data-preview="dark"] .screen-mockup .stat-label { color: #999 !important; }
+[data-preview="dark"] .screen-mockup .stat-value { color: #fff !important; }
+[data-preview="dark"] .screen-mockup .chart-placeholder { background: #222 !important; border-color: #333 !important; }
+[data-preview="dark"] .screen-mockup .table-wrapper { background: #222 !important; border-color: #333 !important; }
+[data-preview="dark"] .screen-mockup table thead { background: #1A1A1A !important; }
+[data-preview="dark"] .screen-mockup table th { color: #888 !important; border-color: #333 !important; }
+[data-preview="dark"] .screen-mockup table td { border-color: #2A2A2A !important; color: #E0E0E0 !important; }
+[data-preview="dark"] .screen-mockup .setting-card { background: #222 !important; border-color: #333 !important; }
+[data-preview="dark"] .screen-mockup .setting-card h4 { color: #fff !important; }
+[data-preview="dark"] .screen-mockup .setting-card p { color: #888 !important; }
+[data-preview="dark"] .screen-mockup .form-input,
+[data-preview="dark"] .screen-mockup input { background: #222 !important; border-color: #444 !important; color: #fff !important; }
+[data-preview="dark"] .screen-mockup .form-group label { color: #A0A0A0 !important; }
+[data-preview="dark"] .screen-mockup .btn-secondary { background: #222 !important; color: #E0E0E0 !important; border-color: #444 !important; }
+[data-preview="dark"] .screen-mockup .property-card { background: #222 !important; border-color: #333 !important; }
+[data-preview="dark"] .screen-mockup .property-card h4 { color: #fff !important; }
+[data-preview="dark"] .screen-mockup .property-card p { color: #999 !important; }
+[data-preview="dark"] .screen-mockup .service-card { background: #222 !important; border-color: #333 !important; }
+[data-preview="dark"] .screen-mockup .service-card h4 { color: #fff !important; }
+[data-preview="dark"] .screen-mockup .service-card p { color: #999 !important; }
+[data-preview="dark"] .screen-mockup .timeline-item h4 { color: #fff !important; }
+[data-preview="dark"] .screen-mockup .timeline-item p { color: #999 !important; }
+[data-preview="dark"] .screen-mockup .cal-day { color: #ccc !important; }
+[data-preview="dark"] .screen-mockup .cal-day:hover { background: #333 !important; }
+[data-preview="dark"] .screen-mockup .rule-row { background: #222 !important; }
+[data-preview="dark"] .screen-mockup .rule-row h5 { color: #fff !important; }
+[data-preview="dark"] .screen-mockup .rule-row p { color: #888 !important; }
+[data-preview="dark"] .screen-mockup .toggle { background: #444 !important; }
+[data-preview="dark"] .screen-mockup .ai-bubble { background: rgba(255,56,92,0.08) !important; border-color: rgba(255,56,92,0.15) !important; }
+
+/* Property image placeholders dark */
+[data-preview="dark"] .screen-mockup .property-img { background: #333 !important; }
+
+/* Footer dark */
+[data-preview="dark"] .footer { background: #111 !important; }
+[data-preview="dark"] .footer p { color: rgba(255,255,255,0.4) !important; }
+[data-preview="dark"] .footer a { color: rgba(255,255,255,0.6) !important; }
+
+
+/* =================================================================
+   =================================================================
+   LIGHT MODE — PHONE MOCKUPS (.phone-mockup)
+   Every class with hardcoded dark colors.
+   =================================================================
+   ================================================================= */
+
+/* --- Phone frame --- */
+[data-preview="light"] .phone-mockup {
+  background: #F5F5F5 !important;
+  border-color: #C8C8C8 !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.12), 0 0 0 1px rgba(0,0,0,0.04) !important;
+}
+[data-preview="light"] .phone-notch { background: #F5F5F5 !important; }
+[data-preview="light"] .phone-status-bar { color: #222 !important; }
+[data-preview="light"] .phone-screen { background: #F9F9F9 !important; }
+[data-preview="light"] .phone-home { background: #222 !important; opacity: 0.15 !important; }
+
+/* --- Header --- */
+[data-preview="light"] .phone-mockup .m-header h3 { color: #222 !important; }
+
+/* --- Section titles --- */
+[data-preview="light"] .phone-mockup .m-section-title { color: #222 !important; }
+
+/* --- Generic cards (.m-card) --- */
+[data-preview="light"] .phone-mockup .m-card {
+  background: #fff !important;
+  border-color: #E8E8E8 !important;
+}
+[data-preview="light"] .phone-mockup .m-card h3,
+[data-preview="light"] .phone-mockup .m-card h4,
+[data-preview="light"] .phone-mockup .m-card h5,
+[data-preview="light"] .phone-mockup .m-card strong { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-card p { color: #555 !important; }
+
+/* --- Labels & Inputs --- */
+[data-preview="light"] .phone-mockup .m-label { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-input {
+  background: #fff !important;
+  border-color: #DDD !important;
+  color: #222 !important;
+}
+[data-preview="light"] .phone-mockup .m-input::placeholder { color: #B0B0B0 !important; }
+[data-preview="light"] .phone-mockup .m-input-filled {
+  background: #fff !important;
+  color: #222 !important;
+  border-color: rgba(0,138,5,0.3) !important;
+}
+[data-preview="light"] .phone-mockup .m-select {
+  background: #fff !important;
+  border-color: #DDD !important;
+  color: #222 !important;
+}
+
+/* --- Steps --- */
+[data-preview="light"] .phone-mockup .m-step { background: #DDD !important; }
+[data-preview="light"] .phone-mockup .m-step.active { background: #FF385C !important; }
+[data-preview="light"] .phone-mockup .m-step.done { background: #008A05 !important; }
+[data-preview="light"] .phone-mockup .m-step-bar { color: #B0B0B0 !important; }
+[data-preview="light"] .phone-mockup .m-step-bar .current { color: #FF385C !important; }
+
+/* --- Buttons --- */
+[data-preview="light"] .phone-mockup .m-btn-outline {
+  border-color: #DDD !important;
+  color: #222 !important;
+}
+
+/* --- Bottom nav --- */
+[data-preview="light"] .phone-mockup .m-bottom-nav {
+  background: #fff !important;
+  border-top-color: #E8E8E8 !important;
+}
+[data-preview="light"] .phone-mockup .m-nav-item .nav-icon { color: #B0B0B0 !important; }
+[data-preview="light"] .phone-mockup .m-nav-item p { color: #B0B0B0 !important; }
+[data-preview="light"] .phone-mockup .m-nav-item.active .nav-icon { color: #FF385C !important; }
+[data-preview="light"] .phone-mockup .m-nav-item.active p { color: #FF385C !important; }
+
+/* --- Document verification items --- */
+[data-preview="light"] .phone-mockup .m-doc-item {
+  background: #fff !important;
+  border-color: #E8E8E8 !important;
+}
+[data-preview="light"] .phone-mockup .m-doc-item.done {
+  border-color: rgba(0,138,5,0.3) !important;
+}
+[data-preview="light"] .phone-mockup .m-doc-info h4 { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-doc-info p { color: #717171 !important; }
+
+/* --- Verification success --- */
+[data-preview="light"] .phone-mockup .m-verify-success h3 { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-verify-success .match-label { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-verify-check {
+  border-bottom-color: #F0F0F0 !important;
+}
+[data-preview="light"] .phone-mockup .m-verify-check span { color: #555 !important; }
+
+/* --- Contract preview --- */
+[data-preview="light"] .phone-mockup .m-contract-preview {
+  background: #fff !important;
+  border-color: #E8E8E8 !important;
+}
+[data-preview="light"] .phone-mockup .m-contract-preview h4 { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-contract-preview p { color: #555 !important; }
+[data-preview="light"] .phone-mockup .m-contract-preview strong { color: #333 !important; }
+
+/* --- Checkbox & signature --- */
+[data-preview="light"] .phone-mockup .m-checkbox-label { color: #555 !important; }
+[data-preview="light"] .phone-mockup .m-signature-area {
+  background: #fff !important;
+  border-color: #DDD !important;
+}
+[data-preview="light"] .phone-mockup .m-signature-area .sig-text { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-signature-area .sig-hint { color: #B0B0B0 !important; }
+
+/* --- Stay card (home hub) --- */
+[data-preview="light"] .phone-mockup .m-stay-card {
+  background: #fff !important;
+  border-color: #E8E8E8 !important;
+}
+[data-preview="light"] .phone-mockup .m-stay-date .label { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-stay-date .value { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-stay-arrow { color: #B0B0B0 !important; }
+[data-preview="light"] .phone-mockup .m-stay-meta {
+  border-top-color: #EBEBEB !important;
+}
+[data-preview="light"] .phone-mockup .m-stay-meta-item .lbl { color: #717171 !important; }
+
+/* --- Access code card --- */
+[data-preview="light"] .phone-mockup .m-code-card {
+  background: linear-gradient(135deg, rgba(255,56,92,0.06), rgba(0,132,137,0.06)) !important;
+  border-color: rgba(255,56,92,0.15) !important;
+}
+[data-preview="light"] .phone-mockup .code-label { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .code-value { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-code-divider { background: #EBEBEB !important; }
+
+/* --- Quick action buttons --- */
+[data-preview="light"] .phone-mockup .m-quick-btn {
+  background: #fff !important;
+  border-color: #E8E8E8 !important;
+}
+[data-preview="light"] .phone-mockup .m-quick-btn:hover { background: #F7F7F7 !important; }
+[data-preview="light"] .phone-mockup .m-quick-btn p { color: #555 !important; }
+
+/* --- Service items --- */
+[data-preview="light"] .phone-mockup .m-service {
+  background: #fff !important;
+  border-color: #E8E8E8 !important;
+}
+[data-preview="light"] .phone-mockup .m-service:hover { background: #F7F7F7 !important; }
+[data-preview="light"] .phone-mockup .m-service-info h4 { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-service-info p { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-service-unavailable { color: #B0B0B0 !important; }
+[data-preview="light"] .phone-mockup .m-service.disabled { opacity: 0.5 !important; }
+
+/* --- AI card --- */
+[data-preview="light"] .phone-mockup .m-ai-card {
+  background: rgba(255,56,92,0.04) !important;
+  border-color: rgba(255,56,92,0.12) !important;
+}
+[data-preview="light"] .phone-mockup .m-ai-card h4 { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-ai-card p { color: #555 !important; }
+[data-preview="light"] .phone-mockup .m-ai-card-header div p { color: #717171 !important; }
+
+/* --- AI farewell (checkout) --- */
+[data-preview="light"] .phone-mockup .m-ai-farewell {
+  background: rgba(255,56,92,0.04) !important;
+  border-color: rgba(255,56,92,0.12) !important;
+}
+[data-preview="light"] .phone-mockup .m-ai-farewell .af-text { color: #555 !important; }
+
+/* --- Chat --- */
+[data-preview="light"] .phone-mockup .m-chat-header {
+  border-bottom-color: #E8E8E8 !important;
+}
+[data-preview="light"] .phone-mockup .m-chat-avatar::after { border-color: #F9F9F9 !important; }
+[data-preview="light"] .phone-mockup .m-bubble.ai {
+  background: rgba(255,56,92,0.06) !important;
+  color: #333 !important;
+}
+[data-preview="light"] .phone-mockup .m-chat-field {
+  background: #fff !important;
+  border-color: #DDD !important;
+  color: #222 !important;
+}
+[data-preview="light"] .phone-mockup .m-chat-field::placeholder { color: #B0B0B0 !important; }
+[data-preview="light"] .phone-mockup .m-chat-input { border-top-color: #E8E8E8 !important; }
+[data-preview="light"] .phone-mockup .m-suggestion {
+  background: rgba(255,56,92,0.04) !important;
+  border-color: rgba(255,56,92,0.15) !important;
+}
+
+/* --- Confirm card --- */
+[data-preview="light"] .phone-mockup .m-confirm-card {
+  background: rgba(0,138,5,0.06) !important;
+  border-color: rgba(0,138,5,0.15) !important;
+}
+[data-preview="light"] .phone-mockup .m-confirm-card h5 { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-confirm-card p { color: #555 !important; }
+
+/* --- Note (SIRE) --- */
+[data-preview="light"] .phone-mockup .m-note {
+  background: rgba(255,56,92,0.04) !important;
+}
+[data-preview="light"] .phone-mockup .m-note p { color: #717171 !important; }
+
+/* --- Comment input --- */
+[data-preview="light"] .phone-mockup .m-comment-input {
+  background: #fff !important;
+  border-color: #DDD !important;
+  color: #222 !important;
+}
+[data-preview="light"] .phone-mockup .m-comment-input::placeholder { color: #B0B0B0 !important; }
+
+/* --- Notification items (admin-app) --- */
+[data-preview="light"] .phone-mockup .notif-item { border-bottom-color: #F0F0F0 !important; }
+[data-preview="light"] .phone-mockup .notif-item:hover { background: #F7F7F7 !important; }
+[data-preview="light"] .phone-mockup .notif-item.unread { background: rgba(255,56,92,0.03) !important; }
+[data-preview="light"] .phone-mockup .notif-body h4 { color: #222 !important; }
+[data-preview="light"] .phone-mockup .notif-body p { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .notif-time { color: #B0B0B0 !important; }
+
+/* --- Reservation items (admin-app) --- */
+[data-preview="light"] .phone-mockup .res-item {
+  background: #fff !important;
+  border-color: #E8E8E8 !important;
+}
+[data-preview="light"] .phone-mockup .res-item:hover { background: #F7F7F7 !important; }
+[data-preview="light"] .phone-mockup .res-info h4 { color: #222 !important; }
+[data-preview="light"] .phone-mockup .res-info p { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .res-chevron { color: #B0B0B0 !important; }
+
+/* --- Filter pills (admin-app) --- */
+[data-preview="light"] .phone-mockup .filter-pill {
+  background: #F0F0F0 !important;
+  color: #717171 !important;
+}
+[data-preview="light"] .phone-mockup .filter-pill.active {
+  background: #FF385C !important;
+  color: #fff !important;
+}
+
+/* --- CATCH-ALL: Any remaining inline white text/bg in phones --- */
+[data-preview="light"] .phone-screen h3[style*="color:#fff"],
+[data-preview="light"] .phone-screen h4[style*="color:#fff"],
+[data-preview="light"] .phone-screen div[style*="color:#fff"],
+[data-preview="light"] .phone-screen span[style*="color:#fff"],
+[data-preview="light"] .phone-screen p[style*="color:#fff"] {
+  color: #222 !important;
+}
+[data-preview="light"] .phone-screen [style*="color:rgba(255,255,255,0.45)"],
+[data-preview="light"] .phone-screen [style*="color:rgba(255,255,255,0.4)"],
+[data-preview="light"] .phone-screen [style*="color:rgba(255,255,255,0.5)"] {
+  color: #717171 !important;
+}
+[data-preview="light"] .phone-screen [style*="color:rgba(255,255,255,0.65)"],
+[data-preview="light"] .phone-screen [style*="color:rgba(255,255,255,0.7)"],
+[data-preview="light"] .phone-screen [style*="color:rgba(255,255,255,0.6)"] {
+  color: #555 !important;
+}
+[data-preview="light"] .phone-screen [style*="color:rgba(255,255,255,0.35)"],
+[data-preview="light"] .phone-screen [style*="color:rgba(255,255,255,0.3)"],
+[data-preview="light"] .phone-screen [style*="color:rgba(255,255,255,0.2)"] {
+  color: #B0B0B0 !important;
+}
+
+/* Inline dark backgrounds → light */
+[data-preview="light"] .phone-screen div[style*="background:rgba(255,255,255,0.0"],
+[data-preview="light"] .phone-screen div[style*="background:rgba(255,255,255,0.1)"],
+[data-preview="light"] .phone-screen div[style*="background:rgba(255,255,255,0.08)"],
+[data-preview="light"] .phone-screen div[style*="background:#111"] {
+  background: #fff !important;
+}
+[data-preview="light"] .phone-screen [style*="border:1px solid rgba(255,255,255"],
+[data-preview="light"] .phone-screen [style*="border:1.5px solid rgba(255,255,255"],
+[data-preview="light"] .phone-screen [style*="border-bottom:1px solid rgba(255,255,255"] {
+  border-color: #E8E8E8 !important;
+}
+
+/* Camera/ID preview area — keep dark (it's a camera viewfinder) */
+[data-preview="light"] .phone-screen div[style*="background:linear-gradient(135deg,#1a1a2e"] {
+  background: linear-gradient(135deg, #E8E8E8, #DDD) !important;
+  border-color: rgba(255,56,92,0.2) !important;
+}
+
+/* Property image placeholder — keep styled but lighter */
+[data-preview="light"] .phone-screen div[style*="background:linear-gradient(135deg,#2a1a3a"] {
+  background: linear-gradient(135deg, #E8E0F0, #D8E8F0) !important;
+}
+
+/* Desktop property images — light gradient */
+[data-preview="light"] .screen-mockup .property-img {
+  filter: brightness(1.6) saturate(0.5) !important;
+}
+
+
+/* =================================================================
+   TRANSITION SMOOTHING
+   ================================================================= */
+.screen-mockup,
+.screen-mockup .screen-bar,
+.screen-mockup .screen-url,
+.screen-mockup .main-content,
+.screen-mockup .sidebar,
+.screen-mockup .stat-card,
+.screen-mockup .setting-card,
+.screen-mockup .table-wrapper,
+.screen-mockup .property-card,
+.screen-mockup .service-card,
+.phone-mockup,
+.phone-notch,
+.phone-screen,
+.m-card,
+.m-doc-item,
+.m-stay-card,
+.m-code-card,
+.m-quick-btn,
+.m-service,
+.m-contract-preview,
+.m-signature-area,
+.m-bottom-nav,
+.notif-item,
+.res-item,
+.filter-pill,
+.footer {
+  transition: background 0.4s ease, color 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+}
