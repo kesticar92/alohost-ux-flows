@@ -574,6 +574,37 @@
 [data-preview="light"] .phone-mockup .m-checkbox { border-color: #ddd !important; }
 [data-preview="light"] .phone-mockup .m-checkbox-checked { background: #FF385C !important; border-color: #FF385C !important; }
 
+/* --- Guests screen (Screen 1c) --- */
+[data-preview="light"] .phone-mockup .m-guests-title { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-guests-subtitle { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-ota-badge { background: rgba(255,56,92,0.06) !important; border-color: rgba(255,56,92,0.15) !important; }
+[data-preview="light"] .phone-mockup .m-ota-badge-text { color: #FF385C !important; }
+[data-preview="light"] .phone-mockup .m-gc-label { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-gc-value { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-ota-lock { background: rgba(0,0,0,0.03) !important; }
+[data-preview="light"] .phone-mockup .m-ota-lock-text { color: #999 !important; }
+[data-preview="light"] .phone-mockup .m-admin-notice { background: rgba(255,165,0,0.06) !important; border-color: rgba(255,165,0,0.15) !important; }
+[data-preview="light"] .phone-mockup .m-admin-notice-title { color: #E68A00 !important; }
+[data-preview="light"] .phone-mockup .m-admin-notice-text { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-guests-list-label { color: #999 !important; }
+[data-preview="light"] .phone-mockup .m-guest-row { background: rgba(0,0,0,0.02) !important; border-color: #E8E8E8 !important; }
+[data-preview="light"] .phone-mockup .m-guest-name { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-guest-role { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-guest-pending-tag { color: #999 !important; background: rgba(0,0,0,0.04) !important; }
+[data-preview="light"] .phone-mockup .m-guest-req-tags { color: #999 !important; }
+[data-preview="light"] .phone-mockup .m-guest-count-card { background: #fff !important; border: 1px solid #EBEBEB !important; }
+[data-preview="light"] .phone-mockup .m-reg-methods-card { background: #fff !important; border: 1px solid #EBEBEB !important; }
+[data-preview="light"] .phone-mockup .m-reg-methods-title { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-reg-option { border-bottom-color: #EBEBEB !important; }
+[data-preview="light"] .phone-mockup .m-reg-option-label { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-reg-option-desc { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-stepper-value { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-stepper-btn { border-color: #ddd !important; }
+[data-preview="light"] .phone-mockup .m-type-count { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-type-label { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-check-dot { background: #E0E0E0 !important; }
+[data-preview="light"] .phone-mockup .m-check-done { background: #FF385C !important; }
+
 /* ==========================================================
    BRAND COLORS — MUST NEVER BE OVERRIDDEN IN EITHER MODE
    ========================================================== */
@@ -724,6 +755,11 @@
 .m-data-summary-card,
 .m-legal-card,
 .m-security-badge,
+.m-guest-row,
+.m-guest-count-card,
+.m-reg-methods-card,
+.m-admin-notice,
+.m-ota-badge,
 .m-bottom-nav,
 .notif-item,
 .res-item,
