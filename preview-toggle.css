@@ -555,6 +555,25 @@
 [data-preview="light"] .phone-mockup .m-content [style*="border-bottom:1px solid rgba(255,255,255"] { border-bottom-color: #EBEBEB !important; }
 [data-preview="light"] .phone-mockup .m-content [style*="border:1px solid rgba(255,255,255"] { border-color: #E8E8E8 !important; }
 
+/* --- Privacy / Data Consent screen (Screen 1b) --- */
+[data-preview="light"] .phone-mockup .m-privacy-title { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-privacy-subtitle { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-data-card-title { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-data-item-text { color: #484848 !important; }
+[data-preview="light"] .phone-mockup .m-data-item { border-bottom-color: #EBEBEB !important; }
+[data-preview="light"] .phone-mockup .m-legal-card-title { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-legal-item { color: #484848 !important; }
+[data-preview="light"] .phone-mockup .m-consent-label { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-consent-detail { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-consent-row { background: rgba(0,0,0,0.03) !important; border-color: #E0E0E0 !important; }
+[data-preview="light"] .phone-mockup .m-security-text { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-security-badge { background: rgba(255,56,92,0.06) !important; }
+[data-preview="light"] .phone-mockup .m-skip-text { color: #999 !important; }
+[data-preview="light"] .phone-mockup .m-data-summary-card { background: #fff !important; border: 1px solid #EBEBEB !important; }
+[data-preview="light"] .phone-mockup .m-legal-card { background: #fff !important; border: 1px solid #EBEBEB !important; }
+[data-preview="light"] .phone-mockup .m-checkbox { border-color: #ddd !important; }
+[data-preview="light"] .phone-mockup .m-checkbox-checked { background: #FF385C !important; border-color: #FF385C !important; }
+
 /* ==========================================================
    BRAND COLORS — MUST NEVER BE OVERRIDDEN IN EITHER MODE
    ========================================================== */
@@ -701,6 +720,10 @@
 .m-service,
 .m-contract-preview,
 .m-signature-area,
+.m-consent-row,
+.m-data-summary-card,
+.m-legal-card,
+.m-security-badge,
 .m-bottom-nav,
 .notif-item,
 .res-item,
