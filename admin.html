@@ -138,6 +138,7 @@
     <div class="step-pill" onclick="scrollToScreen('s6',this)">6. Monetizacion</div>
     <div class="step-pill" onclick="scrollToScreen('s7',this)">7. Agente IA</div>
     <div class="step-pill" onclick="scrollToScreen('s8',this)">8. Legal SIRE</div>
+    <div class="step-pill" onclick="scrollToScreen('s9',this)">9. Acceso</div>
   </div>
 
   <!-- ============================================================
@@ -1020,6 +1021,190 @@
     </div>
   </div>
 
+  <div class="flow-arrow"><div class="flow-arrow-line"></div></div>
+
+  <!-- ============================================================
+       SCREEN 9 — Control de Acceso & Chapas Inteligentes
+       ============================================================ -->
+  <div class="flow-section" id="s9">
+    <div class="flow-section-header">
+      <div class="flow-number">9</div>
+      <div><h2>Control de Acceso & Chapas Inteligentes</h2><p>Gestion centralizada de cerraduras digitales (TTlock, YaleConnect) e instrucciones de acceso manual</p></div>
+    </div>
+
+    <div class="screen-mockup">
+      <div class="screen-bar">
+        <div class="screen-dot red"></div><div class="screen-dot yellow"></div><div class="screen-dot green"></div>
+        <div class="screen-url">https://app.alohost.co/access</div>
+      </div>
+      <div class="screen-body" data-active="access">
+        <div class="main-content">
+          <div class="main-header">
+            <h2>Control de Acceso</h2>
+            <div style="display:flex;gap:8px;">
+              <button class="btn btn-secondary btn-sm"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M21 2v6h-6"/><path d="M3 12a9 9 0 0115.36-6.36L21 8"/><path d="M3 22v-6h6"/><path d="M21 12a9 9 0 01-15.36 6.36L3 16"/></svg></span> Sincronizar Chapas</button>
+              <button class="btn btn-accent"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></span> Agregar Chapa</button>
+            </div>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card" style="border-left:3px solid var(--success);">
+              <div class="stat-label">Propiedades con Chapa Digital</div>
+              <div class="stat-value" style="color:var(--success);">6</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">TTlock & YaleConnect</div>
+            </div>
+            <div class="stat-card" style="border-left:3px solid #E07912;">
+              <div class="stat-label">Propiedades con Acceso Manual</div>
+              <div class="stat-value" style="color:#E07912;">2</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Instrucciones configuradas</div>
+            </div>
+            <div class="stat-card" style="border-left:3px solid var(--primary);">
+              <div class="stat-label">Codigos Activos Hoy</div>
+              <div class="stat-value" style="color:var(--primary);">8</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Temporales por reserva</div>
+            </div>
+            <div class="stat-card" style="border-left:3px solid var(--accent);">
+              <div class="stat-label">Aperturas Ultima Semana</div>
+              <div class="stat-value" style="color:var(--accent);">47</div>
+              <div style="font-size:12px;color:var(--text-secondary);margin-top:4px;">Registradas en log</div>
+            </div>
+          </div>
+
+          <div class="table-wrapper" style="margin-bottom:24px;">
+            <div class="table-header">
+              <h3>Acceso por Propiedad</h3>
+              <button class="btn btn-secondary btn-sm"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg></span> Exportar Log</button>
+            </div>
+            <table>
+              <thead><tr><th>Propiedad</th><th>Tipo Acceso</th><th>Estado</th><th>Codigo Actual</th><th>Acciones</th></tr></thead>
+              <tbody>
+                <tr>
+                  <td style="font-weight:600;">Loft Poblado</td>
+                  <td><span style="color:#22c55e;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:4px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></span> TTlock Pro</span></td>
+                  <td><span class="badge-sm badge-active">Conectado</span></td>
+                  <td style="font-family:var(--font-mono,monospace);font-weight:600;font-size:15px;">4829</td>
+                  <td><button class="btn btn-secondary btn-sm">Config</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:600;">Casa Laureles</td>
+                  <td><span style="color:#3b82f6;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:4px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></span> YaleConnect</span></td>
+                  <td><span class="badge-sm badge-active">Conectado</span></td>
+                  <td style="font-family:var(--font-mono,monospace);font-weight:600;font-size:15px;">7156</td>
+                  <td><button class="btn btn-secondary btn-sm">Config</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:600;">Apt. Centro #3</td>
+                  <td><span style="color:#22c55e;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:4px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></span> TTlock Pro</span></td>
+                  <td><span class="badge-sm badge-active">Conectado</span></td>
+                  <td style="font-family:var(--font-mono,monospace);font-weight:600;font-size:13px;color:var(--text-secondary);">Auto-gen</td>
+                  <td><button class="btn btn-secondary btn-sm">Config</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:600;">Studio Envigado</td>
+                  <td><span style="color:#E07912;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:4px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span> Manual</span></td>
+                  <td><span class="badge-sm badge-pending">Instrucciones</span></td>
+                  <td style="font-size:13px;color:var(--text-tertiary);">—</td>
+                  <td><button class="btn btn-secondary btn-sm">Editar</button></td>
+                </tr>
+                <tr>
+                  <td style="font-weight:600;">Loft El Tesoro</td>
+                  <td><span style="color:#3b82f6;font-weight:600;font-size:13px;display:inline-flex;align-items:center;gap:4px;"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></span> YaleConnect</span></td>
+                  <td><span class="badge-sm badge-active">Conectado</span></td>
+                  <td style="font-family:var(--font-mono,monospace);font-weight:600;font-size:15px;">2847</td>
+                  <td><button class="btn btn-secondary btn-sm">Config</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="two-col">
+            <div class="setting-card">
+              <h3 style="display:flex;align-items:center;gap:8px;margin-bottom:20px;"><span class="icon" style="color:var(--primary);"><svg viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/></svg></span> Configuracion de Chapa Digital</h3>
+
+              <div style="margin-bottom:16px;">
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:6px;">Marca</label>
+                <select style="width:100%;padding:10px 12px;background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--radius-md);color:var(--text-primary);font-size:14px;">
+                  <option>TTlock</option>
+                  <option>YaleConnect</option>
+                </select>
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:14px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                  <span style="font-size:13px;font-weight:500;">Generar codigo unico por reserva</span>
+                  <div class="toggle active"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                  <span style="font-size:13px;font-weight:500;">Codigo temporal con duracion de estadia</span>
+                  <div class="toggle active"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                  <span style="font-size:13px;font-weight:500;">Notificar apertura al admin</span>
+                  <div class="toggle active"></div>
+                </div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--bg-secondary);border-radius:var(--radius-md);">
+                  <span style="font-size:13px;font-weight:500;">Desactivar codigo tras check-out</span>
+                  <div class="toggle active"></div>
+                </div>
+              </div>
+
+              <div style="margin-top:16px;">
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:6px;">Codigo maestro de emergencia</label>
+                <input type="text" placeholder="Ej: 999888" style="width:100%;padding:10px 12px;background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--radius-md);color:var(--text-primary);font-size:14px;box-sizing:border-box;">
+              </div>
+            </div>
+
+            <div class="setting-card">
+              <h3 style="display:flex;align-items:center;gap:8px;margin-bottom:20px;"><span class="icon" style="color:#E07912;"><svg viewBox="0 0 24 24"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 11-7.778 7.778 5.5 5.5 0 017.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg></span> Instrucciones de Acceso Manual</h3>
+              <p style="font-size:13px;color:var(--text-secondary);margin-bottom:16px;">Para propiedades sin cerradura electronica</p>
+
+              <div style="margin-bottom:16px;">
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:6px;">Instrucciones de acceso</label>
+                <textarea rows="5" style="width:100%;padding:12px;background:var(--bg-secondary);border:1px solid var(--border-light);border-radius:var(--radius-md);color:var(--text-primary);font-size:13px;line-height:1.6;resize:vertical;box-sizing:border-box;">1. Al llegar al edificio, presiona el timbre del Apto 502.
+2. El portero te dara acceso al ascensor.
+3. Sube al piso 5, la puerta es la segunda a la derecha.
+4. La llave esta en la caja de seguridad junto a la puerta (codigo: 1234).
+5. Al entrar, desactiva la alarma con el codigo 5678.</textarea>
+              </div>
+
+              <div style="margin-bottom:16px;">
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:6px;">Subir fotos de instrucciones</label>
+                <div style="border:2px dashed var(--border-default);border-radius:var(--radius-md);padding:24px;text-align:center;color:var(--text-tertiary);cursor:pointer;">
+                  <span class="icon icon-xl" style="display:block;margin:0 auto 8px;"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span>
+                  <div style="font-size:13px;">Arrastra fotos aqui o haz clic para subir</div>
+                  <div style="font-size:11px;margin-top:4px;">JPG, PNG — Max 5 fotos</div>
+                </div>
+              </div>
+
+              <div style="margin-bottom:16px;">
+                <label style="font-size:12px;font-weight:600;color:var(--text-secondary);display:block;margin-bottom:6px;">Subir video de instrucciones</label>
+                <div style="border:2px dashed var(--border-default);border-radius:var(--radius-md);padding:24px;text-align:center;color:var(--text-tertiary);cursor:pointer;">
+                  <span class="icon icon-xl" style="display:block;margin:0 auto 8px;"><svg viewBox="0 0 24 24"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></span>
+                  <div style="font-size:13px;">Arrastra video aqui o haz clic para subir</div>
+                  <div style="font-size:11px;margin-top:4px;">MP4, MOV — Max 2 min</div>
+                </div>
+              </div>
+
+              <div style="background:var(--primary-soft);border-radius:var(--radius-md);padding:12px;font-size:12px;color:var(--primary);display:flex;align-items:start;gap:8px;">
+                <span class="icon icon-sm" style="flex-shrink:0;margin-top:1px;"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span>
+                <span>Estas instrucciones se envian automaticamente al huesped via IA antes del check-in</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="ai-bubble" style="margin-top:24px;">
+            <div class="ai-bubble-header"><span class="icon icon-sm"><svg viewBox="0 0 24 24"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg></span> Alo IA — Control de Acceso</div>
+            <p>Cada vez que un huesped tiene check-in, genero un <strong>codigo unico temporal</strong> para su chapa digital. El codigo se activa a la hora del check-in y se desactiva automaticamente tras el check-out. Para propiedades con acceso manual, envio las instrucciones con fotos y video al huesped <strong>2 horas antes</strong> de su llegada.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="screen-annotation">
+      <h4>Decision UX</h4>
+      <p>Control centralizado de acceso por propiedad. Integracion nativa con TTlock y YaleConnect. Codigos temporales automaticos eliminan la entrega fisica de llaves. Las instrucciones manuales con fotos/video son la alternativa para propiedades sin cerradura inteligente.</p>
+    </div>
+  </div>
+
 </div>
 
 <div class="footer">
@@ -1046,6 +1231,7 @@ function scrollToScreen(id, el) {
     { id: 'services', label: 'Servicios Extra', svg: '<line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>' },
     { id: 'documents', label: 'Documentos', svg: '<path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/>' },
     { id: 'legal', label: 'SIRE / TRA', svg: '<path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/>' },
+    { id: 'access', label: 'Control Acceso', svg: '<rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 018 0v4"/>' },
     { id: 'divider' },
     { id: 'integrations', label: 'Integraciones', svg: '<path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71"/>' },
     { id: 'settings', label: 'Configuracion', svg: '<circle cx="12" cy="12" r="3"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>' }
