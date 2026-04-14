@@ -26,7 +26,7 @@ Este repositorio contiene los **prototipos UX de alta fidelidad** en HTML/CSS/JS
 
 ## Funcionalidades Clave Diseñadas
 
-- **Agente IA "Alo"** — Presente en toda la experiencia del huésped (check-in, chat, servicios, check-out)
+- **Agente IA "Aloy"** — Presente en toda la experiencia del huésped (check-in, chat, servicios, check-out)
 - **Check-in automático** — Validación de identidad biométrica, registro SIRE/TRA, firma digital
 - **Calendario multi-propiedad** — Vista estilo Airbnb con barras de reserva por OTA
 - **Adaptación por OTA** — Colores e interfaces que se adaptan a Airbnb, Booking, VRBO, Stays, Directo
@@ -233,7 +233,7 @@ Este toggle afecta únicamente los mockups ilustrativos, no la página contenedo
 3. Verificación de Identidad (Biométrica)
 4. Firma de Contrato Digital
 5. Home Hub de la Estadía
-6. Chat con Alo IA
+6. Chat con Aloy IA
 7. Servicios Extra Disponibles
 8. Check-out Automatizado
 

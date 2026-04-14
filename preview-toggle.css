@@ -605,6 +605,44 @@
 [data-preview="light"] .phone-mockup .m-check-dot { background: #E0E0E0 !important; }
 [data-preview="light"] .phone-mockup .m-check-done { background: #FF385C !important; }
 
+/* --- Splash screen (Screen 0) --- */
+[data-preview="light"] .phone-mockup .m-splash-brand { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-splash-tagline { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-splash-greeting { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-splash-name { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-splash-loading { color: #999 !important; }
+[data-preview="light"] .phone-mockup .m-splash-source { color: #FF385C !important; }
+
+/* --- Payment screen (Screen 7b) --- */
+[data-preview="light"] .phone-mockup .m-pay-service-name { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-pay-service-desc { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-pay-label { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-pay-value { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-pay-total-label { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-pay-methods-label { color: #999 !important; }
+[data-preview="light"] .phone-mockup .m-pay-method { background: rgba(0,0,0,0.02) !important; border-color: #E8E8E8 !important; }
+[data-preview="light"] .phone-mockup .m-pay-method-active { background: rgba(255,56,92,0.04) !important; border-color: #FF385C !important; }
+[data-preview="light"] .phone-mockup .m-pay-method-name { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-pay-method-detail { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-pay-success-title { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-pay-success-desc { color: #717171 !important; }
+
+/* --- Collapsible sections --- */
+[data-preview="light"] .phone-mockup .m-collapsible summary { background: rgba(0,0,0,0.03) !important; border-color: #E8E8E8 !important; color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-collapsible .m-collapsible-body { background: #fafafa !important; border-color: #E8E8E8 !important; }
+
+/* --- Hub personalized greeting --- */
+[data-preview="light"] .phone-mockup .m-hub-greeting { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-hub-property { color: #222 !important; }
+
+/* --- ICR auto-fill badges --- */
+[data-preview="light"] .phone-mockup .m-icr-badge { color: #008A05 !important; background: rgba(0,138,5,0.08) !important; }
+[data-preview="light"] .phone-mockup .m-icr-ribbon { background: rgba(0,138,5,0.06) !important; color: #008A05 !important; }
+
+/* --- Extra guest purchase card --- */
+[data-preview="light"] .phone-mockup .m-extra-title { color: #222 !important; }
+[data-preview="light"] .phone-mockup .m-extra-subtitle { color: #717171 !important; }
+
 /* ==========================================================
    BRAND COLORS — MUST NEVER BE OVERRIDDEN IN EITHER MODE
    ========================================================== */
