@@ -637,6 +637,9 @@
 [data-preview="light"] .phone-mockup .m-theme-toggle { background: rgba(0,0,0,0.04) !important; border-color: #E0E0E0 !important; }
 [data-preview="light"] .phone-mockup .m-toggle-opt { color: #999 !important; }
 [data-preview="light"] .phone-mockup .m-toggle-active { background: #FF385C !important; color: #fff !important; }
+[data-preview="light"] .phone-mockup .m-cta-sticky { background: linear-gradient(to top, #fff 70%, transparent) !important; }
+[data-preview="light"] .phone-mockup .m-cta-sticky .cta-locked { background: #E0E0E0 !important; color: #999 !important; }
+[data-preview="light"] .phone-mockup .m-cta-sticky .cta-hint { color: #bbb !important; }
 [data-preview="light"] .phone-mockup .m-chat-minimize { background: rgba(0,0,0,0.05) !important; border-color: #E0E0E0 !important; color: #999 !important; }
 [data-preview="light"] .phone-mockup .m-chat-input { background: #fff !important; border-top-color: #EBEBEB !important; }
 [data-preview="light"] .phone-mockup .m-chat-field { background: rgba(0,0,0,0.04) !important; border-color: #E0E0E0 !important; color: #222 !important; }

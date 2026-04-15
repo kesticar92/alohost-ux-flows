@@ -310,6 +310,32 @@
   color: #fff;
 }
 
+/* Sticky CTA wrapper — always visible at bottom of phone */
+.m-cta-sticky {
+  position: sticky;
+  bottom: 0;
+  background: linear-gradient(to top, #111 70%, transparent);
+  padding: 16px 20px 12px;
+  z-index: 5;
+}
+.m-cta-sticky .m-btn {
+  transition: all 0.3s ease;
+}
+.m-cta-sticky .m-btn.cta-locked {
+  background: rgba(255,255,255,0.1);
+  color: rgba(255,255,255,0.3);
+  pointer-events: none;
+  cursor: not-allowed;
+}
+.m-cta-sticky .cta-hint {
+  text-align: center;
+  font-size: 10px;
+  color: rgba(255,255,255,0.25);
+  margin-top: 6px;
+  transition: opacity 0.3s ease;
+}
+.m-cta-sticky .cta-hint.hidden { opacity: 0; }
+
 /* Step indicators */
 .m-steps {
   display: flex;
@@ -4067,5 +4093,40 @@
   <p>AloHost UX Prototype &mdash; Guest Mobile Flow &mdash; Todos los derechos reservados</p>
 </div>
 
+<script>
+(function(){
+  document.querySelectorAll('.phone-screen').forEach(function(screen){
+    var btns = screen.querySelectorAll('.m-content > .m-btn-primary, .m-content > button.m-btn-primary');
+    if(!btns.length) return;
+    btns.forEach(function(btn){
+      if(btn.closest('.m-cta-sticky') || btn.closest('.m-chat-input')) return;
+
+      var wrapper = document.createElement('div');
+      wrapper.className = 'm-cta-sticky';
+
+      var hint = document.createElement('div');
+      hint.className = 'cta-hint';
+      hint.textContent = 'Desliza para continuar';
+
+      btn.classList.add('cta-locked');
+      btn.parentNode.insertBefore(wrapper, btn);
+      wrapper.appendChild(btn);
+      wrapper.appendChild(hint);
+
+      var unlocked = false;
+      screen.addEventListener('scroll', function(){
+        if(unlocked) return;
+        var scrollBottom = screen.scrollTop + screen.clientHeight;
+        var threshold = screen.scrollHeight - 40;
+        if(scrollBottom >= threshold){
+          unlocked = true;
+          btn.classList.remove('cta-locked');
+          hint.classList.add('hidden');
+        }
+      });
+    });
+  });
+})();
+</script>
 </body>
 </html>
