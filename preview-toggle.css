@@ -646,9 +646,14 @@
 [data-preview="light"] .phone-mockup .m-icr-badge { color: #008A05 !important; background: rgba(0,138,5,0.08) !important; }
 [data-preview="light"] .phone-mockup .m-icr-ribbon { background: rgba(0,138,5,0.06) !important; color: #008A05 !important; }
 
-/* --- Extra guest purchase card --- */
+/* --- Extra guest cards --- */
 [data-preview="light"] .phone-mockup .m-extra-title { color: #222 !important; }
 [data-preview="light"] .phone-mockup .m-extra-subtitle { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-extra-ota-cap { color: #717171 !important; }
+[data-preview="light"] .phone-mockup .m-extra-guest-ota { background: rgba(255,165,0,0.04) !important; border-color: rgba(255,165,0,0.15) !important; }
+[data-preview="light"] .phone-mockup .m-ota-policy { background: rgba(255,165,0,0.04) !important; border-color: rgba(255,165,0,0.1) !important; }
+[data-preview="light"] .phone-mockup .m-ota-policy-text { color: #484848 !important; }
+[data-preview="light"] .phone-mockup .m-ota-disclaimer { color: #999 !important; }
 
 /* ==========================================================
    BRAND COLORS — MUST NEVER BE OVERRIDDEN IN EITHER MODE

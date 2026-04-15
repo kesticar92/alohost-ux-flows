@@ -1879,21 +1879,29 @@
             <p>Tu registro ya esta en curso! Una vez lo completes, puedes enviar el link a tu acompanante por WhatsApp para que se registre desde su celular, o puedes hacerlo tu por el. Si todos completan el registro, el check-in sera instantaneo.</p>
           </div>
 
-          <!-- Extra guest purchase (AI-assisted) -->
-          <div class="m-card m-extra-guest-card" style="margin-bottom:14px;border-color:rgba(255,56,92,0.2);background:linear-gradient(135deg,rgba(255,56,92,0.06),rgba(0,132,137,0.04));">
+          <!-- Extra guest — OTA flow (no direct charge) -->
+          <div class="m-card m-extra-guest-ota" style="margin-bottom:14px;border-color:rgba(255,165,0,0.2);background:linear-gradient(135deg,rgba(255,165,0,0.06),rgba(255,56,92,0.03));">
             <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,56,92,0.1);display:flex;align-items:center;justify-content:center;">
-                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#FF385C" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+              <div style="width:36px;height:36px;border-radius:10px;background:rgba(255,165,0,0.1);display:flex;align-items:center;justify-content:center;">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#FFA500" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
               </div>
               <div style="flex:1;">
                 <span class="m-extra-title" style="font-size:13px;font-weight:600;color:#fff;display:block;">Necesitas agregar mas huespedes?</span>
-                <span class="m-extra-subtitle" style="font-size:11px;color:rgba(255,255,255,0.4);">Capacidad max: 6 personas · Desde $25.000/noche</span>
+                <span class="m-extra-ota-cap" style="font-size:11px;color:rgba(255,255,255,0.4);">Capacidad max: 6 personas</span>
               </div>
             </div>
+
+            <!-- Airbnb policy notice -->
+            <div class="m-ota-policy" style="display:flex;align-items:start;gap:8px;padding:10px 12px;background:rgba(255,165,0,0.06);border:1px solid rgba(255,165,0,0.12);border-radius:10px;margin-bottom:10px;">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#FFA500" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              <span class="m-ota-policy-text" style="font-size:11px;color:rgba(255,255,255,0.55);line-height:1.5;">Como tu reserva es via <strong style="color:#FF5A7D;">Airbnb</strong>, el cobro por huespedes adicionales se gestionara a traves de la plataforma. Se enviara una solicitud de modificacion por Airbnb para el cargo correspondiente.</span>
+            </div>
+
             <button class="m-btn m-btn-outline" style="padding:10px;font-size:13px;">
-              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2l2.4 7.2L22 12l-7.6 2.8L12 22l-2.4-7.2L2 12l7.6-2.8L12 2z"/></svg>
-              Agregar con Aloy
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="8.5" cy="7" r="4"/><line x1="20" y1="8" x2="20" y2="14"/><line x1="23" y1="11" x2="17" y2="11"/></svg>
+              Solicitar y Registrar Huesped
             </button>
+            <p class="m-ota-disclaimer" style="text-align:center;font-size:10px;color:rgba(255,255,255,0.3);margin-top:8px;">Se notificara al anfitrion · Cobro gestionado por Airbnb</p>
           </div>
 
           <!-- CTA -->
