@@ -376,7 +376,9 @@
 .m-chat-container {
   display: flex;
   flex-direction: column;
+  height: 100%;
   min-height: 580px;
+  position: relative;
 }
 .m-chat-header {
   padding: 16px 20px;
@@ -461,6 +463,33 @@
   display: flex;
   gap: 8px;
   align-items: center;
+  position: sticky;
+  bottom: 0;
+  background: #111;
+  z-index: 5;
+}
+
+/* Minimize button in chat header */
+.m-chat-minimize {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-left: auto;
+  flex-shrink: 0;
+  color: rgba(255,255,255,0.5);
+  transition: all 0.2s ease;
+}
+.m-chat-minimize:hover { background: rgba(255,255,255,0.15); }
+.m-chat-minimize svg {
+  width: 18px; height: 18px;
+  fill: none; stroke: currentColor;
+  stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round;
 }
 .m-chat-field {
   flex: 1;
@@ -1505,6 +1534,18 @@
         <span>LTE  100%</span>
       </div>
       <div class="phone-screen">
+
+        <!-- Theme toggle — always visible from first screen -->
+        <div style="display:flex;justify-content:flex-end;padding:8px 20px 0;">
+          <div class="m-theme-toggle" style="display:flex;align-items:center;gap:4px;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:20px;padding:4px;">
+            <div class="m-toggle-opt" style="width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;color:rgba(255,255,255,0.3);">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+            </div>
+            <div class="m-toggle-opt m-toggle-active" style="width:28px;height:28px;border-radius:50%;background:#FF385C;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            </div>
+          </div>
+        </div>
 
         <!-- Welcome content -->
         <div class="m-welcome">
@@ -3409,6 +3450,9 @@
               <div style="font-size:15px;font-weight:700;color:#fff;">Aloy IA</div>
               <div style="font-size:11px;color:#008A05;">En linea</div>
             </div>
+            <div class="m-chat-minimize" title="Minimizar chat">
+              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            </div>
           </div>
 
           <div class="m-chat-body">
@@ -3492,6 +3536,9 @@
             <div>
               <div style="font-size:15px;font-weight:700;color:#fff;">Aloy IA</div>
               <div style="font-size:11px;color:#008A05;">En linea</div>
+            </div>
+            <div class="m-chat-minimize" title="Minimizar chat">
+              <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/></svg>
             </div>
           </div>
 
